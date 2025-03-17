@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- Meta -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Page Icon -->
+  <link rel="shortcut icon" href="favicon.svg">
+  <!-- CSS Documents -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Montserrat', sans-serif; }
+  </style>
+  <title>Comparador de Pizzas</title>
+</head>
+<body class="bg-[#F2F2F2] flex flex-col items-center justify-center min-h-screen p-4">
+  <div class="bg-[#0D0D0D] p-6 rounded-lg shadow-lg w-full max-w-md">
+    <h1 class="text-3xl font-bold mb-6 text-center text-[#F2F2F2]">Pizzas 🍕</h1>
+    
+    <form onsubmit="calcular(); return false;">
+      <div class="mb-4">
+        <h2 class="text-lg font-semibold text-[#F2F2F2]">Mediana</h2>
+        <div class="grid grid-cols-2 gap-2 mt-2">
+          <label class="font-semibold text-[#F2F2F2]">Diámetro (cm)</label>
+          <label class="font-semibold text-[#F2F2F2]">Precio (PEN)</label>
+          <input id="diametroMediana" type="number" step="0.01" class="w-full p-2 border border-[#F2F2F2] rounded outline-none bg-[#F2F2F2] text-[#0D0D0D]">
+          <input id="precioMediana" type="number" step="0.01" class="w-full p-2 border border-[#F2F2F2] rounded outline-none bg-[#F2F2F2] text-[#0D0D0D]">
+        </div>
+      </div>
+      
+      <div class="mb-4">
+        <h2 class="text-lg font-semibold text-[#F2F2F2]">Grande</h2>
+        <div class="grid grid-cols-2 gap-2 mt-2">
+          <label class="font-semibold text-[#F2F2F2]">Diámetro (cm)</label>
+          <label class="font-semibold text-[#F2F2F2]">Precio (PEN)</label>
+          <input id="diametroGrande" type="number" step="0.01" class="w-full p-2 border border-[#F2F2F2] rounded outline-none bg-[#F2F2F2] text-[#0D0D0D]">
+          <input id="precioGrande" type="number" step="0.01" class="w-full p-2 border border-[#F2F2F2] rounded outline-none bg-[#F2F2F2] text-[#0D0D0D]">
+        </div>
+      </div>
+      
+      <button type="submit" class="w-full bg-[#F2F2F2] text-[#0D0D0D] p-3 rounded font-bold hover:bg-opacity-90 transition duration-300">Comparar</button>
+    </form>
+    
+    <div id="resultado" class="mt-6 text-center font-semibold text-lg text-[#F2F2F2]"></div>
+  </div>
+  
+  <script>
+    function calcular() {
+      let dMediana = parseFloat(document.getElementById('diametroMediana').value);
+      let pMediana = parseFloat(document.getElementById('precioMediana').value);
+      let dGrande = parseFloat(document.getElementById('diametroGrande').value);
+      let pGrande = parseFloat(document.getElementById('precioGrande').value);
+      
+      if (!dMediana || !pMediana || !dGrande || !pGrande) {
+        document.getElementById('resultado').innerHTML = "<p>Por favor, completa todos los campos.</p>";
+        return;
+      }
+      
+      let rMediana = dMediana / 2;
+      let rGrande = dGrande / 2;
+      
+      let areaMediana = Math.PI * Math.pow(rMediana, 2);
+      let areaTotalMedianas = 2 * areaMediana;
+      let areaGrande = Math.PI * Math.pow(rGrande, 2);
+      
+      let costoMediana = pMediana / areaMediana;
+      let costoGrande = pGrande / areaGrande;
+      
+      let mejorOpcion = areaTotalMedianas > areaGrande ? `2 Pizzas Medianas` : `Pizza Grande`;
+      let opcionEconomica = costoMediana < costoGrande ? `2 Pizzas Medianas` : `Pizza Grande`;
+      
+      document.getElementById('resultado').innerHTML = `
+        <p>Hay más pizza en:</p>
+        <p class="font-bold">${mejorOpcion}</p>
+        <p>La opción más económica es:</p>
+        <p class="font-bold">${opcionEconomica}</p>
+      `;
+    }
+  </script>
+</body>
+</html>
