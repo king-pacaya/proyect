@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!--- Meta --->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!--- Page Icon --->
+  <link rel="shortcut icon" href="favicon.svg">
+  <!-- CSS Documents -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Montserrat con todas las versiones -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <style>
+    /* Aplicar Montserrat globalmente */
+    * {
+      font-family: 'Montserrat', sans-serif;
+    }
+  </style>
+  <title>Cálculo de Pantalla</title>
+</head>
+<body class="bg-[#F2F2F2] flex items-center justify-center min-h-screen text-[#0D0D0D]">
+  <div id="screen-size" class="text-center">
+    <h1 class="text-4xl font-bold">Tamaño de Pantalla</h1>
+    <p id="dimensions" class="text-2xl mt-4">Calculando...</p>
+  </div>
+
+  <script>
+    function updateScreenSize() {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      document.getElementById('dimensions').textContent = `${width}px × ${height}px`;
+    }
+
+    window.addEventListener('resize', updateScreenSize);
+    window.addEventListener('load', updateScreenSize);
+  </script>
+</body>
+</html>
