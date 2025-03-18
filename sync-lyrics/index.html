@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- Metadatos básicos -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="shortcut icon" href="favicon.png" />
+
+  <!-- CSS: Font Awesome 6.0.0, Normalize, Tailwind -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Estilos personalizados -->
+  <style>
+    /* Fuente Montserrat aplicada globalmente */
+    * {
+      font-family: 'Montserrat', sans-serif;
+    }
+    /* Paleta de colores nueva */
+    .bg-primary { background-color: #0D0D0D; }
+    .text-primary { color: #0D0D0D; }
+    .bg-accent { background-color: #F2F2F2; }
+    .text-accent { color: #F2F2F2; }
+    .border-primary { border-color: #0D0D0D; }
+    .border-accent { border-color: #0D0D0D; } /* Para inactivos, usamos borde negro */
+    /* Quitar outlines */
+    .focus-ring:focus { outline: none; }
+    
+    /* Barra de reproducción personalizada (range) */
+    input[type="range"] {
+      -webkit-appearance: none;
+      width: 100%;
+      background: transparent;
+    }
+    input[type="range"]:focus { outline: none; }
+    input[type="range"]::-webkit-slider-runnable-track {
+      height: 4px;
+      background: #0D0D0D;
+      border-radius: 2px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      background: #F2F2F2;
+      border-radius: 50%;
+      margin-top: -6px;
+    }
+    input[type="range"]::-moz-range-track {
+      height: 4px;
+      background: #0D0D0D;
+      border-radius: 2px;
+    }
+    input[type="range"]::-moz-range-thumb {
+      width: 16px;
+      height: 16px;
+      background: #F2F2F2;
+      border-radius: 50%;
+    }
+    
+    /* Scroll personalizado: track transparente, thumb negro */
+    #syncArea::-webkit-scrollbar,
+    textarea::-webkit-scrollbar {
+      width: 6px;
+    }
+    #syncArea::-webkit-scrollbar-track,
+    textarea::-webkit-scrollbar-track {
+      background: transparent;
+      border-radius: 3px;
+    }
+    #syncArea::-webkit-scrollbar-thumb,
+    textarea::-webkit-scrollbar-thumb {
+      background: #0D0D0D;
+      border-radius: 3px;
+    }
+  </style>
+
+  <title>Lyrics</title>
+</head>
+<body class="min-h-screen flex justify-center items-center p-4" style="background-color: #F2F2F2;">
+  <div class="w-full max-w-2xl p-4 rounded shadow bg-white">
+    <!-- FILA SUPERIOR: Título y Artista -->
+    <div class="flex flex-col md:flex-row md:space-x-4 mb-4">
+      <!-- Título -->
+      <div class="flex-1 mb-2 md:mb-0">
+        <label class="block text-primary font-semibold mb-1">Título de la canción:</label>
+        <input id="songTitle" type="text" placeholder="Ingresa el título"
+          class="w-full border-2 border-primary rounded p-2 text-primary focus-ring" />
+      </div>
+      <!-- Artista -->
+      <div class="flex-1">
+        <label class="block text-primary font-semibold mb-1">Artista o banda:</label>
+        <input id="songArtist" type="text" placeholder="Ingresa el artista o banda"
+          class="w-full border-2 border-primary rounded p-2 text-primary focus-ring" />
+      </div>
+    </div>
+
+    <!-- Tabs y botón de descarga -->
+    <div class="flex justify-between items-center mb-4">
+      <div class="flex space-x-2">
+        <!-- Tab Sencillo: activo por defecto -->
+        <button id="tabSencillo"
+          class="px-4 py-2 rounded bg-primary text-accent font-semibold focus-ring">
+          Sencillo
+        </button>
+        <!-- Tab Sincronizado: inactivo (blanco con borde negro y texto negro) -->
+        <button id="tabSincronizado"
+          class="px-4 py-2 rounded bg-accent text-primary border border-primary font-semibold focus-ring">
+          Sincronizado
+        </button>
+      </div>
+      <!-- Botón Descargar: se mantiene con fondo primario y texto acento -->
+      <button id="downloadButton"
+        class="px-4 py-2 rounded bg-primary text-accent font-semibold focus-ring flex items-center">
+        <i class="fa-solid fa-download mr-1"></i> Descargar letras
+      </button>
+    </div>
+
+    <!-- Sección Sencillo -->
+    <div id="sectionSencillo" class="space-y-4">
+      <!-- Subir archivo -->
+      <div>
+        <label class="block text-primary font-semibold mb-1">Subir canción (archivo de audio):</label>
+        <div class="inline-block">
+          <input id="audioFile" type="file" accept="audio/*" class="hidden" />
+          <!-- Para el botón, se usa fondo primario y texto acento -->
+          <label for="audioFile" id="fileLabel"
+            class="cursor-pointer px-4 py-2 bg-primary text-accent rounded font-semibold focus-ring inline-flex items-center">
+            <i class="fa-solid fa-upload"></i>
+            <span class="ml-2" id="fileLabelText">Seleccionar archivo</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Reproducción: Tiempo actual + Barra de progreso + Toggle Play/Pause -->
+      <div class="flex items-center space-x-2">
+        <span id="currentTimeSencillo" class="text-primary w-16 text-center">00:00</span>
+        <input type="range" id="progressBarSencillo" min="0" max="100" value="0"
+          class="focus-ring" style="background: linear-gradient(90deg, #F2F2F2 0%, #0D0D0D 0%);" />
+        <button id="togglePlayPauseSencillo"
+          class="px-4 py-2 rounded bg-transparent text-primary font-semibold border-2 border-primary focus-ring flex items-center">
+          <i class="fa-solid fa-play"></i>
+        </button>
+      </div>
+
+      <!-- Textarea de letras -->
+      <div>
+        <label class="block text-primary font-semibold mb-1">Letras de la canción:</label>
+        <textarea id="lyricsInput" rows="6" placeholder="Escribe aquí las letras..."
+          class="w-full border-2 border-primary rounded p-2 text-primary focus-ring"></textarea>
+      </div>
+    </div>
+
+    <!-- Sección Sincronizado -->
+    <div id="sectionSincronizado" class="hidden space-y-4">
+      <!-- Reproducción en Sincronizado -->
+      <div class="flex items-center space-x-2">
+        <span id="currentTimeSync" class="text-primary w-16 text-center">00:00</span>
+        <input type="range" id="progressBarSync" min="0" max="100" value="0"
+          class="focus-ring" style="background: linear-gradient(90deg, #F2F2F2 0%, #0D0D0D 0%);" />
+        <button id="togglePlayPauseSync"
+          class="px-4 py-2 rounded bg-transparent text-primary font-semibold border-2 border-primary focus-ring flex items-center">
+          <i class="fa-solid fa-play"></i>
+        </button>
+      </div>
+
+      <!-- Contenedor de líneas sincronizadas -->
+      <div id="syncArea" class="max-h-80 overflow-auto border-2 border-primary rounded p-2"></div>
+
+      <!-- Botón Guardar (centrado y más ancho) -->
+      <div class="flex justify-center">
+        <button id="saveSyncButton"
+          class="w-56 px-4 py-2 rounded bg-primary text-accent font-semibold focus-ring flex items-center justify-center">
+          Guardar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reproductor de audio (oculto) -->
+  <audio id="audioPlayer"></audio>
+
+  <script>
+    // REFERENCIAS GENERALES
+    const tabSencillo = document.getElementById('tabSencillo');
+    const tabSincronizado = document.getElementById('tabSincronizado');
+    const sectionSencillo = document.getElementById('sectionSencillo');
+    const sectionSincronizado = document.getElementById('sectionSincronizado');
+    const downloadButton = document.getElementById('downloadButton');
+
+    const audioFileInput = document.getElementById('audioFile');
+    const fileLabelText = document.getElementById('fileLabelText');
+    const audioPlayer = document.getElementById('audioPlayer');
+
+    // CONTROLES DE REPRODUCCIÓN (Sencillo)
+    const currentTimeSencillo = document.getElementById('currentTimeSencillo');
+    const progressBarSencillo = document.getElementById('progressBarSencillo');
+    const togglePlayPauseSencillo = document.getElementById('togglePlayPauseSencillo');
+
+    // CONTROLES DE REPRODUCCIÓN (Sincronizado)
+    const currentTimeSync = document.getElementById('currentTimeSync');
+    const progressBarSync = document.getElementById('progressBarSync');
+    const togglePlayPauseSync = document.getElementById('togglePlayPauseSync');
+
+    const lyricsInput = document.getElementById('lyricsInput');
+    const syncArea = document.getElementById('syncArea');
+    const saveSyncButton = document.getElementById('saveSyncButton');
+
+    const songTitleInput = document.getElementById('songTitle');
+    const songArtistInput = document.getElementById('songArtist');
+
+    // ARRAY PARA LAS LÍNEAS (TEXTO Y TIEMPO)
+    let lyricsLines = [];
+
+    // --- FUNCIONES DE TABS ---
+    function showTabSencillo() {
+      sectionSencillo.classList.remove('hidden');
+      sectionSincronizado.classList.add('hidden');
+      // Tab activo: fondo negro, texto blanco
+      tabSencillo.classList.remove('bg-accent', 'text-primary', 'border', 'border-primary');
+      tabSencillo.classList.add('bg-primary', 'text-accent');
+      // Tab inactivo: fondo blanco, texto y borde negro
+      tabSincronizado.classList.remove('bg-primary', 'text-accent');
+      tabSincronizado.classList.add('bg-accent', 'text-primary', 'border', 'border-primary');
+    }
+    function showTabSincronizado() {
+      const text = lyricsInput.value.trim();
+      if (!text) {
+        alert('Ingresa las letras en modo "Sencillo" antes de sincronizar.');
+        return;
+      }
+      sectionSencillo.classList.add('hidden');
+      sectionSincronizado.classList.remove('hidden');
+      // Cambiar estados de los tabs
+      tabSencillo.classList.remove('bg-primary', 'text-accent');
+      tabSencillo.classList.add('bg-accent', 'text-primary', 'border', 'border-primary');
+      tabSincronizado.classList.remove('bg-accent', 'text-primary', 'border', 'border-primary');
+      tabSincronizado.classList.add('bg-primary', 'text-accent');
+      renderSyncInterface(text);
+    }
+    tabSencillo.addEventListener('click', showTabSencillo);
+    tabSincronizado.addEventListener('click', showTabSincronizado);
+    showTabSencillo();
+
+    // --- MANEJO DEL ARCHIVO DE AUDIO ---
+    audioFileInput.addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const url = URL.createObjectURL(file);
+        audioPlayer.src = url;
+        audioPlayer.load();
+        fileLabelText.textContent = file.name;
+      } else {
+        fileLabelText.textContent = 'Seleccionar archivo';
+      }
+    });
+
+    // --- ACTUALIZAR FONDO DEL RANGE (BARRA DE REPRODUCCIÓN) ---
+    function updateRangeBackground(rangeElement) {
+      const value = rangeElement.value;
+      const min = rangeElement.min || 0;
+      const max = rangeElement.max || 100;
+      const percentage = ((value - min) * 100) / (max - min);
+      rangeElement.style.background = `linear-gradient(90deg, #F2F2F2 ${percentage}%, #0D0D0D ${percentage}%)`;
+    }
+
+    // --- FORMATEAR TIEMPO (mm:ss) ---
+    function formatTime(seconds) {
+      const m = Math.floor(seconds / 60);
+      const s = Math.floor(seconds % 60);
+      return `${m < 10 ? '0' + m : m}:${s < 10 ? '0' + s : s}`;
+    }
+
+    // --- PLAY/PAUSE TOGGLE (Sencillo) ---
+    togglePlayPauseSencillo.addEventListener('click', function() {
+      if (!audioPlayer.src) {
+        alert('Sube una canción primero.');
+        return;
+      }
+      if (audioPlayer.paused) {
+        audioPlayer.play();
+        togglePlayPauseSencillo.innerHTML = '<i class="fa-solid fa-pause"></i>';
+        togglePlayPauseSync.innerHTML = '<i class="fa-solid fa-pause"></i>';
+      } else {
+        audioPlayer.pause();
+        togglePlayPauseSencillo.innerHTML = '<i class="fa-solid fa-play"></i>';
+        togglePlayPauseSync.innerHTML = '<i class="fa-solid fa-play"></i>';
+      }
+    });
+    // --- PLAY/PAUSE TOGGLE (Sincronizado) ---
+    togglePlayPauseSync.addEventListener('click', function() {
+      if (!audioPlayer.src) {
+        alert('Sube una canción primero.');
+        return;
+      }
+      if (audioPlayer.paused) {
+        audioPlayer.play();
+        togglePlayPauseSync.innerHTML = '<i class="fa-solid fa-pause"></i>';
+        togglePlayPauseSencillo.innerHTML = '<i class="fa-solid fa-pause"></i>';
+      } else {
+        audioPlayer.pause();
+        togglePlayPauseSync.innerHTML = '<i class="fa-solid fa-play"></i>';
+        togglePlayPauseSencillo.innerHTML = '<i class="fa-solid fa-play"></i>';
+      }
+    });
+
+    // --- SINCRONIZAR CONTROLES DE BARRA Y TIEMPO ---
+    progressBarSencillo.addEventListener('input', function(e) {
+      if (audioPlayer.duration) {
+        const fraction = e.target.value / 100;
+        audioPlayer.currentTime = fraction * audioPlayer.duration;
+      }
+    });
+    progressBarSync.addEventListener('input', function(e) {
+      if (audioPlayer.duration) {
+        const fraction = e.target.value / 100;
+        audioPlayer.currentTime = fraction * audioPlayer.duration;
+      }
+    });
+    audioPlayer.addEventListener('timeupdate', () => {
+      if (!audioPlayer.duration) return;
+      const fraction = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+      progressBarSencillo.value = fraction;
+      progressBarSync.value = fraction;
+      updateRangeBackground(progressBarSencillo);
+      updateRangeBackground(progressBarSync);
+      const current = formatTime(audioPlayer.currentTime);
+      currentTimeSencillo.textContent = current;
+      currentTimeSync.textContent = current;
+    });
+    audioPlayer.addEventListener('ended', () => {
+      togglePlayPauseSencillo.innerHTML = '<i class="fa-solid fa-play"></i>';
+      togglePlayPauseSync.innerHTML = '<i class="fa-solid fa-play"></i>';
+      progressBarSencillo.value = 0;
+      progressBarSync.value = 0;
+      updateRangeBackground(progressBarSencillo);
+      updateRangeBackground(progressBarSync);
+    });
+
+    // --- RENDERIZAR INTERFAZ DE SINCRONIZACIÓN ---
+    function renderSyncInterface(text) {
+      syncArea.innerHTML = '';
+      lyricsLines = [];
+      const lines = text.split('\n').filter(line => line.trim() !== "");
+      lines.forEach(line => {
+        const match = line.match(/^\[(\d{2}:\d{2}\.\d{2})\](.*)/);
+        if (match) {
+          // Guardamos el tiempo sin corchetes para la UI
+          lyricsLines.push({
+            time: match[1],
+            text: match[2].trim()
+          });
+        } else {
+          lyricsLines.push({ time: null, text: line });
+        }
+      });
+      // Para cada línea, crear un contenedor con tres columnas en una fila
+      lyricsLines.forEach((line, index) => {
+        const container = document.createElement('div');
+        container.className = 'p-2 border-2 border-primary rounded mb-2';
+
+        const row = document.createElement('div');
+        row.className = 'flex items-center';
+
+        // Columna izquierda: botón de sincronizar (reloj + tiempo sin corchetes)
+        const leftCell = document.createElement('div');
+        leftCell.className = 'flex items-center justify-center cursor-pointer w-24';
+        leftCell.style.borderRight = '2px solid #0D0D0D';
+        leftCell.style.paddingRight = '8px';
+        leftCell.style.marginRight = '8px';
+        leftCell.style.whiteSpace = 'nowrap';
+        if (line.time) {
+          leftCell.innerHTML = '<i class="fa-solid fa-stopwatch text-primary"></i> <span class="ml-1 text-primary">' + line.time + '</span>';
+        } else {
+          leftCell.innerHTML = '<i class="fa-solid fa-stopwatch text-primary"></i>';
+        }
+        leftCell.addEventListener('click', function() {
+          if (!audioPlayer.duration) {
+            alert('No hay canción cargada o no se pudo reproducir.');
+            return;
+          }
+          const currentTime = audioPlayer.currentTime;
+          const m = Math.floor(currentTime / 60);
+          const s = (currentTime % 60).toFixed(2);
+          const formatted = `${m < 10 ? '0' + m : m}:${s < 10 ? '0' + s : s}`;
+          lyricsLines[index].time = formatted;
+          leftCell.innerHTML = '<i class="fa-solid fa-stopwatch text-primary"></i> <span class="ml-1 text-primary">' + formatted + '</span>';
+        });
+
+        // Columna central: mostrar la letra
+        const middleCell = document.createElement('div');
+        middleCell.className = 'flex-1 text-center text-primary';
+        middleCell.textContent = line.text;
+        middleCell.style.borderRight = '2px solid #0D0D0D';
+        middleCell.style.paddingRight = '8px';
+        middleCell.style.paddingLeft = '8px';
+
+        // Columna derecha: botón de reproducir desde ese tiempo
+        const rightCell = document.createElement('div');
+        rightCell.className = 'flex items-center justify-center cursor-pointer w-16';
+        rightCell.innerHTML = '<i class="fa-solid fa-play text-primary"></i>';
+        rightCell.addEventListener('click', function() {
+          if (!audioPlayer.src) {
+            alert('No hay canción cargada.');
+            return;
+          }
+          if (!lyricsLines[index].time) {
+            alert('Esta línea no tiene tiempo asignado.');
+            return;
+          }
+          const timeStr = lyricsLines[index].time;
+          const [minStr, secStr] = timeStr.split(':');
+          const seconds = parseFloat(minStr) * 60 + parseFloat(secStr);
+          audioPlayer.currentTime = seconds;
+          audioPlayer.play();
+          togglePlayPauseSencillo.innerHTML = '<i class="fa-solid fa-pause"></i>';
+          togglePlayPauseSync.innerHTML = '<i class="fa-solid fa-pause"></i>';
+        });
+
+        row.appendChild(leftCell);
+        row.appendChild(middleCell);
+        row.appendChild(rightCell);
+        container.appendChild(row);
+        syncArea.appendChild(container);
+      });
+    }
+
+    // --- GUARDAR: Inyecta el texto final en el textarea de Sencillo (sin header) ---
+    saveSyncButton.addEventListener('click', function() {
+      // Generamos el texto SIN header para la UI
+      const finalText = generateSyncedText(false);
+      lyricsInput.value = finalText;
+      const original = saveSyncButton.innerHTML;
+      saveSyncButton.innerHTML = '<i class="fa-solid fa-check"></i>';
+      setTimeout(() => { saveSyncButton.innerHTML = original; }, 1500);
+    });
+
+    // Función para generar el texto final (resultado)
+    // El parámetro includeHeader determina si se agrega la primera línea con título y artista.
+    function generateSyncedText(includeHeader = true) {
+      let output = "";
+      if (includeHeader) {
+        const songTitle = songTitleInput.value;
+        const songArtist = songArtistInput.value;
+        output += `[00:00.00]${songTitle} - ${songArtist}\n`;
+      }
+      lyricsLines.forEach(line => {
+        if (line.time) {
+          output += `[${line.time}]${line.text}\n`;
+        } else {
+          output += `${line.text}\n`;
+        }
+      });
+      return output;
+    }
+
+    // --- DESCARGAR ARCHIVO .txt ---
+    downloadButton.addEventListener('click', function() {
+      let textToDownload = lyricsInput.value.trim();
+      // Al descargar, se incluye el header.
+      if (!textToDownload) {
+        textToDownload = generateSyncedText(true);
+      } else {
+        // Si ya se guardó en el textarea, lo regeneramos con header.
+        textToDownload = generateSyncedText(true);
+      }
+      const songTitle = songTitleInput.value || 'cancion';
+      const blob = new Blob([textToDownload], { type: 'text/plain' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = songTitle + '.txt';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+  </script>
+</body>
+</html>
