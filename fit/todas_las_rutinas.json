@@ -1,0 +1,2254 @@
+[
+  {
+    "id": 1741896771470,
+    "name": "2° Día - Peso",
+    "exercises": [
+      {
+        "id": 1741619274885,
+        "title": "Escalada de montaña",
+        "type": "time",
+        "time": 30,
+        "reps": null,
+        "images": [
+          "multimedia/escalada-de-montaña.png",
+          "multimedia/escalada-de-montaña-2.png"
+        ]
+      },
+      {
+        "id": 1741621548459,
+        "title": "Tríceps en silla",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/triceps-en-silla.png",
+          "multimedia/triceps-en-silla-2.png"
+        ]
+      },
+      {
+        "id": 1741621570170,
+        "title": "Saltos de tijera",
+        "type": "time",
+        "time": "30",
+        "reps": null,
+        "images": [
+          "multimedia/saltos-de-tijera.png",
+          "multimedia/saltos-de-tijera-2.png"
+        ]
+      },
+      {
+        "id": 1741621595930,
+        "title": "Crunch de brazos estirados",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/crunch-de-brazos-estirados.png",
+          "multimedia/crunch-de-brazos-estirados-2.png"
+        ]
+      },
+      {
+        "id": 1741621609250,
+        "title": "Crunch de bicicleta",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/crunch-de-bicicleta.png",
+          "multimedia/crunch-de-bicicleta-2.png"
+        ]
+      },
+      {
+        "id": 1741618733853,
+        "title": "Tablón",
+        "type": "time",
+        "time": "30",
+        "reps": null,
+        "images": [
+          "multimedia/tablon.png"
+        ]
+      },
+      {
+        "id": 1741621548459,
+        "title": "Tríceps en silla",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/triceps-en-silla.png",
+          "multimedia/triceps-en-silla-2.png"
+        ]
+      },
+      {
+        "id": 1741621570170,
+        "title": "Saltos de tijera",
+        "type": "time",
+        "time": "30",
+        "reps": null,
+        "images": [
+          "multimedia/saltos-de-tijera.png",
+          "multimedia/saltos-de-tijera-2.png"
+        ]
+      },
+      {
+        "id": 1741621595930,
+        "title": "Crunch de brazos estirados",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/crunch-de-brazos-estirados.png",
+          "multimedia/crunch-de-brazos-estirados-2.png"
+        ]
+      },
+      {
+        "id": 1741621609250,
+        "title": "Crunch de bicicleta",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/crunch-de-bicicleta.png",
+          "multimedia/crunch-de-bicicleta-2.png"
+        ]
+      },
+      {
+        "id": 1741618733853,
+        "title": "Tablón",
+        "type": "time",
+        "time": "30",
+        "reps": null,
+        "images": [
+          "multimedia/tablon.png"
+        ]
+      },
+      {
+        "id": 1741618770061,
+        "title": "Estiramiento de cobra",
+        "type": "time",
+        "time": "30",
+        "reps": null,
+        "images": [
+          "multimedia/estiramiento-de-cobra.png"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 1742083014778,
+    "name": "2° Día - Abdomen",
+    "exercises": [
+      {
+        "id": 1741618654910,
+        "title": "Elevaciones de rodillas",
+        "type": "time",
+        "time": 30,
+        "reps": null,
+        "images": [
+          "multimedia/elevaciones-de-rodillas.png",
+          "multimedia/elevaciones-de-rodillas-2.png"
+        ]
+      },
+      {
+        "id": 1741621570170,
+        "title": "Saltos de tijera",
+        "type": "time",
+        "time": "30",
+        "reps": null,
+        "images": [
+          "multimedia/saltos-de-tijera.png",
+          "multimedia/saltos-de-tijera-2.png"
+        ]
+      },
+      {
+        "id": 1742082755675,
+        "title": "Abdominales",
+        "type": "reps",
+        "time": null,
+        "reps": 10,
+        "images": [
+          "multimedia/abdominales.png",
+          "multimedia/abdominales-2.png"
+        ]
+      },
+      {
+        "id": 1742082864714,
+        "title": "Twist Ruso",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/twist-ruso.png",
+          "multimedia/twist-ruso-2.png"
+        ]
+      },
+      {
+        "id": 1742082889506,
+        "title": "Butt Bridge",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/butt-bridge.png",
+          "multimedia/butt-bridge-2.png"
+        ]
+      },
+      {
+        "id": 1741903314058,
+        "title": "Elevaciones de piernas",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/elevaciones-de-piernas.png",
+          "multimedia/elevaciones-de-piernas-2.png"
+        ]
+      },
+      {
+        "id": 1742082929890,
+        "title": "Giro con piernas dobladas",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/giro-con-piernas-dobladas.png",
+          "multimedia/giro-con-piernas-dobladas-2.png"
+        ]
+      },
+      {
+        "id": 1742082755675,
+        "title": "Abdominales",
+        "type": "reps",
+        "time": null,
+        "reps": 10,
+        "images": [
+          "multimedia/abdominales.png",
+          "multimedia/abdominales-2.png"
+        ]
+      },
+      {
+        "id": 1742082864714,
+        "title": "Twist Ruso",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/twist-ruso.png",
+          "multimedia/twist-ruso-2.png"
+        ]
+      },
+      {
+        "id": 1742082889506,
+        "title": "Butt Bridge",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/butt-bridge.png",
+          "multimedia/butt-bridge-2.png"
+        ]
+      },
+      {
+        "id": 1741903314058,
+        "title": "Elevaciones de piernas",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/elevaciones-de-piernas.png",
+          "multimedia/elevaciones-de-piernas-2.png"
+        ]
+      },
+      {
+        "id": 1742082929890,
+        "title": "Giro con piernas dobladas",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/giro-con-piernas-dobladas.png",
+          "multimedia/giro-con-piernas-dobladas-2.png"
+        ]
+      },
+      {
+        "id": 1741618770061,
+        "title": "Estiramiento de cobra",
+        "type": "time",
+        "time": "30",
+        "reps": null,
+        "images": [
+          "multimedia/estiramiento-de-cobra.png"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 1742090595648,
+    "name": "2° Día - Todo",
+    "exercises": [
+      {
+        "id": 1741622208442,
+        "title": "Crunch abdominales",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/crunch-abdominales.png",
+          "multimedia/crunch-abdominales-2.png"
+        ]
+      },
+      {
+        "id": 1742082864714,
+        "title": "Twist Ruso",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/twist-ruso.png",
+          "multimedia/twist-ruso-2.png"
+        ]
+      },
+      {
+        "id": 1741619274885,
+        "title": "Escalada de montaña",
+        "type": "time",
+        "time": 30,
+        "reps": null,
+        "images": [
+          "multimedia/escalada-de-montaña.png",
+          "multimedia/escalada-de-montaña-2.png"
+        ]
+      },
+      {
+        "id": 1741622230066,
+        "title": "Toque al talón",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/toque-al-talon.png",
+          "multimedia/toque-al-talon-2.png"
+        ]
+      },
+      {
+        "id": 1741903314058,
+        "title": "Elevaciones de piernas",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/elevaciones-de-piernas.png",
+          "multimedia/elevaciones-de-piernas-2.png"
+        ]
+      },
+      {
+        "id": 1741618733853,
+        "title": "Tablón",
+        "type": "time",
+        "time": "30",
+        "reps": null,
+        "images": [
+          "multimedia/tablon.png"
+        ]
+      },
+      {
+        "id": 1741622208442,
+        "title": "Crunch abdominales",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/crunch-abdominales.png",
+          "multimedia/crunch-abdominales-2.png"
+        ]
+      },
+      {
+        "id": 1742082864714,
+        "title": "Twist Ruso",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/twist-ruso.png",
+          "multimedia/twist-ruso-2.png"
+        ]
+      },
+      {
+        "id": 1741619274885,
+        "title": "Escalada de montaña",
+        "type": "time",
+        "time": 30,
+        "reps": null,
+        "images": [
+          "multimedia/escalada-de-montaña.png",
+          "multimedia/escalada-de-montaña-2.png"
+        ]
+      },
+      {
+        "id": 1741622230066,
+        "title": "Toque al talón",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/toque-al-talon.png",
+          "multimedia/toque-al-talon-2.png"
+        ]
+      },
+      {
+        "id": 1741903314058,
+        "title": "Elevaciones de piernas",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/elevaciones-de-piernas.png",
+          "multimedia/elevaciones-de-piernas-2.png"
+        ]
+      },
+      {
+        "id": 1741618733853,
+        "title": "Tablón",
+        "type": "time",
+        "time": "30",
+        "reps": null,
+        "images": [
+          "multimedia/tablon.png"
+        ]
+      },
+      {
+        "id": 1741618770061,
+        "title": "Estiramiento de cobra",
+        "type": "time",
+        "time": "30",
+        "reps": null,
+        "images": [
+          "multimedia/estiramiento-de-cobra.png"
+        ]
+      },
+      {
+        "id": 1742088902641,
+        "title": "Estiramiento de columna con giro lumbar derecho",
+        "type": "time",
+        "time": 30,
+        "reps": null,
+        "images": [
+          "multimedia/estiramiento-de-columna-con-giro-lumbar-derecho.png"
+        ]
+      },
+      {
+        "id": 1742088891185,
+        "title": "Estiramiento de columna con giro lumbar izquierdo",
+        "type": "time",
+        "time": 30,
+        "reps": null,
+        "images": [
+          "multimedia/estiramiento-de-columna-con-giro-lumbar-izquierdo.png"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 1741896852871,
+    "name": "3° Día - Peso",
+    "exercises": [
+      {
+        "id": 1741619274885,
+        "title": "Escalada de montaña",
+        "type": "time",
+        "time": 30,
+        "reps": null,
+        "images": [
+          "multimedia/escalada-de-montaña.png",
+          "multimedia/escalada-de-montaña-2.png"
+        ]
+      },
+      {
+        "id": 1741621570170,
+        "title": "Saltos de tijera",
+        "type": "time",
+        "time": "30",
+        "reps": null,
+        "images": [
+          "multimedia/saltos-de-tijera.png",
+          "multimedia/saltos-de-tijera-2.png"
+        ]
+      },
+      {
+        "id": 1741622208442,
+        "title": "Crunch abdominales",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/crunch-abdominales.png",
+          "multimedia/crunch-abdominales-2.png"
+        ]
+      },
+      {
+        "id": 1741622230066,
+        "title": "Toque al talón",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/toque-al-talon.png",
+          "multimedia/toque-al-talon-2.png"
+        ]
+      },
+      {
+        "id": 1741622260818,
+        "title": "Tijeras verticales",
+        "type": "time",
+        "time": 30,
+        "reps": null,
+        "images": [
+          "multimedia/tijeras-verticales.png",
+          "multimedia/tijeras-verticales-2.png"
+        ]
+      },
+      {
+        "id": 1741618733853,
+        "title": "Tablón",
+        "type": "time",
+        "time": "30",
+        "reps": null,
+        "images": [
+          "multimedia/tablon.png"
+        ]
+      },
+      {
+        "id": 1741621570170,
+        "title": "Saltos de tijera",
+        "type": "time",
+        "time": "30",
+        "reps": null,
+        "images": [
+          "multimedia/saltos-de-tijera.png",
+          "multimedia/saltos-de-tijera-2.png"
+        ]
+      },
+      {
+        "id": 1741622208442,
+        "title": "Crunch abdominales",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/crunch-abdominales.png",
+          "multimedia/crunch-abdominales-2.png"
+        ]
+      },
+      {
+        "id": 1741622230066,
+        "title": "Toque al talón",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/toque-al-talon.png",
+          "multimedia/toque-al-talon-2.png"
+        ]
+      },
+      {
+        "id": 1741622260818,
+        "title": "Tijeras verticales",
+        "type": "time",
+        "time": 30,
+        "reps": null,
+        "images": [
+          "multimedia/tijeras-verticales.png",
+          "multimedia/tijeras-verticales-2.png"
+        ]
+      },
+      {
+        "id": 1741618733853,
+        "title": "Tablón",
+        "type": "time",
+        "time": "30",
+        "reps": null,
+        "images": [
+          "multimedia/tablon.png"
+        ]
+      },
+      {
+        "id": 1741618770061,
+        "title": "Estiramiento de cobra",
+        "type": "time",
+        "time": "30",
+        "reps": null,
+        "images": [
+          "multimedia/estiramiento-de-cobra.png"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 1742083372922,
+    "name": "3° Día - Abdomen",
+    "exercises": [
+      {
+        "id": 1741618654910,
+        "title": "Elevaciones de rodillas",
+        "type": "time",
+        "time": 30,
+        "reps": null,
+        "images": [
+          "multimedia/elevaciones-de-rodillas.png",
+          "multimedia/elevaciones-de-rodillas-2.png"
+        ]
+      },
+      {
+        "id": 1741621570170,
+        "title": "Saltos de tijera",
+        "type": "time",
+        "time": "30",
+        "reps": null,
+        "images": [
+          "multimedia/saltos-de-tijera.png",
+          "multimedia/saltos-de-tijera-2.png"
+        ]
+      },
+      {
+        "id": 1741618733853,
+        "title": "Tablón",
+        "type": "time",
+        "time": "30",
+        "reps": null,
+        "images": [
+          "multimedia/tablon.png"
+        ]
+      },
+      {
+        "id": 1741618723925,
+        "title": "Crunch inverso",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/crunch-inverso.png",
+          "multimedia/crunch-inverso-2.png"
+        ]
+      },
+      {
+        "id": 1741621609250,
+        "title": "Crunch de bicicleta",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/crunch-de-bicicleta.png",
+          "multimedia/crunch-de-bicicleta-2.png"
+        ]
+      },
+      {
+        "id": 1742083086146,
+        "title": "Giro oblicuo acostado",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/giro-oblicuo-acostado.png",
+          "multimedia/giro-oblicuo-acostado-2.png"
+        ]
+      },
+      {
+        "id": 1742083147811,
+        "title": "Puente lateral derecho",
+        "type": "reps",
+        "time": null,
+        "reps": 10,
+        "images": [
+          "multimedia/puente-lateral-derecho.png",
+          "multimedia/puente-lateral-derecho-2.png"
+        ]
+      },
+      {
+        "id": 1742083182266,
+        "title": "Puente lateral izquierdo",
+        "type": "reps",
+        "time": null,
+        "reps": 10,
+        "images": [
+          "multimedia/puente-lateral-izquierdo.png",
+          "multimedia/puente-lateral-izquierdo-2.png"
+        ]
+      },
+      {
+        "id": 1741618733853,
+        "title": "Tablón",
+        "type": "time",
+        "time": "30",
+        "reps": null,
+        "images": [
+          "multimedia/tablon.png"
+        ]
+      },
+      {
+        "id": 1741618723925,
+        "title": "Crunch inverso",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/crunch-inverso.png",
+          "multimedia/crunch-inverso-2.png"
+        ]
+      },
+      {
+        "id": 1741621609250,
+        "title": "Crunch de bicicleta",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/crunch-de-bicicleta.png",
+          "multimedia/crunch-de-bicicleta-2.png"
+        ]
+      },
+      {
+        "id": 1742083086146,
+        "title": "Giro oblicuo acostado",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/giro-oblicuo-acostado.png",
+          "multimedia/giro-oblicuo-acostado-2.png"
+        ]
+      },
+      {
+        "id": 1742083147811,
+        "title": "Puente lateral derecho",
+        "type": "reps",
+        "time": null,
+        "reps": 10,
+        "images": [
+          "multimedia/puente-lateral-derecho.png",
+          "multimedia/puente-lateral-derecho-2.png"
+        ]
+      },
+      {
+        "id": 1742083182266,
+        "title": "Puente lateral izquierdo",
+        "type": "reps",
+        "time": null,
+        "reps": 10,
+        "images": [
+          "multimedia/puente-lateral-izquierdo.png",
+          "multimedia/puente-lateral-izquierdo-2.png"
+        ]
+      },
+      {
+        "id": 1741618770061,
+        "title": "Estiramiento de cobra",
+        "type": "time",
+        "time": "30",
+        "reps": null,
+        "images": [
+          "multimedia/estiramiento-de-cobra.png"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 1742090658640,
+    "name": "3° Día - Todo",
+    "exercises": [
+      {
+        "id": 1742088983873,
+        "title": "Elevaciones de brazos",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/elevaciones-de-brazos.png",
+          "multimedia/elevaciones-de-brazos-2.png"
+        ]
+      },
+      {
+        "id": 1742089031593,
+        "title": "Tracciones de romboides",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/tracciones-de-romboides.png",
+          "multimedia/tracciones-de-romboides-2.png"
+        ]
+      },
+      {
+        "id": 1742089110161,
+        "title": "Elevaciones laterales de brazos",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/elevaciones-laterales-de-brazos.png",
+          "multimedia/elevaciones-laterales-de-brazos-2.png"
+        ]
+      },
+      {
+        "id": 1742088685921,
+        "title": "Flexiones con apoyo de rodillas",
+        "type": "reps",
+        "time": null,
+        "reps": 10,
+        "images": [
+          "multimedia/flexiones-con-apoyo-de-rodillas.png",
+          "multimedia/flexiones-con-apoyo-de-rodillas-2.png"
+        ]
+      },
+      {
+        "id": 1742089237961,
+        "title": "Estiramiento tumbado sobre el costado derecho",
+        "type": "time",
+        "time": 30,
+        "reps": null,
+        "images": [
+          "multimedia/estiramiento-tumbado-sobre-el-costado-derecho.png"
+        ]
+      },
+      {
+        "id": 1742089227705,
+        "title": "Estiramiento tumbado sobre el costado izquierdo",
+        "type": "time",
+        "time": 30,
+        "reps": null,
+        "images": [
+          "multimedia/estiramiento-tumbado-sobre-el-costado-izquierdo.png"
+        ]
+      },
+      {
+        "id": 1742090710033,
+        "title": "Tijeras de brazos",
+        "type": "reps",
+        "time": null,
+        "reps": 30,
+        "images": [
+          "multimedia/tijeras-de-brazos.png",
+          "multimedia/tijeras-de-brazos-2.png"
+        ]
+      },
+      {
+        "id": 1742089031593,
+        "title": "Tracciones de romboides",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/tracciones-de-romboides.png",
+          "multimedia/tracciones-de-romboides-2.png"
+        ]
+      },
+      {
+        "id": 1742089110161,
+        "title": "Elevaciones laterales de brazos",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/elevaciones-laterales-de-brazos.png",
+          "multimedia/elevaciones-laterales-de-brazos-2.png"
+        ]
+      },
+      {
+        "id": 1742088685921,
+        "title": "Flexiones con apoyo de rodillas",
+        "type": "reps",
+        "time": null,
+        "reps": 10,
+        "images": [
+          "multimedia/flexiones-con-apoyo-de-rodillas.png",
+          "multimedia/flexiones-con-apoyo-de-rodillas-2.png"
+        ]
+      },
+      {
+        "id": 1742089324897,
+        "title": "Flexiones de tríceps boca abajo",
+        "type": "reps",
+        "time": null,
+        "reps": 10,
+        "images": [
+          "multimedia/flexiones-de-triceps-boca-abajo.png",
+          "multimedia/flexiones-de-triceps-boca-abajo-2.png"
+        ]
+      },
+      {
+        "id": 1742089394857,
+        "title": "Apretones de romboides inclinados",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/apretones-de-romboides-inclinados.png",
+          "multimedia/apretones-de-romboides-inclinados-2.png"
+        ]
+      },
+      {
+        "id": 1742089324897,
+        "title": "Flexiones de tríceps boca abajo",
+        "type": "reps",
+        "time": null,
+        "reps": 10,
+        "images": [
+          "multimedia/flexiones-de-triceps-boca-abajo.png",
+          "multimedia/flexiones-de-triceps-boca-abajo-2.png"
+        ]
+      },
+      {
+        "id": 1742089394857,
+        "title": "Apretones de romboides inclinados",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/apretones-de-romboides-inclinados.png",
+          "multimedia/apretones-de-romboides-inclinados-2.png"
+        ]
+      },
+      {
+        "id": 1742089441809,
+        "title": "Postura de bebé",
+        "type": "time",
+        "time": 30,
+        "reps": null,
+        "images": [
+          "multimedia/postura-de-bebe.png"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 1741896924718,
+    "name": "4° Día - Peso",
+    "exercises": [
+      {
+        "id": 1741622881545,
+        "title": "Saltos con cuerda",
+        "type": "time",
+        "time": "30",
+        "reps": null,
+        "images": [
+          "multimedia/saltos-con-cuerda.png"
+        ]
+      },
+      {
+        "id": 1741622898017,
+        "title": "Zancada frontal",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/zancada-frontal.png",
+          "multimedia/zancada-frontal-2.png"
+        ]
+      },
+      {
+        "id": 1741618667805,
+        "title": "Flexiones",
+        "type": "reps",
+        "time": null,
+        "reps": 10,
+        "images": [
+          "multimedia/flexiones.png",
+          "multimedia/flexiones-2.png"
+        ]
+      },
+      {
+        "id": 1741618723925,
+        "title": "Crunch inverso",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/crunch-inverso.png",
+          "multimedia/crunch-inverso-2.png"
+        ]
+      },
+      {
+        "id": 1741622230066,
+        "title": "Toque al talón",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/toque-al-talon.png",
+          "multimedia/toque-al-talon-2.png"
+        ]
+      },
+      {
+        "id": 1741618733853,
+        "title": "Tablón",
+        "type": "time",
+        "time": "30",
+        "reps": null,
+        "images": [
+          "multimedia/tablon.png"
+        ]
+      },
+      {
+        "id": 1741622898017,
+        "title": "Zancada frontal",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/zancada-frontal.png",
+          "multimedia/zancada-frontal-2.png"
+        ]
+      },
+      {
+        "id": 1741618667805,
+        "title": "Flexiones",
+        "type": "reps",
+        "time": null,
+        "reps": 10,
+        "images": [
+          "multimedia/flexiones.png",
+          "multimedia/flexiones-2.png"
+        ]
+      },
+      {
+        "id": 1741618723925,
+        "title": "Crunch inverso",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/crunch-inverso.png",
+          "multimedia/crunch-inverso-2.png"
+        ]
+      },
+      {
+        "id": 1741622230066,
+        "title": "Toque al talón",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/toque-al-talon.png",
+          "multimedia/toque-al-talon-2.png"
+        ]
+      },
+      {
+        "id": 1741618733853,
+        "title": "Tablón",
+        "type": "time",
+        "time": "30",
+        "reps": null,
+        "images": [
+          "multimedia/tablon.png"
+        ]
+      },
+      {
+        "id": 1741618770061,
+        "title": "Estiramiento de cobra",
+        "type": "time",
+        "time": "30",
+        "reps": null,
+        "images": [
+          "multimedia/estiramiento-de-cobra.png"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 1742083555617,
+    "name": "4° Día - Abdomen",
+    "exercises": [
+      {
+        "id": 1741618654910,
+        "title": "Elevaciones de rodillas",
+        "type": "time",
+        "time": 30,
+        "reps": null,
+        "images": [
+          "multimedia/elevaciones-de-rodillas.png",
+          "multimedia/elevaciones-de-rodillas-2.png"
+        ]
+      },
+      {
+        "id": 1741621570170,
+        "title": "Saltos de tijera",
+        "type": "time",
+        "time": "30",
+        "reps": null,
+        "images": [
+          "multimedia/saltos-de-tijera.png",
+          "multimedia/saltos-de-tijera-2.png"
+        ]
+      },
+      {
+        "id": 1742082755675,
+        "title": "Abdominales",
+        "type": "reps",
+        "time": null,
+        "reps": 10,
+        "images": [
+          "multimedia/abdominales.png",
+          "multimedia/abdominales-2.png"
+        ]
+      },
+      {
+        "id": 1741622230066,
+        "title": "Toque al talón",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/toque-al-talon.png",
+          "multimedia/toque-al-talon-2.png"
+        ]
+      },
+      {
+        "id": 1742082889506,
+        "title": "Butt Bridge",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/butt-bridge.png",
+          "multimedia/butt-bridge-2.png"
+        ]
+      },
+      {
+        "id": 1741903314058,
+        "title": "Elevaciones de piernas",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/elevaciones-de-piernas.png",
+          "multimedia/elevaciones-de-piernas-2.png"
+        ]
+      },
+      {
+        "id": 1742082929890,
+        "title": "Giro con piernas dobladas",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/giro-con-piernas-dobladas.png",
+          "multimedia/giro-con-piernas-dobladas-2.png"
+        ]
+      },
+      {
+        "id": 1742082755675,
+        "title": "Abdominales",
+        "type": "reps",
+        "time": null,
+        "reps": 10,
+        "images": [
+          "multimedia/abdominales.png",
+          "multimedia/abdominales-2.png"
+        ]
+      },
+      {
+        "id": 1741622230066,
+        "title": "Toque al talón",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/toque-al-talon.png",
+          "multimedia/toque-al-talon-2.png"
+        ]
+      },
+      {
+        "id": 1742082889506,
+        "title": "Butt Bridge",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/butt-bridge.png",
+          "multimedia/butt-bridge-2.png"
+        ]
+      },
+      {
+        "id": 1741903314058,
+        "title": "Elevaciones de piernas",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/elevaciones-de-piernas.png",
+          "multimedia/elevaciones-de-piernas-2.png"
+        ]
+      },
+      {
+        "id": 1742082929890,
+        "title": "Giro con piernas dobladas",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/giro-con-piernas-dobladas.png",
+          "multimedia/giro-con-piernas-dobladas-2.png"
+        ]
+      },
+      {
+        "id": 1741618770061,
+        "title": "Estiramiento de cobra",
+        "type": "time",
+        "time": "30",
+        "reps": null,
+        "images": [
+          "multimedia/estiramiento-de-cobra.png"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 1742090835496,
+    "name": "4° Día - Todo",
+    "exercises": [
+      {
+        "id": 1741621570170,
+        "title": "Saltos de tijera",
+        "type": "time",
+        "time": "30",
+        "reps": null,
+        "images": [
+          "multimedia/saltos-de-tijera.png",
+          "multimedia/saltos-de-tijera-2.png"
+        ]
+      },
+      {
+        "id": 1741618667805,
+        "title": "Flexiones",
+        "type": "reps",
+        "time": null,
+        "reps": 10,
+        "images": [
+          "multimedia/flexiones.png",
+          "multimedia/flexiones-2.png"
+        ]
+      },
+      {
+        "id": 1742088761313,
+        "title": "Flexiones con brazos abiertos",
+        "type": "reps",
+        "time": null,
+        "reps": 10,
+        "images": [
+          "multimedia/flexiones-con-brazos-abiertos.png",
+          "multimedia/flexiones-con-brazos-abiertos-2.png"
+        ]
+      },
+      {
+        "id": 1742090166258,
+        "title": "Flexión y rotación",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/flexion-y-rotacion.png",
+          "multimedia/flexion-y-rotacion-2.png",
+          "multimedia/flexion-y-rotacion-3.png"
+        ]
+      },
+      {
+        "id": 1742090285473,
+        "title": "Flexiones Escalonadas",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/flexiones-escalonadas.png",
+          "multimedia/flexiones-escalonadas-2.png",
+          "multimedia/flexiones-escalonadas-3.png",
+          "multimedia/flexiones-escalonadas-4.png"
+        ]
+      },
+      {
+        "id": 1741618667805,
+        "title": "Flexiones",
+        "type": "reps",
+        "time": null,
+        "reps": 10,
+        "images": [
+          "multimedia/flexiones.png",
+          "multimedia/flexiones-2.png"
+        ]
+      },
+      {
+        "id": 1742088761313,
+        "title": "Flexiones con brazos abiertos",
+        "type": "reps",
+        "time": null,
+        "reps": 10,
+        "images": [
+          "multimedia/flexiones-con-brazos-abiertos.png",
+          "multimedia/flexiones-con-brazos-abiertos-2.png"
+        ]
+      },
+      {
+        "id": 1742090166258,
+        "title": "Flexión y rotación",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/flexion-y-rotacion.png",
+          "multimedia/flexion-y-rotacion-2.png",
+          "multimedia/flexion-y-rotacion-3.png"
+        ]
+      },
+      {
+        "id": 1742089501785,
+        "title": "Flexiones con inclinación (Apoyo de piernas)",
+        "type": "reps",
+        "time": null,
+        "reps": 10,
+        "images": [
+          "multimedia/flexiones-con-inclinacion-apoyo-de-piernas.png",
+          "multimedia/flexiones-con-inclinacion-apoyo-de-piernas-2.png"
+        ]
+      },
+      {
+        "id": 1741618770061,
+        "title": "Estiramiento de cobra",
+        "type": "time",
+        "time": "30",
+        "reps": null,
+        "images": [
+          "multimedia/estiramiento-de-cobra.png"
+        ]
+      },
+      {
+        "id": 1742088802185,
+        "title": "Estiramiento de pecho",
+        "type": "time",
+        "time": 30,
+        "reps": null,
+        "images": [
+          "multimedia/estiramiento-de-pecho.png"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 1741902877009,
+    "name": "5° Día - Peso",
+    "exercises": [
+      {
+        "id": 1741622881545,
+        "title": "Saltos con cuerda",
+        "type": "time",
+        "time": "30",
+        "reps": null,
+        "images": [
+          "multimedia/saltos-con-cuerda.png"
+        ]
+      },
+      {
+        "id": 1741621548459,
+        "title": "Tríceps en silla",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/triceps-en-silla.png",
+          "multimedia/triceps-en-silla-2.png"
+        ]
+      },
+      {
+        "id": 1741618654910,
+        "title": "Elevaciones de rodillas",
+        "type": "time",
+        "time": 30,
+        "reps": null,
+        "images": [
+          "multimedia/elevaciones-de-rodillas.png",
+          "multimedia/elevaciones-de-rodillas-2.png"
+        ]
+      },
+      {
+        "id": 1741623856841,
+        "title": "Sentadillas de pulso",
+        "type": "time",
+        "time": 30,
+        "reps": null,
+        "images": [
+          "multimedia/sentadillas-de-pulso.png",
+          "multimedia/sentadillas-de-pulso-2.png"
+        ]
+      },
+      {
+        "id": 1741621609250,
+        "title": "Crunch de bicicleta",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/crunch-de-bicicleta.png",
+          "multimedia/crunch-de-bicicleta-2.png"
+        ]
+      },
+      {
+        "id": 1741618733853,
+        "title": "Tablón",
+        "type": "time",
+        "time": "30",
+        "reps": null,
+        "images": [
+          "multimedia/tablon.png"
+        ]
+      },
+      {
+        "id": 1741621548459,
+        "title": "Tríceps en silla",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/triceps-en-silla.png",
+          "multimedia/triceps-en-silla-2.png"
+        ]
+      },
+      {
+        "id": 1741618654910,
+        "title": "Elevaciones de rodillas",
+        "type": "time",
+        "time": 30,
+        "reps": null,
+        "images": [
+          "multimedia/elevaciones-de-rodillas.png",
+          "multimedia/elevaciones-de-rodillas-2.png"
+        ]
+      },
+      {
+        "id": 1741623856841,
+        "title": "Sentadillas de pulso",
+        "type": "time",
+        "time": 30,
+        "reps": null,
+        "images": [
+          "multimedia/sentadillas-de-pulso.png",
+          "multimedia/sentadillas-de-pulso-2.png"
+        ]
+      },
+      {
+        "id": 1741621609250,
+        "title": "Crunch de bicicleta",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/crunch-de-bicicleta.png",
+          "multimedia/crunch-de-bicicleta-2.png"
+        ]
+      },
+      {
+        "id": 1741618733853,
+        "title": "Tablón",
+        "type": "time",
+        "time": "30",
+        "reps": null,
+        "images": [
+          "multimedia/tablon.png"
+        ]
+      },
+      {
+        "id": 1741618770061,
+        "title": "Estiramiento de cobra",
+        "type": "time",
+        "time": "30",
+        "reps": null,
+        "images": [
+          "multimedia/estiramiento-de-cobra.png"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 1742084091041,
+    "name": "5° Día - Abdomen",
+    "exercises": [
+      {
+        "id": 1741618654910,
+        "title": "Elevaciones de rodillas",
+        "type": "time",
+        "time": 30,
+        "reps": null,
+        "images": [
+          "multimedia/elevaciones-de-rodillas.png",
+          "multimedia/elevaciones-de-rodillas-2.png"
+        ]
+      },
+      {
+        "id": 1741621570170,
+        "title": "Saltos de tijera",
+        "type": "time",
+        "time": "30",
+        "reps": null,
+        "images": [
+          "multimedia/saltos-de-tijera.png",
+          "multimedia/saltos-de-tijera-2.png"
+        ]
+      },
+      {
+        "id": 1742082109075,
+        "title": "Abdominal de bicicleta de pie",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/abdominal-de-bicicleta-de-pie.png",
+          "multimedia/abdominal-de-bicicleta-de-pie-2.png"
+        ]
+      },
+      {
+        "id": 1741622208442,
+        "title": "Crunch abdominales",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/crunch-abdominales.png",
+          "multimedia/crunch-abdominales-2.png"
+        ]
+      },
+      {
+        "id": 1741618723925,
+        "title": "Crunch inverso",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/crunch-inverso.png",
+          "multimedia/crunch-inverso-2.png"
+        ]
+      },
+      {
+        "id": 1741621609250,
+        "title": "Crunch de bicicleta",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/crunch-de-bicicleta.png",
+          "multimedia/crunch-de-bicicleta-2.png"
+        ]
+      },
+      {
+        "id": 1742083086146,
+        "title": "Giro oblicuo acostado",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/giro-oblicuo-acostado.png",
+          "multimedia/giro-oblicuo-acostado-2.png"
+        ]
+      },
+      {
+        "id": 1742082109075,
+        "title": "Abdominal de bicicleta de pie",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/abdominal-de-bicicleta-de-pie.png",
+          "multimedia/abdominal-de-bicicleta-de-pie-2.png"
+        ]
+      },
+      {
+        "id": 1741622208442,
+        "title": "Crunch abdominales",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/crunch-abdominales.png",
+          "multimedia/crunch-abdominales-2.png"
+        ]
+      },
+      {
+        "id": 1741618723925,
+        "title": "Crunch inverso",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/crunch-inverso.png",
+          "multimedia/crunch-inverso-2.png"
+        ]
+      },
+      {
+        "id": 1741621609250,
+        "title": "Crunch de bicicleta",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/crunch-de-bicicleta.png",
+          "multimedia/crunch-de-bicicleta-2.png"
+        ]
+      },
+      {
+        "id": 1742083086146,
+        "title": "Giro oblicuo acostado",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/giro-oblicuo-acostado.png",
+          "multimedia/giro-oblicuo-acostado-2.png"
+        ]
+      },
+      {
+        "id": 1741618770061,
+        "title": "Estiramiento de cobra",
+        "type": "time",
+        "time": "30",
+        "reps": null,
+        "images": [
+          "multimedia/estiramiento-de-cobra.png"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 1742090925576,
+    "name": "5° Día - Todo",
+    "exercises": [
+      {
+        "id": 1742082864714,
+        "title": "Twist Ruso",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/twist-ruso.png",
+          "multimedia/twist-ruso-2.png"
+        ]
+      },
+      {
+        "id": 1741903314058,
+        "title": "Elevaciones de piernas",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/elevaciones-de-piernas.png",
+          "multimedia/elevaciones-de-piernas-2.png"
+        ]
+      },
+      {
+        "id": 1742082889506,
+        "title": "Butt Bridge",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/butt-bridge.png",
+          "multimedia/butt-bridge-2.png"
+        ]
+      },
+      {
+        "id": 1742083147811,
+        "title": "Puente lateral derecho",
+        "type": "reps",
+        "time": null,
+        "reps": 10,
+        "images": [
+          "multimedia/puente-lateral-derecho.png",
+          "multimedia/puente-lateral-derecho-2.png"
+        ]
+      },
+      {
+        "id": 1742083182266,
+        "title": "Puente lateral izquierdo",
+        "type": "reps",
+        "time": null,
+        "reps": 10,
+        "images": [
+          "multimedia/puente-lateral-izquierdo.png",
+          "multimedia/puente-lateral-izquierdo-2.png"
+        ]
+      },
+      {
+        "id": 1741622208442,
+        "title": "Crunch abdominales",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/crunch-abdominales.png",
+          "multimedia/crunch-abdominales-2.png"
+        ]
+      },
+      {
+        "id": 1742082864714,
+        "title": "Twist Ruso",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/twist-ruso.png",
+          "multimedia/twist-ruso-2.png"
+        ]
+      },
+      {
+        "id": 1741903314058,
+        "title": "Elevaciones de piernas",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/elevaciones-de-piernas.png",
+          "multimedia/elevaciones-de-piernas-2.png"
+        ]
+      },
+      {
+        "id": 1742082889506,
+        "title": "Butt Bridge",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/butt-bridge.png",
+          "multimedia/butt-bridge-2.png"
+        ]
+      },
+      {
+        "id": 1742083147811,
+        "title": "Puente lateral derecho",
+        "type": "reps",
+        "time": null,
+        "reps": 10,
+        "images": [
+          "multimedia/puente-lateral-derecho.png",
+          "multimedia/puente-lateral-derecho-2.png"
+        ]
+      },
+      {
+        "id": 1742083182266,
+        "title": "Puente lateral izquierdo",
+        "type": "reps",
+        "time": null,
+        "reps": 10,
+        "images": [
+          "multimedia/puente-lateral-izquierdo.png",
+          "multimedia/puente-lateral-izquierdo-2.png"
+        ]
+      },
+      {
+        "id": 1742089588673,
+        "title": "Abdominal en v",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/abdominal-en-v.png",
+          "multimedia/abdominal-en-v-2.png"
+        ]
+      },
+      {
+        "id": 1742090166258,
+        "title": "Flexión y rotación",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/flexion-y-rotacion.png",
+          "multimedia/flexion-y-rotacion-2.png",
+          "multimedia/flexion-y-rotacion-3.png"
+        ]
+      },
+      {
+        "id": 1741618770061,
+        "title": "Estiramiento de cobra",
+        "type": "time",
+        "time": "30",
+        "reps": null,
+        "images": [
+          "multimedia/estiramiento-de-cobra.png"
+        ]
+      },
+      {
+        "id": 1742088902641,
+        "title": "Estiramiento de columna con giro lumbar derecho",
+        "type": "time",
+        "time": 30,
+        "reps": null,
+        "images": [
+          "multimedia/estiramiento-de-columna-con-giro-lumbar-derecho.png"
+        ]
+      },
+      {
+        "id": 1742088891185,
+        "title": "Estiramiento de columna con giro lumbar izquierdo",
+        "type": "time",
+        "time": 30,
+        "reps": null,
+        "images": [
+          "multimedia/estiramiento-de-columna-con-giro-lumbar-izquierdo.png"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 1741902935905,
+    "name": "6° Día - Peso",
+    "exercises": [
+      {
+        "id": 1741622881545,
+        "title": "Saltos con cuerda",
+        "type": "time",
+        "time": "30",
+        "reps": null,
+        "images": [
+          "multimedia/saltos-con-cuerda.png"
+        ]
+      },
+      {
+        "id": 1741621548459,
+        "title": "Tríceps en silla",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/triceps-en-silla.png",
+          "multimedia/triceps-en-silla-2.png"
+        ]
+      },
+      {
+        "id": 1741622898017,
+        "title": "Zancada frontal",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/zancada-frontal.png",
+          "multimedia/zancada-frontal-2.png"
+        ]
+      },
+      {
+        "id": 1741621595930,
+        "title": "Crunch de brazos estirados",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/crunch-de-brazos-estirados.png",
+          "multimedia/crunch-de-brazos-estirados-2.png"
+        ]
+      },
+      {
+        "id": 1741618723925,
+        "title": "Crunch inverso",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/crunch-inverso.png",
+          "multimedia/crunch-inverso-2.png"
+        ]
+      },
+      {
+        "id": 1741618733853,
+        "title": "Tablón",
+        "type": "time",
+        "time": "30",
+        "reps": null,
+        "images": [
+          "multimedia/tablon.png"
+        ]
+      },
+      {
+        "id": 1741621548459,
+        "title": "Tríceps en silla",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/triceps-en-silla.png",
+          "multimedia/triceps-en-silla-2.png"
+        ]
+      },
+      {
+        "id": 1741622898017,
+        "title": "Zancada frontal",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/zancada-frontal.png",
+          "multimedia/zancada-frontal-2.png"
+        ]
+      },
+      {
+        "id": 1741621595930,
+        "title": "Crunch de brazos estirados",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/crunch-de-brazos-estirados.png",
+          "multimedia/crunch-de-brazos-estirados-2.png"
+        ]
+      },
+      {
+        "id": 1741618723925,
+        "title": "Crunch inverso",
+        "type": "reps",
+        "time": null,
+        "reps": "16",
+        "images": [
+          "multimedia/crunch-inverso.png",
+          "multimedia/crunch-inverso-2.png"
+        ]
+      },
+      {
+        "id": 1741618733853,
+        "title": "Tablón",
+        "type": "time",
+        "time": "30",
+        "reps": null,
+        "images": [
+          "multimedia/tablon.png"
+        ]
+      },
+      {
+        "id": 1741618770061,
+        "title": "Estiramiento de cobra",
+        "type": "time",
+        "time": "30",
+        "reps": null,
+        "images": [
+          "multimedia/estiramiento-de-cobra.png"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 1742084212882,
+    "name": "6° Día - Abdomen",
+    "exercises": [
+      {
+        "id": 1741618654910,
+        "title": "Elevaciones de rodillas",
+        "type": "time",
+        "time": 30,
+        "reps": null,
+        "images": [
+          "multimedia/elevaciones-de-rodillas.png",
+          "multimedia/elevaciones-de-rodillas-2.png"
+        ]
+      },
+      {
+        "id": 1741621570170,
+        "title": "Saltos de tijera",
+        "type": "time",
+        "time": "30",
+        "reps": null,
+        "images": [
+          "multimedia/saltos-de-tijera.png",
+          "multimedia/saltos-de-tijera-2.png"
+        ]
+      },
+      {
+        "id": 1742082755675,
+        "title": "Abdominales",
+        "type": "reps",
+        "time": null,
+        "reps": 10,
+        "images": [
+          "multimedia/abdominales.png",
+          "multimedia/abdominales-2.png"
+        ]
+      },
+      {
+        "id": 1742082864714,
+        "title": "Twist Ruso",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/twist-ruso.png",
+          "multimedia/twist-ruso-2.png"
+        ]
+      },
+      {
+        "id": 1741618733853,
+        "title": "Tablón",
+        "type": "time",
+        "time": "30",
+        "reps": null,
+        "images": [
+          "multimedia/tablon.png"
+        ]
+      },
+      {
+        "id": 1742083147811,
+        "title": "Puente lateral derecho",
+        "type": "reps",
+        "time": null,
+        "reps": 10,
+        "images": [
+          "multimedia/puente-lateral-derecho.png",
+          "multimedia/puente-lateral-derecho-2.png"
+        ]
+      },
+      {
+        "id": 1742083182266,
+        "title": "Puente lateral izquierdo",
+        "type": "reps",
+        "time": null,
+        "reps": 10,
+        "images": [
+          "multimedia/puente-lateral-izquierdo.png",
+          "multimedia/puente-lateral-izquierdo-2.png"
+        ]
+      },
+      {
+        "id": 1742082231610,
+        "title": "Crunch con patada",
+        "type": "time",
+        "time": 30,
+        "reps": null,
+        "images": [
+          "multimedia/crunch-con-patada.png",
+          "multimedia/crunch-con-patada-2.png"
+        ]
+      },
+      {
+        "id": 1742082755675,
+        "title": "Abdominales",
+        "type": "reps",
+        "time": null,
+        "reps": 10,
+        "images": [
+          "multimedia/abdominales.png",
+          "multimedia/abdominales-2.png"
+        ]
+      },
+      {
+        "id": 1742082864714,
+        "title": "Twist Ruso",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/twist-ruso.png",
+          "multimedia/twist-ruso-2.png"
+        ]
+      },
+      {
+        "id": 1741618733853,
+        "title": "Tablón",
+        "type": "time",
+        "time": "30",
+        "reps": null,
+        "images": [
+          "multimedia/tablon.png"
+        ]
+      },
+      {
+        "id": 1742083147811,
+        "title": "Puente lateral derecho",
+        "type": "reps",
+        "time": null,
+        "reps": 10,
+        "images": [
+          "multimedia/puente-lateral-derecho.png",
+          "multimedia/puente-lateral-derecho-2.png"
+        ]
+      },
+      {
+        "id": 1742083182266,
+        "title": "Puente lateral izquierdo",
+        "type": "reps",
+        "time": null,
+        "reps": 10,
+        "images": [
+          "multimedia/puente-lateral-izquierdo.png",
+          "multimedia/puente-lateral-izquierdo-2.png"
+        ]
+      },
+      {
+        "id": 1741618770061,
+        "title": "Estiramiento de cobra",
+        "type": "time",
+        "time": "30",
+        "reps": null,
+        "images": [
+          "multimedia/estiramiento-de-cobra.png"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 1742091021137,
+    "name": "6° Día - Todo",
+    "exercises": [
+      {
+        "id": 1742090710033,
+        "title": "Tijeras de brazos",
+        "type": "reps",
+        "time": null,
+        "reps": 30,
+        "images": [
+          "multimedia/tijeras-de-brazos.png",
+          "multimedia/tijeras-de-brazos-2.png"
+        ]
+      },
+      {
+        "id": 1742089031593,
+        "title": "Tracciones de romboides",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/tracciones-de-romboides.png",
+          "multimedia/tracciones-de-romboides-2.png"
+        ]
+      },
+      {
+        "id": 1742089709529,
+        "title": "Extensiones hacia atrás de tríceps",
+        "type": "reps",
+        "time": null,
+        "reps": 10,
+        "images": [
+          "multimedia/extensiones-hacia-atras-de-triceps.png",
+          "multimedia/extensiones-hacia-atras-de-triceps-2.png"
+        ]
+      },
+      {
+        "id": 1742088475874,
+        "title": "Flexiones con inclinación (Apoyo de brazos)",
+        "type": "reps",
+        "time": null,
+        "reps": 10,
+        "images": [
+          "multimedia/flexiones-con-inclinacion-apoyo-de-brazos.png",
+          "multimedia/flexiones-con-inclinacion-apoyo-de-brazos-2.png"
+        ]
+      },
+      {
+        "id": 1742089237961,
+        "title": "Estiramiento tumbado sobre el costado derecho",
+        "type": "time",
+        "time": 30,
+        "reps": null,
+        "images": [
+          "multimedia/estiramiento-tumbado-sobre-el-costado-derecho.png"
+        ]
+      },
+      {
+        "id": 1742089227705,
+        "title": "Estiramiento tumbado sobre el costado izquierdo",
+        "type": "time",
+        "time": 30,
+        "reps": null,
+        "images": [
+          "multimedia/estiramiento-tumbado-sobre-el-costado-izquierdo.png"
+        ]
+      },
+      {
+        "id": 1742088983873,
+        "title": "Elevaciones de brazos",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/elevaciones-de-brazos.png",
+          "multimedia/elevaciones-de-brazos-2.png"
+        ]
+      },
+      {
+        "id": 1742089031593,
+        "title": "Tracciones de romboides",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/tracciones-de-romboides.png",
+          "multimedia/tracciones-de-romboides-2.png"
+        ]
+      },
+      {
+        "id": 1742089709529,
+        "title": "Extensiones hacia atrás de tríceps",
+        "type": "reps",
+        "time": null,
+        "reps": 10,
+        "images": [
+          "multimedia/extensiones-hacia-atras-de-triceps.png",
+          "multimedia/extensiones-hacia-atras-de-triceps-2.png"
+        ]
+      },
+      {
+        "id": 1742088475874,
+        "title": "Flexiones con inclinación (Apoyo de brazos)",
+        "type": "reps",
+        "time": null,
+        "reps": 10,
+        "images": [
+          "multimedia/flexiones-con-inclinacion-apoyo-de-brazos.png",
+          "multimedia/flexiones-con-inclinacion-apoyo-de-brazos-2.png"
+        ]
+      },
+      {
+        "id": 1742089324897,
+        "title": "Flexiones de tríceps boca abajo",
+        "type": "reps",
+        "time": null,
+        "reps": 10,
+        "images": [
+          "multimedia/flexiones-de-triceps-boca-abajo.png",
+          "multimedia/flexiones-de-triceps-boca-abajo-2.png"
+        ]
+      },
+      {
+        "id": 1742089394857,
+        "title": "Apretones de romboides inclinados",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/apretones-de-romboides-inclinados.png",
+          "multimedia/apretones-de-romboides-inclinados-2.png"
+        ]
+      },
+      {
+        "id": 1742089324897,
+        "title": "Flexiones de tríceps boca abajo",
+        "type": "reps",
+        "time": null,
+        "reps": 10,
+        "images": [
+          "multimedia/flexiones-de-triceps-boca-abajo.png",
+          "multimedia/flexiones-de-triceps-boca-abajo-2.png"
+        ]
+      },
+      {
+        "id": 1742089394857,
+        "title": "Apretones de romboides inclinados",
+        "type": "reps",
+        "time": null,
+        "reps": 16,
+        "images": [
+          "multimedia/apretones-de-romboides-inclinados.png",
+          "multimedia/apretones-de-romboides-inclinados-2.png"
+        ]
+      },
+      {
+        "id": 1742089441809,
+        "title": "Postura de bebé",
+        "type": "time",
+        "time": 30,
+        "reps": null,
+        "images": [
+          "multimedia/postura-de-bebe.png"
+        ]
+      }
+    ]
+  }
+]
