@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redondeo</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="shortcut icon" href="favicon.svg">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900&display=swap" rel="stylesheet">
+  <style>
+    * {
+      font-family: 'Montserrat', sans-serif;
+    }
+    /* Estilo para inputs y selects */
+    input {
+      border: none;
+      border-bottom: 2px solid #0D0D0D;
+      padding: 8px;
+      transition: border-bottom 0.3s;
+      width: 100%;
+      color: #0D0D0D;
+      background-color: transparent;
+    }
+    input:focus {
+      border-bottom: 2px solid #0D0D0D;
+    }
+    select {
+      border: none;
+      border-bottom: 2px solid #0D0D0D;
+      padding: 8px;
+      transition: border-bottom 0.3s;
+      width: 100%;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      background-image: url('data:image/svg+xml;utf8,<svg fill="%230D0D0D" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M5.516 7.548l4.484 4.484 4.484-4.484L16 8.548l-6 6-6-6z"/></svg>');
+      background-repeat: no-repeat;
+      background-position: right 8px center;
+      background-size: 12px;
+      color: #0D0D0D;
+      background-color: transparent;
+    }
+    select:focus {
+      border-bottom: 2px solid #0D0D0D;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 10px;
+      color: #0D0D0D;
+    }
+  </style>
+</head>
+<body class="bg-[#0D0D0D] p-6">
+  <div class="max-w-xl mx-auto bg-[#F2F2F2] p-6 rounded-lg shadow-lg text-center">
+    <h1 class="text-3xl font-bold mb-8 text-[#0D0D0D]">Redondeo a Cifras Significativas</h1>
+    <form id="round-form" class="mb-8 text-left">
+      <div class="mb-6">
+        <label class="block text-lg font-medium mb-2" for="significant-figures">Cifras significativas:</label>
+        <select id="significant-figures" class="w-full p-2 border rounded outline-none focus:ring-2 focus:ring-[#0D0D0D]">
+          <!-- Opciones generadas dinámicamente -->
+        </select>
+      </div>
+      <div id="input-container" class="mb-8">
+        <label class="block text-lg font-medium mb-2" for="number-1">Número 1:</label>
+        <input type="number" id="number-1" class="w-full p-2 border rounded mb-4 number-input outline-none focus:ring-2 focus:ring-[#0D0D0D]" placeholder="Ejemplo: 59.086230290721346">
+      </div>
+      <div class="flex justify-center items-center gap-4">
+        <button type="button" onclick="addInput()" class="bg-[#0D0D0D] hover:bg-opacity-80 text-[#F2F2F2] font-bold py-2 px-6 rounded">Agregar otro número</button>
+        <button type="button" onclick="roundNumbers()" class="bg-[#0D0D0D] hover:bg-opacity-80 text-[#F2F2F2] font-bold py-2 px-6 rounded">Redondear</button>
+      </div>
+    </form>
+    <div id="result" class="text-lg font-medium text-[#0D0D0D]"></div>
+  </div>
+
+  <script>
+    // Generar las opciones del dropdown al cargar la página
+    document.addEventListener("DOMContentLoaded", function() {
+      const select = document.getElementById("significant-figures");
+      for (let i = 1; i <= 10; i++) {
+        const option = document.createElement("option");
+        option.value = i;
+        option.textContent = i;
+        if (i === 3) { // Seleccionar 3 por defecto
+          option.selected = true;
+        }
+        select.appendChild(option);
+      }
+    });
+
+    let inputCount = 1;
+
+    function roundToSignificantFigures(number, significantFigures = 3) {
+      if (number === 0) {
+        return 0;
+      } else {
+        return parseFloat(number.toPrecision(significantFigures));
+      }
+    }
+
+    function addInput() {
+      inputCount++;
+      const inputContainer = document.getElementById("input-container");
+      const newLabel = document.createElement("label");
+      newLabel.className = "block text-lg font-medium mb-2";
+      newLabel.setAttribute("for", `number-${inputCount}`);
+      newLabel.innerText = `Número ${inputCount}:`;
+
+      const newInput = document.createElement("input");
+      newInput.type = "number";
+      newInput.id = `number-${inputCount}`;
+      newInput.className = "w-full p-2 border rounded mb-4 number-input outline-none focus:ring-2 focus:ring-[#0D0D0D]";
+      newInput.placeholder = "Ejemplo: 629.5666666666666";
+
+      inputContainer.appendChild(newLabel);
+      inputContainer.appendChild(newInput);
+      newInput.focus();
+    }
+
+    function roundNumbers() {
+      const inputs = document.querySelectorAll(".number-input");
+      const significantFiguresInput = document.getElementById("significant-figures");
+      const significantFigures = parseInt(significantFiguresInput.value);
+
+      if (isNaN(significantFigures) || significantFigures < 1) {
+        document.getElementById("result").innerText = "Por favor, seleccione un número válido de cifras significativas.";
+        return;
+      }
+
+      try {
+        const numbers = Array.from(inputs).map(input => parseFloat(input.value.trim())).filter(num => !isNaN(num));
+        if (numbers.length > 0) {
+          const roundedNumbers = numbers.map(num => roundToSignificantFigures(num, significantFigures));
+          document.getElementById("result").innerHTML = `Resultados redondeados:<br>${roundedNumbers.map((num, index) => `<strong>Número ${index + 1}:</strong> ${num}`).join("<br>")}`;
+        } else {
+          document.getElementById("result").innerText = "Por favor, ingrese al menos un valor numérico válido.";
+        }
+      } catch (error) {
+        document.getElementById("result").innerText = "Por favor, ingrese valores numéricos válidos.";
+      }
+    }
+
+    document.addEventListener("keydown", function(event) {
+      if (event.key === "Enter" && event.shiftKey) {
+        event.preventDefault();
+        addInput();
+      } else if (event.key === "Enter") {
+        event.preventDefault();
+        roundNumbers();
+      }
+    });
+  </script>
+</body>
+</html>
