@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="favicon.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    @font-face {
+      font-family: 'VCR';
+      src: url('vcr.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+    * {
+      font-family: 'VCR', sans-serif;
+    }
+  </style>
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <title>TV Chida</title>
+</head>
+<body class="bg-black text-white">
+  <div id="randomModal" class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded hidden z-50"></div>
+  <div id="tvContainer" class="w-screen h-screen">
+    <div id="videoPlayer" class="w-full h-full"></div>
+  </div>
+
+  <script>
+    let filaAleatoria = []; // Este array guardará el orden aleatorio de los videos
+    let currentAleatorioIndex = 0; // El índice que llevará la cuenta de los videos reproducidos en modo aleatorio
+
+    function activarAleatorio() {
+      if (isRandom) {
+        // Si ya está en aleatorio, no lo modificamos
+        return;
+      }
+
+      // Crear una fila aleatoria de índices de videos
+      filaAleatoria = Array.from({ length: videos.length }, (_, index) => index);
+      filaAleatoria = filaAleatoria.sort(() => Math.random() - 0.5); // Desordenar aleatoriamente
+      currentAleatorioIndex = 0; // Reiniciar el índice de la fila aleatoria
+      isRandom = true;
+      showRandomModal("Reproducción aleatoria activada");
+    }
+
+    function desactivarAleatorio() {
+      isRandom = false;
+      showRandomModal("Reproducción aleatoria desactivada");
+    }
+
+    function getQueryParam(param) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(param);
+    }
+
+    // Carga las categorías: intenta leer desde localStorage; si no hay datos, carga videos.json
+    async function loadCategoryData() {
+      let categories = JSON.parse(localStorage.getItem('tvCategories'));
+      if (!categories || categories.length === 0) {
+        try {
+          const response = await fetch('videos.json');
+          if (!response.ok) throw new Error("Error al cargar videos.json");
+          categories = await response.json();
+        } catch (error) {
+          console.error(error);
+          alert("Error al cargar los videos default.");
+          window.location.href = 'index.html';
+        }
+      }
+      return categories;
+    }
+
+    const categoryIndex = getQueryParam('cat');
+    if (categoryIndex === null) {
+      alert("No se ha especificado la categoría.");
+      window.location.href = 'index.html';
+    }
+
+    let videos = [];
+    (async function () {
+      const categories = await loadCategoryData();
+      if (!categories[categoryIndex]) {
+        alert("Categoría no encontrada.");
+        window.location.href = 'index.html';
+      }
+      const category = categories[categoryIndex];
+      videos = category.videos;
+      if (videos.length === 0) {
+        alert("No hay videos en esta categoría.");
+      }
+      if (typeof onYouTubeIframeAPIReady === 'function') {
+        onYouTubeIframeAPIReady();
+      }
+    })();
+
+    let currentIndex = 0;
+    let isRandom = false;
+    let player;
+
+    function onYouTubeIframeAPIReady() {
+      loadVideo(currentIndex);
+    }
+    
+    function loadVideo(index) {
+      if (videos.length === 0) return;
+      let url = videos[index];
+
+      let videoId = extractVideoId(url);
+      let startTime = extractStartTime(url);
+
+      if (player) {
+        player.loadVideoById({ videoId: videoId, startSeconds: startTime });
+        player.mute();
+        setTimeout(() => {
+          player.unMute();
+        }, 1000);
+      } else {
+        player = new YT.Player('videoPlayer', {
+          videoId: videoId,
+          playerVars: {
+            autoplay: 1,
+            controls: 1,
+            mute: 1,
+            modestbranding: 1,
+            rel: 0,
+            cc_load_policy: 1, // Activa subtítulos
+            hl: 'es', // Forzar idioma español
+            cc_lang_pref: 'es', // Subtítulos en español
+            start: startTime // Reproducir desde el tiempo especificado
+          },
+          events: {
+            onReady: onPlayerReady,
+            onStateChange: onPlayerStateChange
+          }
+        });
+      }
+    }
+
+    function extractVideoId(url) {
+      let videoId = "";
+      
+      // Si es un enlace tipo "watch?v="
+      if (url.includes("youtube.com/watch?v=")) {
+        videoId = url.split("watch?v=")[1].split(/[?&]/)[0];
+      }
+
+      // Si es un enlace tipo "shorts/"
+      else if (url.includes("youtube.com/shorts/")) {
+        videoId = url.split("shorts/")[1].split(/[?&]/)[0];
+      }
+
+      // Si ya es un enlace "embed/"
+      else if (url.includes("youtube.com/embed/")) {
+        videoId = url.split("embed/")[1].split(/[?&]/)[0];
+      }
+
+      return videoId;
+    }
+
+    function extractStartTime(url) {
+      let startTime = 0;
+      const match = url.match(/[?&]t=(\d+)s?/);
+      if (match) {
+        startTime = parseInt(match[1]);
+      }
+      return startTime;
+    }
+
+    function onPlayerReady(event) {
+      event.target.playVideo();
+      setTimeout(() => {
+        event.target.unMute();
+      }, 1000);
+    }
+    
+    function onPlayerStateChange(event) {
+      if (event.data === YT.PlayerState.PLAYING && player.isMuted()) {
+        setTimeout(() => {
+          player.unMute();
+        }, 1000);
+      }
+    }
+    
+    function nextVideo() {
+      if (videos.length === 0) return;
+
+      if (isRandom) {
+        // Si estamos en modo aleatorio, usa la fila aleatoria
+        currentAleatorioIndex = (currentAleatorioIndex + 1) % filaAleatoria.length;
+        currentIndex = filaAleatoria[currentAleatorioIndex]; // Actualizar el índice de la lista de videos
+      } else {
+        // Si no estamos en aleatorio, sigue el flujo secuencial
+        currentIndex = (currentIndex + 1) % videos.length;
+      }
+
+      loadVideo(currentIndex);
+    }
+        
+    function previousVideo() {
+      if (videos.length === 0) return;
+
+      if (isRandom) {
+        // Si estamos en modo aleatorio, navega al anterior en la fila aleatoria
+        currentAleatorioIndex = (currentAleatorioIndex - 1 + filaAleatoria.length) % filaAleatoria.length;
+        currentIndex = filaAleatoria[currentAleatorioIndex]; // Actualiza el índice de la lista de videos
+      } else {
+        // Si no estamos en aleatorio, navega secuencialmente
+        currentIndex = (currentIndex - 1 + videos.length) % videos.length;
+      }
+
+      loadVideo(currentIndex);
+    }
+    
+    function goBackToCategories() {
+      window.location.href = 'index.html';
+    }
+    
+    function toggleFullScreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => console.error(err));
+      } else {
+        document.exitFullscreen();
+      }
+    }
+    
+    function showRandomModal(message) {
+      const modal = document.getElementById('randomModal');
+      modal.textContent = message;
+      modal.classList.remove('hidden');
+      setTimeout(() => modal.classList.add('hidden'), 4000);
+    }
+    
+    document.addEventListener('keydown', function (e) {
+      if (e.key === "ArrowRight") {
+        nextVideo();
+      } else if (e.key === "ArrowLeft") {
+        if (e.altKey) {
+          goBackToCategories();
+        } else {
+          previousVideo();
+        }
+      } else if (e.key === "ArrowDown") {
+        isRandom = !isRandom;
+        showRandomModal(isRandom ? "Reproducción aleatoria activada" : "Reproducción aleatoria desactivada");
+      } else if (e.key === "ArrowUp") {
+        toggleFullScreen();
+      }
+    });
+  </script>
+</body>
+</html>

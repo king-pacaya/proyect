@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="favicon.svg">
+  <!-- Font Awesome 6.0.0 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Se mantiene la fuente propia -->
+  <style>
+    @font-face {
+      font-family: 'VCR';
+      src: url('vcr.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+    * {
+      font-family: 'VCR', sans-serif;
+    }
+    /* Nueva paleta: fondo #0D0D0D y acentos #F2F2F2 */
+    body {
+      background-color: #0D0D0D;
+    }
+    h1 {
+      color: #F2F2F2;
+    }
+    /* Botón para alternar el modo */
+    .mode-btn {
+      background-color: #F2F2F2;
+      color: #0D0D0D;
+      padding: 0.5rem 1rem;
+      border-radius: 0.375rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+    }
+    .mode-btn:hover {
+      opacity: 0.9;
+    }
+    /* Botones de acción para JSON y agregar categoría */
+    .action-btn {
+      background-color: #F2F2F2;
+      color: #0D0D0D;
+      padding: 0.5rem 1rem;
+      border-radius: 0.375rem;
+      font-weight: 600;
+      margin: 0.25rem;
+      border: none;
+      cursor: pointer;
+    }
+    .action-btn:hover {
+      opacity: 0.9;
+    }
+    /* Estilos para las tarjetas de categoría */
+    .category-card {
+      background-color: #0D0D0D;
+      border: 2px solid #F2F2F2;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      color: #F2F2F2;
+      cursor: pointer;
+      position: relative;
+    }
+    .category-card h3 {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    .category-card button {
+      background: transparent;
+      border: none;
+      color: #F2F2F2;
+      cursor: pointer;
+    }
+    .category-card:focus {
+      outline: none;
+    }
+    /* Modales */
+    #categoryModal,
+    #editCategoryModal {
+      background-color: rgba(0, 0, 0, 0.9);
+    }
+    #categoryModal div,
+    #editCategoryModal div {
+      background-color: #0D0D0D;
+      border: 2px solid #F2F2F2;
+    }
+    /* Inputs en modales */
+    #newCategoryInput,
+    #newVideoLink {
+      background-color: #0D0D0D;
+      border: 2px solid #F2F2F2;
+      color: #F2F2F2;
+    }
+    /* Scroll personalizado para áreas de texto */
+    #videoList, textarea {
+      border: 2px solid #F2F2F2;
+      color: #F2F2F2;
+    }
+  </style>
+  <title>TV Chida - Categorías</title>
+</head>
+<body>
+  <div class="max-w-4xl mx-auto p-6">
+    <!-- Título -->
+    <h1 class="text-4xl font-bold text-center mb-6">TV Chida</h1>
+    
+    <!-- Contenedor de botones: el botón de modo y, solo en Personalizado, los demás controles -->
+    <div id="actionContainer" class="flex flex-col sm:flex-row items-center justify-center mb-6 space-y-2 sm:space-y-0 sm:space-x-4">
+      <!-- Botón de modo -->
+      <button id="modeBtn" class="mode-btn">
+        <i class="fa fa-home"></i> Default
+      </button>
+      <!-- Botones extra, que solo se mostrarán en modo Personalizado -->
+      <div id="extraActions" class="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-4 hidden">
+        <label for="uploadJSONInput" class="action-btn cursor-pointer">
+          <i class="fa fa-upload"></i> Subir JSON
+        </label>
+        <button id="downloadJSONBtn" class="action-btn">
+          <i class="fa fa-download"></i> Bajar JSON
+        </button>
+        <button id="addCategoryBtn" class="action-btn">
+          <i class="fa fa-plus"></i> Agregar Categoría
+        </button>
+        <input type="file" id="uploadJSONInput" accept="application/json" class="hidden">
+      </div>
+    </div>
+
+    <!-- Sección de categorías -->
+    <div id="categories" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <!-- Se inyectarán las categorías aquí -->
+    </div>
+  </div>
+
+  <!-- Modal para agregar nueva categoría -->
+  <div id="categoryModal" class="fixed inset-0 flex items-center justify-center bg-[#0D0D0D] bg-opacity-90 hidden">
+    <div class="p-6 rounded w-80 border-2 border-[#F2F2F2]">
+      <h2 class="text-xl font-bold mb-4 text-[#F2F2F2]">Nueva Categoría</h2>
+      <input id="newCategoryInput" type="text" placeholder="Nombre de la categoría" class="w-full p-2 rounded mb-4">
+      <div class="flex justify-end">
+        <button id="cancelBtn" class="action-btn mr-2">Cancelar</button>
+        <button id="saveCategoryBtn" class="action-btn">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para editar categoría: agregar/eliminar links de YouTube -->
+  <div id="editCategoryModal" class="fixed inset-0 flex items-center justify-center bg-[#0D0D0D] bg-opacity-90 hidden">
+    <div class="p-6 rounded w-96 border-2 border-[#F2F2F2]">
+      <h2 class="text-xl font-bold mb-4 text-[#F2F2F2]" id="editCategoryTitle">Editar Categoría</h2>
+      <div class="mb-4">
+        <ul id="videoList" class="max-h-48 overflow-y-auto p-2 rounded">
+          <!-- Lista de links de videos -->
+        </ul>
+      </div>
+      <div class="flex mb-4">
+        <input id="newVideoLink" type="text" placeholder="URL de YouTube" class="flex-1 p-2 rounded">
+        <button id="addVideoBtn" class="action-btn ml-2">
+          <i class="fa fa-plus"></i> Agregar
+        </button>
+      </div>
+      <div class="flex justify-end">
+        <button id="closeEditModal" class="action-btn mr-2">Cerrar</button>
+        <button id="saveEditBtn" class="action-btn">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Variable global para indicar el modo actual:
+    // false: Default (usa videos.json)
+    // true: Personalizado (usa localStorage)
+    let isPersonalizado = false;
+
+    // Función para actualizar la visibilidad de los botones extra según el modo
+    function updateExtraActions() {
+      const extraActions = document.getElementById('extraActions');
+      if(isPersonalizado) {
+        extraActions.classList.remove('hidden');
+      } else {
+        extraActions.classList.add('hidden');
+      }
+    }
+
+    // Botón para alternar el modo
+    document.getElementById('modeBtn').addEventListener('click', async () => {
+      isPersonalizado = !isPersonalizado;
+      // Si cambiamos a modo Personalizado y no hay info en localStorage, la cargamos desde videos.json
+      if(isPersonalizado) {
+        let stored = JSON.parse(localStorage.getItem('tvCategories'));
+        if(!stored || stored.length === 0) {
+          try {
+            const response = await fetch('videos.json');
+            if(!response.ok) throw new Error("Error al cargar videos.json");
+            const data = await response.json();
+            localStorage.setItem('tvCategories', JSON.stringify(data));
+          } catch (error) {
+            console.error(error);
+          }
+        }
+      }
+      // Actualiza el texto e ícono del botón de modo
+      const modeBtn = document.getElementById('modeBtn');
+      if(isPersonalizado) {
+        modeBtn.innerHTML = '<i class="fa fa-user"></i> Personalizado';
+      } else {
+        modeBtn.innerHTML = '<i class="fa fa-home"></i> Default';
+      }
+      updateExtraActions();
+      displayCategories();
+    });
+
+    // Función para cargar las categorías según el modo actual
+    async function loadCategories() {
+      if(!isPersonalizado) {
+        try {
+          const response = await fetch('videos.json');
+          if(!response.ok) throw new Error("Error al cargar videos.json");
+          const data = await response.json();
+          return data;
+        } catch (error) {
+          console.error(error);
+          return [];
+        }
+      } else {
+        let categories = JSON.parse(localStorage.getItem('tvCategories'));
+        return categories ? categories : [];
+      }
+    }
+
+    function saveCategories(categories) {
+      localStorage.setItem('tvCategories', JSON.stringify(categories));
+    }
+
+    let currentCardIndex = 0;
+    async function displayCategories() {
+      const categories = await loadCategories();
+      const categoriesDiv = document.getElementById('categories');
+      categoriesDiv.innerHTML = '';
+      if(categories.length === 0) {
+        categoriesDiv.innerHTML = '<p class="text-center text-[#F2F2F2]">No hay categorías disponibles.</p>';
+        return;
+      }
+      // Los iconos de editar/eliminar solo se muestran en modo Personalizado
+      const showIcons = isPersonalizado;
+      categories.forEach((cat, index) => {
+        const card = document.createElement('div');
+        card.setAttribute("tabindex", "0");
+        card.className = 'category-card';
+        card.setAttribute("data-index", index);
+        card.addEventListener('click', (e) => {
+          if(e.target.tagName.toLowerCase() === 'button' || e.target.tagName.toLowerCase() === 'i') return;
+          window.location.href = 'tv.html?cat=' + index;
+        });
+        card.innerHTML = `
+          <h3>${cat.name}</h3>
+          ${showIcons ? `<div class="absolute top-2 right-2 flex space-x-2">
+            <button class="editBtn" data-index="${index}" title="Editar">
+              <i class="fa fa-pencil"></i>
+            </button>
+            <button class="deleteBtn" data-index="${index}" title="Eliminar">
+              <i class="fa fa-trash"></i>
+            </button>
+          </div>` : ``}
+        `;
+        categoriesDiv.appendChild(card);
+      });
+      updateSelectedCard();
+
+      if(showIcons){
+        document.querySelectorAll('.editBtn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const index = btn.getAttribute('data-index');
+            openEditModal(index);
+          });
+        });
+        document.querySelectorAll('.deleteBtn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const index = btn.getAttribute('data-index');
+            deleteCategory(index);
+          });
+        });
+      }
+    }
+
+    async function deleteCategory(index) {
+      if(!isPersonalizado) {
+        alert("No se pueden eliminar categorías en modo Default.");
+        return;
+      }
+      const categories = await loadCategories();
+      const catName = categories[index].name;
+      if(confirm(`¿Estás seguro de eliminar la categoría "${catName}"?`)) {
+        categories.splice(index, 1);
+        saveCategories(categories);
+        currentCardIndex = 0;
+        displayCategories();
+      }
+    }
+
+    let editCategoryIndex = null;
+    let tempVideos = [];
+    function openEditModal(index) {
+      editCategoryIndex = index;
+      loadCategories().then(categories => {
+        const category = categories[index];
+        tempVideos = [...category.videos];
+        document.getElementById('editCategoryTitle').textContent = `Editar: ${category.name}`;
+        updateVideoList();
+        document.getElementById('editCategoryModal').classList.remove('hidden');
+      });
+    }
+
+    function updateVideoList() {
+      const videoList = document.getElementById('videoList');
+      videoList.innerHTML = '';
+      if(tempVideos.length === 0) {
+        videoList.innerHTML = '<li class="text-[#F2F2F2]">No hay links de YouTube</li>';
+      } else {
+        tempVideos.forEach((link, idx) => {
+          const li = document.createElement('li');
+          li.className = "flex justify-between items-center py-1 border-b border-[#F2F2F2]";
+          li.innerHTML = `<span class="truncate">${link}</span>
+            <button class="deleteLinkBtn" data-index="${idx}" title="Eliminar link">
+              <i class="fa fa-trash"></i>
+            </button>`;
+          videoList.appendChild(li);
+        });
+        document.querySelectorAll('.deleteLinkBtn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const idx = btn.getAttribute('data-index');
+            tempVideos.splice(idx, 1);
+            updateVideoList();
+          });
+        });
+      }
+    }
+
+    document.getElementById('addCategoryBtn').addEventListener('click', () => {
+      if(!isPersonalizado) {
+        alert("No se pueden agregar categorías en modo Default.");
+        return;
+      }
+      document.getElementById('categoryModal').classList.remove('hidden');
+    });
+
+    document.getElementById('cancelBtn').addEventListener('click', () => {
+      document.getElementById('categoryModal').classList.add('hidden');
+    });
+
+    document.getElementById('saveCategoryBtn').addEventListener('click', async () => {
+      const newCategoryName = document.getElementById('newCategoryInput').value.trim();
+      if(newCategoryName !== ""){
+        if(!isPersonalizado) {
+          alert("No se pueden agregar categorías en modo Default.");
+          return;
+        }
+        const categories = await loadCategories();
+        categories.push({ name: newCategoryName, videos: [] });
+        saveCategories(categories);
+        currentCardIndex = 0;
+        displayCategories();
+        document.getElementById('newCategoryInput').value = '';
+        document.getElementById('categoryModal').classList.add('hidden');
+      }
+    });
+
+    function updateSelectedCard() {
+      const cards = document.querySelectorAll('.category-card');
+      cards.forEach((card, idx) => {
+        if(idx == currentCardIndex) {
+          card.style.boxShadow = "0 0 10px #F2F2F2";
+          card.focus();
+        } else {
+          card.style.boxShadow = "none";
+        }
+      });
+    }
+
+    document.addEventListener('keydown', function(e) {
+      const isModalOpen = !document.getElementById('categoryModal').classList.contains('hidden') ||
+                          !document.getElementById('editCategoryModal').classList.contains('hidden');
+      if(isModalOpen) return;
+      const cards = document.querySelectorAll('.category-card');
+      if(cards.length === 0) return;
+      if(e.key === "ArrowRight" || e.key === "ArrowDown") {
+        currentCardIndex = (currentCardIndex + 1) % cards.length;
+        updateSelectedCard();
+        e.preventDefault();
+      } else if(e.key === "ArrowLeft" || e.key === "ArrowUp") {
+        currentCardIndex = (currentCardIndex - 1 + cards.length) % cards.length;
+        updateSelectedCard();
+        e.preventDefault();
+      } else if(e.key === "Enter") {
+        const index = cards[currentCardIndex].getAttribute('data-index');
+        window.location.href = 'tv.html?cat=' + index;
+      }
+    });
+
+    // Botón para bajar (descargar) el JSON actual (solo en modo Personalizado)
+    document.getElementById('downloadJSONBtn').addEventListener('click', async () => {
+      if(!isPersonalizado) return;
+      const categories = await loadCategories();
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(categories, null, 2));
+      const a = document.createElement('a');
+      a.setAttribute("href", dataStr);
+      a.setAttribute("download", "tvCategories.json");
+      a.click();
+    });
+
+    // Cargar JSON desde archivo y actualizar (modo Personalizado)
+    document.getElementById('uploadJSONInput').addEventListener('change', function(event) {
+      if(!isPersonalizado) return;
+      const file = event.target.files[0];
+      if(file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          try {
+            const jsonData = JSON.parse(e.target.result);
+            if(Array.isArray(jsonData)) {
+              let valid = jsonData.every(cat => cat.name && Array.isArray(cat.videos));
+              if(valid) {
+                localStorage.setItem('tvCategories', JSON.stringify(jsonData));
+                isPersonalizado = true;
+                document.getElementById('modeBtn').innerHTML = '<i class="fa fa-user"></i> Personalizado';
+                displayCategories();
+              } else {
+                alert("El JSON no tiene el formato correcto.");
+              }
+            } else {
+              alert("El JSON no tiene el formato correcto.");
+            }
+          } catch (error) {
+            alert("Error al parsear el JSON.");
+          }
+        };
+        reader.readAsText(file);
+      }
+    });
+
+    // Inicializa la visibilidad de los botones extra y las categorías al cargar la página
+    updateExtraActions();
+    displayCategories();
+  </script>
+</body>
+</html>
