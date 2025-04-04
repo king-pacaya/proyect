@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!---Meta--->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!---Page Icon--->
+  <link rel="shortcut icon" href="multimedia/favicon.png">
+  <!--CSS & Fonts-->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * {
+      font-family: 'Montserrat', sans-serif;
+    }
+  </style>
+  <title>Flash Pass | ASU</title>
+</head>
+<body id="body" class="bg-[#F2F2F2] min-h-screen flex items-center justify-center p-4">
+
+  <!-- FORMULARIO -->
+  <form id="flashForm" class="bg-white p-6 rounded-lg shadow-md w-full max-w-sm">
+    <!-- Botón de regreso desde formulario -->
+    <a href="dashboard.html" class="absolute top-4 left-4 text-[#07256D] z-10">
+      <i class="fas fa-arrow-left text-[#07256D] text-2xl"></i>
+    </a>
+    <div class="mb-4">
+      <label class="block text-[#07256D] font-medium">DNI</label>
+      <input type="text" id="dni" class="w-full border px-4 py-2 rounded-lg focus:ring-2 focus:ring-[#07256D]" required>
+    </div>
+    <div class="mb-4">
+      <label class="block text-[#07256D] font-medium">Motivo</label>
+      <input type="text" id="motivo" class="w-full border px-4 py-2 rounded-lg focus:ring-2 focus:ring-[#07256D]" required>
+    </div>
+    <div class="mb-4">
+      <label class="block text-[#07256D] font-medium">Hora de ingreso</label>
+      <input type="time" id="hora" class="w-full border px-4 py-2 rounded-lg focus:ring-2 focus:ring-[#07256D]" required>
+    </div>
+    <button type="submit" class="w-full bg-[#07256D] text-white py-2 rounded-lg hover:bg-[#061f5a] transition">Generar Flash Pass</button>
+  </form>
+
+  <!-- FLASH PASS A PANTALLA COMPLETA -->
+  <div id="flashPass" class="hidden fixed inset-0 bg-[#07256D] text-white flex flex-col items-center justify-between p-6 pt-8">
+    
+    <!-- Parte superior -->
+    <div class="flex flex-col items-center">
+      <!-- Botón de regreso -->
+      <a href="dashboard.html" class="absolute top-4 left-4 text-white">
+        <i class="fas fa-arrow-left text-white text-2xl"></i>
+      </a>
+
+      <!-- Píldora con título -->
+      <div class="bg-white text-[#07256D] font-semibold text-sm px-5 py-3 uppercase rounded-full mb-6 shadow-md">
+        Flash Pass Estudiantil - USIL
+      </div>
+
+      <!-- Imagen más grande -->
+      <img src="multimedia/king-pacaya.jpg" alt="Foto estudiante" class="w-36 h-36 rounded-full border-4 border-white object-cover mb-6">
+
+      <!-- Datos más grandes -->
+      <h3 class="text-3xl font-bold uppercase text-center mb-2">KING ISAAC PACAYA ASTULLA</h3>
+      <p class="text-md text-xl mb-1"><strong>DNI:</strong> <span id="passDni"></span></p>
+      <p class="text-md text-xl mb-1"><strong>Código:</strong> 012110642</p>
+      <p class="text-md text-xl mb-2"><strong>Motivo:</strong> <span id="passMotivo"></span></p>
+    </div>
+
+    <!-- Parte inferior -->
+    <div class="w-full">
+      <p class="text-center text-sm text-gray-200 mb-2" id="expiraTexto"></p>
+      <button id="destruirBtn" class="w-full bg-red-600 hover:bg-red-700 text-white uppercase font-semibold py-3 rounded-lg text-base font-medium shadow-lg">
+        Destruir Flash Pass
+      </button>
+    </div>
+  </div>
+
+
+  <!-- MODAL -->
+  <div id="modalBloqueo" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white text-[#07256D] p-6 rounded-lg shadow-xl w-full max-w-sm text-center">
+      <h2 class="text-xl font-bold mb-4">Ya generaste tu Flash Pass</h2>
+      <p class="mb-4 text-sm">Solo puedes crear uno por día. Vuelve mañana.</p>
+      <button onclick="cerrarModal()" class="bg-[#07256D] text-white px-4 py-2 rounded-lg hover:bg-[#061f5a]">Aceptar</button>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById("flashForm");
+    const flashPass = document.getElementById("flashPass");
+    const destruirBtn = document.getElementById("destruirBtn");
+    const modal = document.getElementById("modalBloqueo");
+    const body = document.getElementById("body");
+
+    const passDni = document.getElementById("passDni");
+    const passMotivo = document.getElementById("passMotivo");
+    const expiraTexto = document.getElementById("expiraTexto");
+
+    const nombre = "KING ISAAC PACAYA ASTULLA";
+    const codigo = "012110642";
+
+    const getFechaHoy = () => new Date().toISOString().split("T")[0];
+
+    function cerrarModal() {
+      modal.classList.add("hidden");
+    }
+
+    function mostrarFlashPass(datos) {
+      passDni.textContent = datos.dni;
+      passMotivo.textContent = datos.motivo;
+      flashPass.classList.remove("hidden");
+      form.classList.add("hidden");
+      body.classList.remove("bg-[#F2F2F2]");
+      body.classList.add("bg-[#07256D]");
+
+      const expira = new Date(datos.expira);
+      expiraTexto.textContent = "Expira a las " + expira.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      const tiempoRestante = expira - new Date();
+      if (tiempoRestante > 0) {
+        setTimeout(() => {
+          localStorage.removeItem("flashPass");
+          flashPass.classList.add("hidden");
+          form.classList.remove("hidden");
+          body.classList.add("bg-[#F2F2F2]");
+          body.classList.remove("bg-[#07256D]");
+        }, tiempoRestante);
+      } else {
+        localStorage.removeItem("flashPass");
+      }
+    }
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const hoy = getFechaHoy();
+      const flashGuardado = JSON.parse(localStorage.getItem("flashPass"));
+
+      if (flashGuardado && flashGuardado.fecha === hoy) {
+        modal.classList.remove("hidden");
+        return;
+      }
+
+      const dni = document.getElementById("dni").value;
+      const motivo = document.getElementById("motivo").value;
+      const hora = document.getElementById("hora").value;
+      const [h, m] = hora.split(":").map(Number);
+      const ahora = new Date();
+      const expira = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate(), h, m + 10);
+
+      const datos = { dni, motivo, expira, fecha: hoy };
+      localStorage.setItem("flashPass", JSON.stringify(datos));
+      mostrarFlashPass(datos);
+    });
+
+    destruirBtn.addEventListener("click", () => {
+      localStorage.setItem("flashPass", JSON.stringify({
+        fecha: getFechaHoy(),
+        eliminado: true
+      }));
+      flashPass.classList.add("hidden");
+      form.classList.remove("hidden");
+      body.classList.add("bg-[#F2F2F2]");
+      body.classList.remove("bg-[#07256D]");
+    });
+
+    window.addEventListener("DOMContentLoaded", () => {
+      const datosGuardados = localStorage.getItem("flashPass");
+      if (datosGuardados) {
+        const datos = JSON.parse(datosGuardados);
+        if (datos.fecha === getFechaHoy() && !datos.eliminado) {
+          mostrarFlashPass(datos);
+        }
+      }
+    });
+  </script>
+</body>
+</html>
