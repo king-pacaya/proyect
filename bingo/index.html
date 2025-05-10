@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="favicon.svg">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * {
+      font-family: 'Montserrat', sans-serif;
+    }
+    
+    body {
+      overflow: hidden;
+      height: 100vh;
+      transition: background-color 0.3s;
+    }
+    
+    .bingo-ball {
+      width: 30vmin;
+      height: 30vmin;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s;
+    }
+    
+    .bingo-letter {
+      font-size: 8vmin;
+    }
+    
+    .bingo-number {
+      font-size: 10vmin;
+    }
+    
+    .called-number {
+      width: 7vmin;
+      height: 7vmin;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      margin: 0.5vmin;
+      font-size: 3vmin;
+    }
+    
+    .zoom-1 { transform: scale(1); }
+    .zoom-2 { transform: scale(1.5); }
+    .zoom-3 { transform: scale(2); }
+    
+    .reset-notice {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.9);
+      padding: 10px 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      z-index: 100;
+      text-align: center;
+    }
+    
+    /* Colores para cada letra */
+    .B-color { background: linear-gradient(135deg, #3B82F6, #2563EB); }
+    .I-color { background: linear-gradient(135deg, #EF4444, #DC2626); }
+    .N-color { background: linear-gradient(135deg, #10B981, #059669); }
+    .G-color { background: linear-gradient(135deg, #8B5CF6, #7C3AED); }
+    .O-color { background: linear-gradient(135deg, #F59E0B, #D97706); }
+  </style>
+  <title>Controlador de Bingo</title>
+</head>
+<body class="bg-gray-100">
+  <div class="flex h-full">
+    <!-- Columna izquierda - Números llamados (60% ancho) -->
+    <div class="w-3/5 p-4">
+      <h2 class="text-3xl font-bold text-center mb-6">Números Llamados</h2>
+      <div class="flex flex-wrap justify-center" id="calledNumbers">
+        <!-- Números aparecerán aquí -->
+      </div>
+    </div>
+    
+    <!-- Columna derecha - Bingo actual (40% ancho) -->
+    <div class="w-2/5 flex flex-col items-center justify-center p-4 bg-gray-50">
+      <h1 class="text-5xl font-bold text-blue-800 mb-8">BINGO</h1>
+      
+      <div id="currentBall" class="bingo-ball text-white mb-8 zoom-1">
+        <div id="currentLetter" class="bingo-letter">B</div>
+        <div id="currentNumber" class="bingo-number">1</div>
+      </div>
+      
+      <p class="text-xl text-gray-600 mb-2">Número actual</p>
+      <p class="text-lg text-gray-500">Presiona → para siguiente número</p>
+      <p class="text-sm text-gray-400 mt-4">Mantén ENTER 3 segundos para reiniciar</p>
+    </div>
+  </div>
+  
+  <div id="resetNotice" class="reset-notice hidden">
+    Mantén presionado ENTER por 3 segundos para reiniciar
+  </div>
+
+  <script>
+    // Configuración del Bingo
+    const bingoRanges = {
+      'B': { min: 1, max: 15, colorClass: 'B-color' },
+      'I': { min: 16, max: 30, colorClass: 'I-color' },
+      'N': { min: 31, max: 45, colorClass: 'N-color' },
+      'G': { min: 46, max: 60, colorClass: 'G-color' },
+      'O': { min: 61, max: 75, colorClass: 'O-color' }
+    };
+    
+    // Estado del juego
+    let calledNumbers = [];
+    let availableNumbers = [];
+    let currentIndex = -1;
+    let zoomLevel = 1;
+    let enterHoldTimer;
+    let enterHoldStart = 0;
+    
+    // Inicializar números disponibles
+    function initializeNumbers() {
+      availableNumbers = [];
+      for (const [letter, range] of Object.entries(bingoRanges)) {
+        for (let num = range.min; num <= range.max; num++) {
+          availableNumbers.push({ letter, number: num });
+        }
+      }
+    }
+    
+    // Llamar un número aleatorio
+    function callNextNumber() {
+      if (availableNumbers.length === 0) {
+        alert('¡Todos los números han sido llamados!');
+        return;
+      }
+      
+      const randomIndex = Math.floor(Math.random() * availableNumbers.length);
+      const nextNumber = availableNumbers[randomIndex];
+      
+      availableNumbers.splice(randomIndex, 1);
+      calledNumbers.push(nextNumber);
+      currentIndex = calledNumbers.length - 1;
+      
+      updateDisplay();
+    }
+    
+    // Actualizar la pantalla
+    function updateDisplay() {
+      const currentNumber = calledNumbers[currentIndex];
+      
+      if (currentNumber) {
+        document.getElementById('currentLetter').textContent = currentNumber.letter;
+        document.getElementById('currentNumber').textContent = currentNumber.number;
+        
+        const ball = document.getElementById('currentBall');
+        // Limpiar clases de color anteriores
+        ball.className = `bingo-ball text-white mb-8 zoom-${zoomLevel}`;
+        // Añadir la clase de color correspondiente
+        ball.classList.add(bingoRanges[currentNumber.letter].colorClass);
+      }
+      
+      const calledNumbersContainer = document.getElementById('calledNumbers');
+      calledNumbersContainer.innerHTML = '';
+      
+      calledNumbers.forEach((num, index) => {
+        const numberElement = document.createElement('div');
+        numberElement.className = `called-number ${bingoRanges[num.letter].colorClass} text-white ${index === currentIndex ? 'ring-4 ring-black' : ''}`;
+        numberElement.textContent = num.number;
+        calledNumbersContainer.appendChild(numberElement);
+      });
+    }
+    
+    // Ir al número anterior
+    function goToPreviousNumber() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        updateDisplay();
+      }
+    }
+    
+    // Cambiar nivel de zoom
+    function changeZoom(direction) {
+      if (direction === 'up' && zoomLevel < 3) {
+        zoomLevel++;
+      } else if (direction === 'down' && zoomLevel > 1) {
+        zoomLevel--;
+      }
+      
+      const ball = document.getElementById('currentBall');
+      ball.className = ball.className.replace(/zoom-\d/, `zoom-${zoomLevel}`);
+    }
+    
+    // Reiniciar el juego
+    function resetGame() {
+      if (confirm('¿Estás seguro de que quieres reiniciar el juego? Se perderán todos los números llamados.')) {
+        initializeNumbers();
+        calledNumbers = [];
+        currentIndex = -1;
+        updateDisplay();
+      }
+    }
+    
+    // Manejar presión prolongada de ENTER
+    function handleEnterHold() {
+      const resetNotice = document.getElementById('resetNotice');
+      resetNotice.classList.remove('hidden');
+      
+      clearTimeout(enterHoldTimer);
+      enterHoldStart = Date.now();
+      
+      enterHoldTimer = setTimeout(() => {
+        if (Date.now() - enterHoldStart >= 3000) {
+          resetGame();
+        }
+        resetNotice.classList.add('hidden');
+      }, 3000);
+    }
+    
+    // Controles de teclado
+    function handleKeyDown(e) {
+      switch (e.key) {
+        case 'ArrowRight':
+          if (currentIndex === calledNumbers.length - 1) {
+            callNextNumber();
+          } else {
+            currentIndex++;
+            updateDisplay();
+          }
+          break;
+        case 'ArrowLeft':
+          goToPreviousNumber();
+          break;
+        case 'ArrowUp':
+          changeZoom('up');
+          break;
+        case 'ArrowDown':
+          changeZoom('down');
+          break;
+        case 'Enter':
+          handleEnterHold();
+          break;
+      }
+    }
+    
+    function handleKeyUp(e) {
+      if (e.key === 'Enter') {
+        clearTimeout(enterHoldTimer);
+        document.getElementById('resetNotice').classList.add('hidden');
+      }
+    }
+    
+    // Inicializar el juego
+    function initGame() {
+      initializeNumbers();
+      document.addEventListener('keydown', handleKeyDown);
+      document.addEventListener('keyup', handleKeyUp);
+      callNextNumber();
+    }
+    
+    window.onload = initGame;
+  </script>
+</body>
+</html>
