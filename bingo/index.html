@@ -106,165 +106,139 @@
     Mantén presionado ENTER por 3 segundos para reiniciar
   </div>
 
-  <script>
-    // Configuración del Bingo
-    const bingoRanges = {
-      'B': { min: 1, max: 15, colorClass: 'B-color' },
-      'I': { min: 16, max: 30, colorClass: 'I-color' },
-      'N': { min: 31, max: 45, colorClass: 'N-color' },
-      'G': { min: 46, max: 60, colorClass: 'G-color' },
-      'O': { min: 61, max: 75, colorClass: 'O-color' }
-    };
-    
-    // Estado del juego
-    let calledNumbers = [];
-    let availableNumbers = [];
-    let currentIndex = -1;
-    let zoomLevel = 1;
-    let enterHoldTimer;
-    let enterHoldStart = 0;
-    
-    // Inicializar números disponibles
-    function initializeNumbers() {
-      availableNumbers = [];
-      for (const [letter, range] of Object.entries(bingoRanges)) {
-        for (let num = range.min; num <= range.max; num++) {
-          availableNumbers.push({ letter, number: num });
-        }
+<script>
+  // Configuración del Bingo
+  const bingoRanges = {
+    'B': { min: 1, max: 15, colorClass: 'B-color' },
+    'I': { min: 16, max: 30, colorClass: 'I-color' },
+    'N': { min: 31, max: 45, colorClass: 'N-color' },
+    'G': { min: 46, max: 60, colorClass: 'G-color' },
+    'O': { min: 61, max: 75, colorClass: 'O-color' }
+  };
+  
+  // Estado del juego
+  let calledNumbers = [];
+  let availableNumbers = [];
+  let currentIndex = -1;
+  let zoomLevel = 1;
+  
+  // Inicializar números disponibles
+  function initializeNumbers() {
+    availableNumbers = [];
+    for (const [letter, range] of Object.entries(bingoRanges)) {
+      for (let num = range.min; num <= range.max; num++) {
+        availableNumbers.push({ letter, number: num });
       }
     }
-    
-    // Llamar un número aleatorio
-    function callNextNumber() {
-      if (availableNumbers.length === 0) {
-        alert('¡Todos los números han sido llamados!');
-        return;
-      }
-      
-      const randomIndex = Math.floor(Math.random() * availableNumbers.length);
-      const nextNumber = availableNumbers[randomIndex];
-      
-      availableNumbers.splice(randomIndex, 1);
-      calledNumbers.push(nextNumber);
-      currentIndex = calledNumbers.length - 1;
-      
-      updateDisplay();
+  }
+  
+  // Llamar un número aleatorio
+  function callNextNumber() {
+    if (availableNumbers.length === 0) {
+      alert('¡Todos los números han sido llamados!');
+      return;
     }
     
-    // Actualizar la pantalla
-    function updateDisplay() {
-      const currentNumber = calledNumbers[currentIndex];
-      
-      if (currentNumber) {
-        document.getElementById('currentLetter').textContent = currentNumber.letter;
-        document.getElementById('currentNumber').textContent = currentNumber.number;
-        
-        const ball = document.getElementById('currentBall');
-        // Limpiar clases de color anteriores
-        ball.className = `bingo-ball text-white mb-8 zoom-${zoomLevel}`;
-        // Añadir la clase de color correspondiente
-        ball.classList.add(bingoRanges[currentNumber.letter].colorClass);
-      }
-      
-      const calledNumbersContainer = document.getElementById('calledNumbers');
-      calledNumbersContainer.innerHTML = '';
-      
-      calledNumbers.forEach((num, index) => {
-        const numberElement = document.createElement('div');
-        numberElement.className = `called-number ${bingoRanges[num.letter].colorClass} text-white ${index === currentIndex ? 'ring-4 ring-black' : ''}`;
-        numberElement.textContent = num.number;
-        calledNumbersContainer.appendChild(numberElement);
-      });
-    }
+    const randomIndex = Math.floor(Math.random() * availableNumbers.length);
+    const nextNumber = availableNumbers[randomIndex];
     
-    // Ir al número anterior
-    function goToPreviousNumber() {
-      if (currentIndex > 0) {
-        currentIndex--;
-        updateDisplay();
-      }
-    }
+    availableNumbers.splice(randomIndex, 1);
+    calledNumbers.push(nextNumber);
+    currentIndex = calledNumbers.length - 1;
     
-    // Cambiar nivel de zoom
-    function changeZoom(direction) {
-      if (direction === 'up' && zoomLevel < 3) {
-        zoomLevel++;
-      } else if (direction === 'down' && zoomLevel > 1) {
-        zoomLevel--;
-      }
+    updateDisplay();
+  }
+  
+  // Actualizar la pantalla
+  function updateDisplay() {
+    const currentNumber = calledNumbers[currentIndex];
+    
+    if (currentNumber) {
+      document.getElementById('currentLetter').textContent = currentNumber.letter;
+      document.getElementById('currentNumber').textContent = currentNumber.number;
       
       const ball = document.getElementById('currentBall');
-      ball.className = ball.className.replace(/zoom-\d/, `zoom-${zoomLevel}`);
+      // Limpiar clases de color anteriores
+      ball.className = `bingo-ball text-white mb-8 zoom-${zoomLevel}`;
+      // Añadir la clase de color correspondiente
+      ball.classList.add(bingoRanges[currentNumber.letter].colorClass);
     }
     
-    // Reiniciar el juego
-    function resetGame() {
-      if (confirm('¿Estás seguro de que quieres reiniciar el juego? Se perderán todos los números llamados.')) {
-        initializeNumbers();
-        calledNumbers = [];
-        currentIndex = -1;
-        updateDisplay();
-      }
+    const calledNumbersContainer = document.getElementById('calledNumbers');
+    calledNumbersContainer.innerHTML = '';
+    
+    calledNumbers.forEach((num, index) => {
+      const numberElement = document.createElement('div');
+      numberElement.className = `called-number ${bingoRanges[num.letter].colorClass} text-white ${index === currentIndex ? 'ring-4 ring-black' : ''}`;
+      numberElement.textContent = num.number;
+      calledNumbersContainer.appendChild(numberElement);
+    });
+  }
+  
+  // Ir al número anterior
+  function goToPreviousNumber() {
+    if (currentIndex > 0) {
+      currentIndex--;
+      updateDisplay();
+    }
+  }
+  
+  // Cambiar nivel de zoom
+  function changeZoom(direction) {
+    if (direction === 'up' && zoomLevel < 3) {
+      zoomLevel++;
+    } else if (direction === 'down' && zoomLevel > 1) {
+      zoomLevel--;
     }
     
-    // Manejar presión prolongada de ENTER
-    function handleEnterHold() {
-      const resetNotice = document.getElementById('resetNotice');
-      resetNotice.classList.remove('hidden');
-      
-      clearTimeout(enterHoldTimer);
-      enterHoldStart = Date.now();
-      
-      enterHoldTimer = setTimeout(() => {
-        if (Date.now() - enterHoldStart >= 3000) {
-          resetGame();
-        }
-        resetNotice.classList.add('hidden');
-      }, 3000);
-    }
-    
-    // Controles de teclado
-    function handleKeyDown(e) {
-      switch (e.key) {
-        case 'ArrowRight':
-          if (currentIndex === calledNumbers.length - 1) {
-            callNextNumber();
-          } else {
-            currentIndex++;
-            updateDisplay();
-          }
-          break;
-        case 'ArrowLeft':
-          goToPreviousNumber();
-          break;
-        case 'ArrowUp':
-          changeZoom('up');
-          break;
-        case 'ArrowDown':
-          changeZoom('down');
-          break;
-        case 'Enter':
-          handleEnterHold();
-          break;
-      }
-    }
-    
-    function handleKeyUp(e) {
-      if (e.key === 'Enter') {
-        clearTimeout(enterHoldTimer);
-        document.getElementById('resetNotice').classList.add('hidden');
-      }
-    }
-    
-    // Inicializar el juego
-    function initGame() {
+    const ball = document.getElementById('currentBall');
+    ball.className = ball.className.replace(/zoom-\d/, `zoom-${zoomLevel}`);
+  }
+  
+  // Reiniciar el juego
+  function resetGame() {
+    if (confirm('¿Estás seguro de que quieres reiniciar el juego? Se perderán todos los números llamados.')) {
       initializeNumbers();
-      document.addEventListener('keydown', handleKeyDown);
-      document.addEventListener('keyup', handleKeyUp);
-      callNextNumber();
+      calledNumbers = [];
+      currentIndex = -1;
+      updateDisplay();
     }
-    
-    window.onload = initGame;
-  </script>
+  }
+  
+  // Controles de teclado
+  function handleKeyDown(e) {
+    switch (e.key) {
+      case 'ArrowRight':
+        if (currentIndex === calledNumbers.length - 1) {
+          callNextNumber();
+        } else {
+          currentIndex++;
+          updateDisplay();
+        }
+        break;
+      case 'ArrowLeft':
+        goToPreviousNumber();
+        break;
+      case 'ArrowUp':
+        changeZoom('up');
+        break;
+      case 'ArrowDown':
+        changeZoom('down');
+        break;
+      case 'Enter':
+        resetGame(); // Reinicio inmediato con Enter
+        break;
+    }
+  }
+  
+  // Inicializar el juego
+  function initGame() {
+    initializeNumbers();
+    document.addEventListener('keydown', handleKeyDown);
+    callNextNumber();
+  }
+  
+  window.onload = initGame;
+</script>
 </body>
 </html>
