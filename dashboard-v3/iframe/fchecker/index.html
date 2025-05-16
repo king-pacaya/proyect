@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!---Meta--->
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="robots" content="index, follow">
+    <meta property="og:locale" content="es_PE"/>
+    <meta property="og:type" content="article"/>
+    <meta property="og:tittle" content="Título"/>
+    <meta property="og:description" content="Descripción"/>
+    <meta property="og:url" content="http://www.page.com"/>
+    <meta property="og:site_name" content="page.com"/>
+    <meta name="description" content="Descripción"/>
+    <meta name="keywords" content="1, 2, 3"/>
+  <!---Page Icon---> 
+    <link rel="shortcut icon" href="multimedia/favicon.png">
+  <!--CSS Documents-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+    <link rel="stylesheet" type="text/css" href="styles/style.css">
+  <!--Fonts-->
+  <title>Título</title>
+</head>
+<body>
+
+      <div class="container">
+         <header>Password Strength Checker</header>
+         <form action="#">
+            <div class="field">
+               <input onkeyup="trigger()" type="password" placeholder="Type password">
+               <span class="showBtn">SHOW</span>
+            </div>
+            <div class="indicator">
+               <span class="weak"></span>
+               <span class="medium"></span>
+               <span class="strong"></span>
+            </div>
+            <div class="text"></div>
+         </form>
+      </div>
+
+<script src="script.js"></script>
+</body>
+</html>
