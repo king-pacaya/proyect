@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="multimedia/favicon.png" type="image/x-icon">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <style>
+        * {
+            font-family: 'Montserrat', sans-serif;
+        }
+        .bg-asu-blue {
+            background-color: #07256D;
+        }
+        .text-asu-blue {
+            color: #07256D;
+        }
+        .border-asu-blue {
+            border-color: #07256D;
+        }
+        /* Sidebar transition */
+        #sidebar {
+            transition: transform 0.3s ease-in-out;
+        }
+    </style>
+    <title>Alumni Suite Usil | ASU</title>
+</head>
+<body class="bg-gray-100">
+
+    <div id="login-section" class="flex items-center justify-center h-screen bg-asu-blue">
+        <div class="bg-white p-8 rounded-lg shadow-lg text-center w-full max-w-sm mx-4">
+            <img src="multimedia/asu-completo-blanco.png" alt="Logo ASU" class="mx-auto mb-6 bg-asu-blue p-4 rounded">
+            <h1 class="text-2xl font-bold mb-6 text-asu-blue">Bienvenido a la Suite del Estudiante</h1>
+            <div class="mb-4">
+                <input type="text" id="username" placeholder="Usuario" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-asu-blue">
+            </div>
+            <div class="mb-6">
+                <input type="password" id="password" placeholder="Contraseña (DNI)" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-asu-blue">
+            </div>
+            <button id="login-button" class="w-full bg-asu-blue text-white py-2 rounded-lg font-bold hover:bg-opacity-90 transition">Ingresar</button>
+            <p id="login-error" class="text-red-500 text-sm mt-4 hidden">Usuario o contraseña incorrectos.</p>
+        </div>
+    </div>
+
+    <div id="app-section" class="hidden">
+        <header class="md:hidden bg-asu-blue text-white p-4 flex justify-between items-center fixed top-0 left-0 right-0 z-40">
+            <button id="hamburger-button">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+            <img src="multimedia/asu-completo-blanco.png" alt="Logo ASU" class="h-8">
+            <div class="w-8"></div> </header>
+
+        <div class="flex h-screen">
+            <aside id="sidebar" class="w-64 bg-asu-blue text-white flex flex-col fixed inset-y-0 left-0 z-50 transform -translate-x-full md:relative md:translate-x-0">
+                <div class="p-4 border-b border-white/20 flex justify-between items-center">
+                    <img src="multimedia/asu-completo-blanco.png" alt="Logo ASU" class="w-40 mx-auto md:mx-0">
+                    <button id="close-sidebar-button" class="md:hidden">
+                        <i class="fas fa-times text-2xl"></i>
+                    </button>
+                </div>
+                <nav class="flex-1 p-4 space-y-2">
+                    <a href="#" class="tool-link flex items-center p-2 rounded-lg hover:bg-white/20" data-tool="menu">
+                        <i class="fas fa-utensils w-6 text-center"></i><span class="ml-3">Menú ASU</span>
+                    </a>
+                    <a href="#" class="tool-link flex items-center p-2 rounded-lg hover:bg-white/20" data-tool="flashpass">
+                        <i class="fas fa-bolt w-6 text-center"></i><span class="ml-3">Flash Pass</span>
+                    </a>
+                    <a href="#" class="tool-link flex items-center p-2 rounded-lg hover:bg-white/20" data-tool="ubicacion">
+                        <i class="fas fa-map-marker-alt w-6 text-center"></i><span class="ml-3">Ubica tu Aula</span>
+                    </a>
+                    <a href="#" class="tool-link flex items-center p-2 rounded-lg hover:bg-white/20" data-tool="becas">
+                        <i class="fas fa-graduation-cap w-6 text-center"></i><span class="ml-3">Becas Smart</span>
+                    </a>
+                    <a href="#" class="tool-link flex items-center p-2 rounded-lg hover:bg-white/20" data-tool="horario">
+                        <i class="fas fa-calendar-alt w-6 text-center"></i><span class="ml-3">Horario</span>
+                    </a>
+                    <a href="#" class="tool-link flex items-center p-2 rounded-lg hover:bg-white/20" data-tool="notas">
+                        <i class="fas fa-book w-6 text-center"></i><span class="ml-3">Notas</span>
+                    </a>
+                </nav>
+                <div class="p-4 border-t border-white/20">
+                    <button id="logout-button" class="w-full flex items-center p-2 rounded-lg bg-red-500 hover:bg-red-600">
+                        <i class="fas fa-sign-out-alt w-6 text-center"></i><span class="ml-3">Cerrar Sesión</span>
+                    </button>
+                </div>
+            </aside>
+
+            <div id="sidebar-overlay" class="hidden md:hidden fixed inset-0 bg-black opacity-50 z-40"></div>
+
+            <main class="flex-1 p-6 md:p-8 overflow-y-auto pt-20 md:pt-8">
+                <div id="main-content">
+                    </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // --- EMBEDDED JSON DATA ---
+        const userData = { "nombre": "Jhon Doe", "dni": "72849172", "user": "jhon.doe", "imagen_de_perfil": "multimedia/user.png" };
+        const gradesData = { "notas_estudiante": { "Tecnología e Innovación": { "PC1": 15, "PC2": 18, "PC3": 14, "Prueba Final": 17, "peso_PC1": 0.20, "peso_PC2": 0.20, "peso_PC3": 0.20, "peso_Prueba_Final": 0.40 }, "Matemática Aplicada": { "PC1": 12, "PC2": 10, "PC3": 15, "Prueba Final": 13, "peso_PC1": 0.20, "peso_PC2": 0.20, "peso_PC3": 0.20, "peso_Prueba_Final": 0.40 }, "Diseño de Interfaces Web": { "PC1": 17, "PC2": 16, "PC3": 19, "Prueba Final": 18, "peso_PC1": 0.20, "peso_PC2": 0.20, "peso_PC3": 0.20, "peso_Prueba_Final": 0.40 }, "Comunicación Efectiva": { "PC1": 14, "PC2": 17, "PC3": 16, "Prueba Final": 15, "peso_PC1": 0.20, "peso_PC2": 0.20, "peso_PC3": 0.20, "peso_Prueba_Final": 0.40 } } };
+        const scholarshipsData = { "becas_peruanas": [ { "nombre": "Beca 18 (PRONABEC)", "link": "https://www.pronabec.gob.pe/beca18/", "promedio_requerido": "15.0" }, { "nombre": "Beca Generación del Bicentenario (PRONABEC)", "link": "https://www.pronabec.gob.pe/beca-bicentenario/", "promedio_requerido": "16.0" }, { "nombre": "Beca Alianza del Pacífico (PRONABEC)", "link": "https://www.pronabec.gob.pe/beca-alianza-pacifico/", "promedio_requerido": "15.5" }, { "nombre": "Beca de Excelencia Académica (Universidades)", "link": "Varias universidades ofrecen sus propias becas, revisar webs institucionales", "promedio_requerido": "16.0" }, { "nombre": "Becas DAAD (Alemania)", "link": "https://www.daad.pe/", "promedio_requerido": "15.0" }, { "nombre": "Becas Fullbright (EE.UU.)", "link": "https://pe.usembassy.gov/es/education-culture/fullbright-scholarship/", "promedio_requerido": "15.5" }, { "nombre": "Becas Chevening (Reino Unido)", "link": "https://www.chevening.org/scholarship/peru/", "promedio_requerido": "16.0" }, { "nombre": "Becas ELAP (Canadá)", "link": "https://www.educanada.ca/scholarships-bourses/can/institutions/elap.aspx?lang=eng", "promedio_requerido": "14.0" }, { "nombre": "Becas Erasmus Mundus (Europa)", "link": "https://erasmus-plus.ec.europa.eu/opportunities/individuals/students/erasmus-mundus-joint-masters", "promedio_requerido": "16.0" }, { "nombre": "Becas para estudios de postgrado en el extranjero (CONCYTEC)", "link": "https://www.gob.pe/concytec", "promedio_requerido": "15.0" } ] };
+        const menuData = { "menu": { "precio_menu_fijo": 10.00, "entradas": [ { "nombre": "Papa a la Huancaína" }, { "nombre": "Ocopa Arequipeña" }, { "nombre": "Causa Rellena de Pollo" } ], "postres": [ { "nombre": "Suspiro a la Limeña" }, { "nombre": "Arroz con Leche" }, { "nombre": "Mazamorra Morada" } ], "segundos": [ { "nombre": "Lomo Saltado" }, { "nombre": "Aji de Gallina" }, { "nombre": "Ceviche de Pescado" } ], "refrescos": [ { "nombre": "Chicha Morada" }, { "nombre": "Maracuyá" }, { "nombre": "Inca Kola" } ] } };
+        const scheduleData = { "horario_clases": [ { "dia": "Lunes", "hora_inicio": "09:00", "hora_fin": "10:40", "curso": "Matemática Aplicada", "ubicacion": { "codigo": "C1A201", "detalle": { "campus": "Campus 1", "pabellon": "Pabellón A", "piso": "Piso 2", "aula": "Aula 201" } } }, { "dia": "Miércoles", "hora_inicio": "11:00", "hora_fin": "12:40", "curso": "Diseño de Interfaces Web", "ubicacion": { "codigo": "C2D305", "detalle": { "campus": "Campus 2", "pabellon": "Pabellón D", "piso": "Piso 3", "aula": "Aula 305" } } }, { "dia": "Viernes", "hora_inicio": "13:00", "hora_fin": "14:40", "curso": "Tecnología e Innovación", "ubicacion": { "codigo": "C7B503", "detalle": { "campus": "Campus 7", "pabellon": "Pabellón B", "piso": "Piso 5", "aula": "Aula 503" } } }, { "dia": "Martes", "hora_inicio": "15:00", "hora_fin": "16:40", "curso": "Comunicación Efectiva", "ubicacion": { "codigo": "C1C102", "detalle": { "campus": "Campus 1", "pabellon": "Pabellón C", "piso": "Piso 1", "aula": "Aula 102" } } } ] };
+
+        // --- DOM Elements ---
+        const loginSection = document.getElementById('login-section');
+        const appSection = document.getElementById('app-section');
+        const loginButton = document.getElementById('login-button');
+        const logoutButton = document.getElementById('logout-button');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const loginError = document.getElementById('login-error');
+        const mainContent = document.getElementById('main-content');
+        const toolLinks = document.querySelectorAll('.tool-link');
+        const hamburgerButton = document.getElementById('hamburger-button');
+        const closeSidebarButton = document.getElementById('close-sidebar-button');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebar-overlay');
+        
+
+        // --- Mobile Sidebar Logic ---
+        function openSidebar() {
+            sidebar.classList.remove('-translate-x-full');
+            sidebarOverlay.classList.remove('hidden');
+        }
+
+        function closeSidebar() {
+            sidebar.classList.add('-translate-x-full');
+            sidebarOverlay.classList.add('hidden');
+        }
+
+        hamburgerButton.addEventListener('click', openSidebar);
+        closeSidebarButton.addEventListener('click', closeSidebar);
+        sidebarOverlay.addEventListener('click', closeSidebar);
+
+        // --- Login & Session Logic ---
+        loginButton.addEventListener('click', () => {
+            if (usernameInput.value === userData.user && passwordInput.value === userData.dni) {
+                localStorage.setItem('isLoggedIn', 'true');
+                loginSection.classList.add('hidden');
+                appSection.classList.remove('hidden');
+                loadTool('ubicacion'); // Load default tool
+            } else {
+                loginError.classList.remove('hidden');
+            }
+        });
+        
+        logoutButton.addEventListener('click', () => {
+            localStorage.removeItem('isLoggedIn');
+            appSection.classList.add('hidden');
+            loginSection.classList.remove('hidden');
+            usernameInput.value = '';
+            passwordInput.value = '';
+            loginError.classList.add('hidden');
+            closeSidebar();
+        });
+
+        // --- Navigation ---
+        toolLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const tool = link.getAttribute('data-tool');
+                loadTool(tool);
+                if (window.innerWidth < 768) { 
+                    closeSidebar();
+                }
+            });
+        });
+
+        function loadTool(tool) {
+            mainContent.innerHTML = ''; // Clear content
+            // Highlight active link
+            toolLinks.forEach(l => l.classList.remove('bg-white/20'));
+            document.querySelector(`.tool-link[data-tool=${tool}]`).classList.add('bg-white/20');
+
+            switch(tool) {
+                case 'menu': showMenu(); break;
+                case 'flashpass': showFlashPass(); break;
+                case 'ubicacion': showUbicacion(); break;
+                case 'becas': showBecas(); break;
+                case 'horario': showHorario(); break;
+                case 'notas': showNotas(); break;
+                default: showUbicacion(); // Default to ubication
+            }
+        }
+        
+        // --- Tool Functions ---
+        function showMenu() {
+            const { segundos, postres, refrescos, precio_menu_fijo } = menuData.menu;
+            let content = `<h1 class="text-2xl md:text-3xl font-bold text-asu-blue mb-6">Menú ASU</h1>`;
+            content += `<p class="mb-4 text-lg">Precio del Menú: S/ ${precio_menu_fijo.toFixed(2)}</p>`;
+            content += `<div class="grid grid-cols-1 md:grid-cols-3 gap-6">`;
+            content += `<div><h2 class="text-xl font-bold mb-2 text-asu-blue">Segundo</h2><select id="segundo-select" class="w-full p-2 border rounded">${segundos.map(s => `<option>${s.nombre}</option>`).join('')}</select></div>`;
+            content += `<div><h2 class="text-xl font-bold mb-2 text-asu-blue">Postre</h2><select id="postre-select" class="w-full p-2 border rounded">${postres.map(p => `<option>${p.nombre}</option>`).join('')}</select></div>`;
+            content += `<div><h2 class="text-xl font-bold mb-2 text-asu-blue">Refresco</h2><select id="refresco-select" class="w-full p-2 border rounded">${refrescos.map(r => `<option>${r.nombre}</option>`).join('')}</select></div>`;
+            content += `</div>`;
+            content += `<div class="mt-6"><h2 class="text-xl font-bold mb-2 text-asu-blue">Método de Pago</h2>`;
+            content += `<div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4">
+                <button id="pay-cash" class="w-full md:w-auto bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Pagar en Caja</button>
+                <button id="pay-app" class="w-full md:w-auto bg-asu-blue text-white px-4 py-2 rounded hover:bg-opacity-90">Pagar en Aplicativo</button>
+            </div></div>`;
+            content += `<div id="payment-result" class="mt-6"></div>`;
+            mainContent.innerHTML = content;
+            
+            document.getElementById('pay-cash').addEventListener('click', () => {
+                document.getElementById('payment-result').innerHTML = `<div class="p-4 bg-green-100 border-l-4 border-green-500 text-green-700"><p class="font-bold">¡Orden generada! Acércate a caja para pagar.</p></div>`;
+            });
+
+            document.getElementById('pay-app').addEventListener('click', () => {
+                const selectedSegundo = document.getElementById('segundo-select').value;
+                const qrData = `Pedido para: ${userData.nombre}\nPlato: ${selectedSegundo}\nPrecio: S/${precio_menu_fijo.toFixed(2)}`;
+                document.getElementById('payment-result').innerHTML = `<div class="p-4 bg-blue-100 border-l-4 border-asu-blue text-asu-blue">
+                    <p class="font-bold">Escanea el QR para pagar</p>
+                    <div id="qrcode" class="mt-4 w-40 h-40 mx-auto"></div>
+                </div>`;
+                new QRCode(document.getElementById("qrcode"), { text: qrData, width: 160, height: 160 });
+            });
+        }
+
+        function showFlashPass() {
+            let content = `<h1 class="text-2xl md:text-3xl font-bold text-asu-blue mb-6">Flash Pass</h1>`;
+            const today = new Date().toISOString().split('T')[0];
+            const lastPassDate = localStorage.getItem('flashPassDate');
+
+            if (lastPassDate === today) {
+                const passData = JSON.parse(localStorage.getItem('flashPassData'));
+                 content += `
+                    <p class="mb-4">Ya has generado un Flash Pass hoy.</p>
+                    <div id="flashpass-card" class="bg-white p-6 rounded-lg shadow-md border-l-4 border-asu-blue">
+                         <div class="text-center md:text-left md:flex md:items-center md:space-x-4">
+                            <img src="multimedia/user.png" alt="Foto de perfil" class="w-24 h-24 rounded-full mx-auto md:mx-0 object-cover border-2 border-asu-blue">
+                            <div class="mt-4 md:mt-0">
+                                <h2 class="text-2xl font-bold text-asu-blue">${passData.name}</h2>
+                                <p class="text-gray-600">DNI: ${passData.dni}</p>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-4 border-t text-center md:text-left">
+                            <p><strong>Motivo:</strong> ${passData.reason}</p>
+                            <p><strong>Hora de Ingreso:</strong> ${passData.time}</p>
+                        </div>
+                         <button id="delete-pass" class="mt-6 w-full bg-red-500 text-white py-2 rounded-lg font-bold hover:bg-red-600 transition">Eliminar Flash Pass</button>
+                    </div>`;
+            } else {
+                 content += `
+                    <div id="flashpass-form">
+                        <p class="mb-4">Genera un permiso de entrada rápida.</p>
+                        <textarea id="pass-reason" class="w-full p-2 border rounded mb-4" placeholder="Escribe el motivo de tu entrada..."></textarea>
+                        <button id="generate-pass" class="w-full bg-asu-blue text-white py-2 rounded-lg font-bold hover:bg-opacity-90 transition">Generar Flash Pass</button>
+                    </div>
+                    <div id="flashpass-display" class="mt-6"></div>`;
+            }
+            mainContent.innerHTML = content;
+            
+            const generateBtn = document.getElementById('generate-pass');
+            if(generateBtn) {
+                generateBtn.addEventListener('click', () => {
+                    const reason = document.getElementById('pass-reason').value;
+                    if (!reason) { alert('Por favor, ingresa un motivo.'); return; }
+                    const now = new Date();
+                    const passData = { name: userData.nombre, dni: userData.dni, image: userData.imagen_de_perfil, reason: reason, time: now.toLocaleTimeString(), date: now.toISOString().split('T')[0] };
+                    localStorage.setItem('flashPassDate', passData.date);
+                    localStorage.setItem('flashPassData', JSON.stringify(passData));
+                    showFlashPass();
+                });
+            }
+
+            const deleteBtn = document.getElementById('delete-pass');
+            if(deleteBtn) {
+                deleteBtn.addEventListener('click', () => {
+                    localStorage.removeItem('flashPassData');
+                    showFlashPass();
+                });
+            }
+        }
+
+        function showUbicacion() {
+            let content = `<h1 class="text-2xl md:text-3xl font-bold text-asu-blue mb-6">Ubica tu Aula</h1>`;
+            // NOTE: Using a fixed date/time for demonstration purposes based on the provided context.
+            // For a live app, you would use: const now = new Date();
+            const now = new Date('2025-06-09T09:45:49-05:00'); 
+            const dayOfWeek = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"][now.getDay()];
+            const currentTime = now.toTimeString().slice(0, 5);
+
+            const currentClass = scheduleData.horario_clases.find(c => c.dia === dayOfWeek && currentTime >= c.hora_inicio && currentTime <= c.hora_fin);
+
+            if (currentClass) {
+                const { curso, ubicacion } = currentClass;
+                const { detalle } = ubicacion;
+                content += `
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <p class="text-lg">Ahora te toca el curso de:</p>
+                        <h2 class="text-2xl md:text-3xl font-bold text-asu-blue my-2">${curso}</h2>
+                        <div class="mt-4 pt-4 border-t">
+                            <h3 class="text-xl font-bold mb-2">Detalles de la Ubicación:</h3>
+                            <ul class="list-disc list-inside space-y-1">
+                                <li><strong>Código:</strong> ${ubicacion.codigo}</li>
+                                <li><strong>Campus:</strong> ${detalle.campus}</li>
+                                <li><strong>Pabellón:</strong> ${detalle.pabellon}</li>
+                                <li><strong>Piso:</strong> ${detalle.piso}</li>
+                                <li><strong>Aula:</strong> ${detalle.aula}</li>
+                            </ul>
+                        </div>
+                    </div>`;
+            } else {
+                content += `<div class="bg-yellow-100 p-4 rounded-lg text-yellow-800"><p>No tienes ninguna clase programada en este momento.</p></div>`;
+            }
+            mainContent.innerHTML = content;
+        }
+        
+        function showBecas() {
+            let content = `<h1 class="text-2xl md:text-3xl font-bold text-asu-blue mb-6">Becas Smart</h1>`;
+            const { courseAverages, overallAverage } = calculateAverages();
+            content += `<div class="bg-white p-6 rounded-lg shadow-md mb-6">
+                            <h2 class="text-xl md:text-2xl font-bold text-asu-blue">Tu Promedio General Ponderado</h2>
+                            <p class="text-4xl md:text-5xl font-bold text-asu-blue mt-2">${overallAverage.toFixed(2)}</p>
+                        </div>`;
+            const eligibleScholarships = scholarshipsData.becas_peruanas.filter(b => overallAverage >= parseFloat(b.promedio_requerido));
+            if (eligibleScholarships.length > 0) {
+                content += `<h2 class="text-xl md:text-2xl font-bold text-asu-blue mb-4">¡Felicidades! Puedes aplicar a estas becas:</h2>`;
+                content += `<div class="grid grid-cols-1 md:grid-cols-2 gap-4">`;
+                eligibleScholarships.forEach(beca => {
+                    content += `<div class="bg-green-100 p-4 rounded-lg border-l-4 border-green-500">
+                                    <h3 class="font-bold text-green-800">${beca.nombre}</h3>
+                                    <p class="text-sm">Promedio requerido: ${beca.promedio_requerido}</p>
+                                    <a href="${beca.link}" target="_blank" class="text-sm text-green-600 hover:underline">Más información</a>
+                               </div>`;
+                });
+                content += `</div>`;
+            } else {
+                let nextBeca = scholarshipsData.becas_peruanas.reduce((prev, curr) => {
+                    let prevDiff = parseFloat(prev.promedio_requerido) - overallAverage;
+                    let currDiff = parseFloat(curr.promedio_requerido) - overallAverage;
+                    if(prevDiff < 0) prevDiff = Infinity;
+                    if(currDiff < 0) currDiff = Infinity;
+                    return (currDiff < prevDiff) ? curr : prev;
+                });
+                const minDiff = parseFloat(nextBeca.promedio_requerido) - overallAverage;
+                content += `<h2 class="text-xl md:text-2xl font-bold text-asu-blue mb-4">Oportunidades de Beca</h2>`;
+                content += `<div class="bg-yellow-100 p-4 rounded-lg border-l-4 border-yellow-500 text-yellow-800">
+                                <p>Aún no alcanzas el promedio para una beca. ¡Sigue esforzándote!</p>
+                                <p class="mt-2">Te faltan <strong>${minDiff.toFixed(2)}</strong> puntos para poder aplicar a la <strong>${nextBeca.nombre}</strong> (requiere ${nextBeca.promedio_requerido}).</p>
+                           </div>`;
+            }
+            mainContent.innerHTML = content;
+        }
+
+        function showHorario() {
+            let content = `<h1 class="text-2xl md:text-3xl font-bold text-asu-blue mb-6">Horario de Clases</h1>`;
+            const sortedSchedule = [...scheduleData.horario_clases].sort((a,b) => {
+                const days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
+                return days.indexOf(a.dia) - days.indexOf(b.dia) || a.hora_inicio.localeCompare(b.hora_inicio);
+            });
+            content += `<div class="bg-white p-4 rounded-lg shadow-md overflow-x-auto">
+                            <table class="w-full text-left min-w-[600px]">
+                                <thead class="border-b-2 border-asu-blue">
+                                    <tr><th class="p-2">Día</th><th class="p-2">Hora</th><th class="p-2">Curso</th><th class="p-2">Ubicación</th></tr>
+                                </thead>
+                                <tbody>`;
+            sortedSchedule.forEach(clase => {
+                content += `<tr class="border-b"><td class="p-2 font-bold">${clase.dia}</td><td class="p-2">${clase.hora_inicio} - ${clase.hora_fin}</td><td class="p-2">${clase.curso}</td><td class="p-2">${clase.ubicacion.detalle.campus}, ${clase.ubicacion.detalle.aula}</td></tr>`;
+            });
+            content += `</tbody></table></div>`;
+            mainContent.innerHTML = content;
+        }
+
+        function showNotas() {
+            let content = `<h1 class="text-2xl md:text-3xl font-bold text-asu-blue mb-6">Mis Notas</h1>`;
+            const { courseAverages, overallAverage } = calculateAverages();
+            content += `<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">`;
+            Object.entries(gradesData.notas_estudiante).forEach(([course, grades]) => {
+                content += `<div class="bg-white p-4 rounded-lg shadow-md">
+                                <h2 class="text-xl font-bold text-asu-blue border-b pb-2 mb-2">${course}</h2>
+                                <ul class="space-y-1 text-sm">
+                                    <li class="flex justify-between"><span>PC1:</span> <span class="font-semibold">${grades.PC1}</span></li>
+                                    <li class="flex justify-between"><span>PC2:</span> <span class="font-semibold">${grades.PC2}</span></li>
+                                    <li class="flex justify-between"><span>PC3:</span> <span class="font-semibold">${grades.PC3}</span></li>
+                                    <li class="flex justify-between"><span>Prueba Final:</span> <span class="font-semibold">${grades['Prueba Final']}</span></li>
+                                </ul>
+                                <div class="mt-3 pt-3 border-t">
+                                    <p class="flex justify-between text-lg font-bold"><span>Promedio del Curso:</span> <span class="text-asu-blue">${courseAverages[course].toFixed(2)}</span></p>
+                                </div>
+                           </div>`;
+            });
+            content += `</div>`;
+            content += `<div class="mt-6 bg-asu-blue text-white p-6 rounded-lg shadow-lg text-center">
+                            <h2 class="text-xl md:text-2xl font-bold">PROMEDIO PONDERADO GENERAL</h2>
+                            <p class="text-5xl md:text-6xl font-extrabold mt-2">${overallAverage.toFixed(2)}</p>
+                        </div>`;
+            mainContent.innerHTML = content;
+        }
+
+        // --- Helper Functions ---
+        function calculateAverages() {
+            const courseAverages = {};
+            let totalAverageSum = 0;
+            let courseCount = 0;
+            for (const course in gradesData.notas_estudiante) {
+                const grades = gradesData.notas_estudiante[course];
+                const avg = (grades.PC1 * grades.peso_PC1) + (grades.PC2 * grades.peso_PC2) + (grades.PC3 * grades.peso_PC3) + (grades['Prueba Final'] * grades.peso_Prueba_Final);
+                courseAverages[course] = avg;
+                totalAverageSum += avg;
+                courseCount++;
+            }
+            const overallAverage = totalAverageSum / courseCount;
+            return { courseAverages, overallAverage };
+        }
+        
+        // --- Initial Load ---
+        document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('isLoggedIn') === 'true') {
+                loginSection.classList.add('hidden');
+                appSection.classList.remove('hidden');
+                loadTool('ubicacion'); // Load default tool on refresh
+            }
+        });
+
+    </script>
+
+</body>
+</html>
