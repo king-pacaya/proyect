@@ -2,18 +2,54 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="shortcut icon" href="favicon.svg">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
   <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+  <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
   <style>
+    @font-face {
+      font-family: 'CircularStd-Book';
+      src: url('CircularStd-Book.otf') format('opentype');
+    }
+
     * {
-      font-family: 'Montserrat', sans-serif;
+      font-family: 'CircularStd-Book', sans-serif;
+      cursor: none; /* Mouse oculto por defecto */
     }
     
+    body {
+      overflow: hidden;
+    }
+
+    /* Mostrar cursor solo en el menú */
+    .song-selector-overlay * {
+      cursor: auto;
+    }
+
+    /* Estilos para el video de fondo */
+    .background-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      object-fit: cover;
+    }
+
+    /* Fondo translúcido para toda la pantalla */
+    .screen-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.45);
+      z-index: 0;
+    }
+
     /* Estilos para el contador */
     .countdown-overlay {
       position: fixed;
@@ -43,52 +79,56 @@
     
     /* Estilos para el reproductor */
     .lyrics-container {
-      max-width: 800px;
-      margin: auto; /* Centrar vertical y horizontalmente */
-      padding: 2rem;
+      width: 100%;
+      margin: auto;
+      padding: 0; /* Eliminamos el padding lateral */
       text-align: center;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      min-height: 100vh; /* Para que ocupe toda la altura y permitir centrado vertical */
+      min-height: 100vh;
       box-sizing: border-box;
+      position: relative;
+      z-index: 10;
     }
     
     .previous-line {
-      font-size: 1.2rem;
-      color: #9ca3af;
+      font-size: 2.6rem;
+      color: #ffffff;
       min-height: 2rem;
-      opacity: 0.7;
+      opacity: 0.9;
+      white-space: nowrap;
+      width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .current-line {
-      font-size: 3rem; /* Aumentado para mayor visibilidad */
+      font-size: 4.7rem;
       font-weight: bold;
-      margin: 1rem 0;
-      color: #3b82f6;
-      min-height: 5rem; /* Ajustado para el nuevo tamaño de fuente */
-      line-height: 1.2;
+      color: #ffffff;
+      min-height: 4rem;
+      white-space: nowrap;
+      width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     
     .next-line {
-      font-size: 1.8rem; /* Aumentado */
-      color: #6b7280;
-      min-height: 3rem; /* Ajustado */
+      font-size: 2.6rem;
+      color: #ffffff;
+      min-height: 2rem;
+      opacity: 0.4;
+      white-space: nowrap;
+      width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     
-    .menu-button {
-      position: fixed;
-      top: 1rem;
-      left: 1rem;
-      background-color: rgba(0, 0, 0, 0.6);
-      border: none;
-      color: white;
-      font-size: 2rem;
-      cursor: pointer;
-      padding: 0.5rem 1rem;
-      border-radius: 0.5rem;
-      z-index: 200;
+    /* El botón de menú ya no es visible por defecto */
+    #menuButton { 
+        display: none; 
     }
 
     .song-selector-overlay {
@@ -134,17 +174,16 @@
       background-color: #3b82f6;
     }
 
-    /* Ocultar la barra de progreso, tiempo y el botón de mute por defecto */
-    .player-controls, #muteBtn {
+    /* Ocultar la barra de progreso y tiempo */
+    .player-controls {
         display: none;
     }
   </style>
   <title>Visualizador de Letras Sincronizadas</title>
 </head>
 <body class="bg-gray-900 text-white">
-  <button id="menuButton" class="menu-button">
-    <i class="fas fa-bars"></i>
-  </button>
+  <video id="backgroundVideo" class="background-video" autoplay muted loop></video>
+  <div class="screen-overlay"></div>
 
   <div id="songSelectorOverlay" class="song-selector-overlay hidden">
     <h2 class="text-3xl font-bold mb-6">Selecciona una canción:</h2>
@@ -166,7 +205,6 @@
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       // Elementos del DOM
-      const menuButton = document.getElementById('menuButton');
       const songSelectorOverlay = document.getElementById('songSelectorOverlay');
       const songList = document.getElementById('songList');
       const previousLine = document.getElementById('previousLine');
@@ -175,9 +213,11 @@
       const audioPlayer = document.getElementById('audioPlayer');
       const countdownOverlay = document.getElementById('countdownOverlay');
       const countdownNumber = document.getElementById('countdownNumber');
+      const backgroundVideo = document.getElementById('backgroundVideo');
       
       // Variables de estado
       let songs = [];
+      let fondos = [];
       let currentSong = null;
       let lyricsData = [];
       let isMuted = false;
@@ -187,19 +227,35 @@
       let oscillator = null;
       let gainNode = null;
 
-      // Cargar canciones
-      async function loadSongs() {
+      // Cargar canciones y fondos
+      async function loadResources() {
         try {
-          const response = await fetch('songs/songs.json');
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+          // Cargar canciones
+          const songsResponse = await fetch('songs/songs.json'); 
+          if (!songsResponse.ok) {
+            throw new Error(`HTTP error! status: ${songsResponse.status}`);
           }
-          const data = await response.json();
-          songs = data.canciones;
+          const songsData = await songsResponse.json();
+          songs = songsData.canciones;
+          
+          // Cargar fondos
+          const fondosResponse = await fetch('fondos/fondos.json');
+          if (!fondosResponse.ok) {
+            throw new Error(`HTTP error! status: ${fondosResponse.status}`);
+          }
+          const fondosData = await fondosResponse.json();
+          fondos = fondosData.fondos;
+          
+          // Seleccionar un fondo aleatorio al inicio (o el primero de la lista si no hay una canción seleccionada)
+          if (fondos.length > 0) {
+            const randomFondo = fondos[Math.floor(Math.random() * fondos.length)];
+            backgroundVideo.src = randomFondo;
+          }
+          
           displaySongs();
         } catch (error) {
-          console.error('Error al cargar las canciones:', error);
-          songList.innerHTML = '<div class="text-red-500">Error al cargar las canciones.</div>';
+          console.error('Error al cargar recursos:', error);
+          songList.innerHTML = '<div class="text-red-500">Error al cargar los recursos. Verifica la consola para más detalles.</div>';
         }
       }
       
@@ -212,7 +268,7 @@
           songItem.textContent = `${song.titulo} - ${song.artista}`;
           songItem.addEventListener('click', () => {
             selectSong(index);
-            songSelectorOverlay.classList.add('hidden'); // Ocultar menú al seleccionar
+            songSelectorOverlay.classList.add('hidden');
           });
           songList.appendChild(songItem);
         });
@@ -241,6 +297,12 @@
         
         currentSong = songs[index];
         
+        // Cambiar el fondo al seleccionar una nueva canción
+        if (fondos.length > 0) {
+            const randomFondo = fondos[Math.floor(Math.random() * fondos.length)];
+            backgroundVideo.src = randomFondo;
+        }
+        
         // Cargar letra
         try {
           const response = await fetch(currentSong.txt_link);
@@ -260,7 +322,7 @@
       function parseLyrics(text) {
         const lines = text.split('\n');
         const lyrics = [];
-        let bpm = 120; // Valor por defecto
+        let bpm = 120;
         
         // Extraer metadatos
         const metadataLines = lines.filter(line => line.startsWith('[') && line.endsWith(']'));
@@ -313,32 +375,32 @@
         // Función para reproducir el sonido de baqueta
         function playStickSound() {
             if (oscillator) {
-                oscillator.stop(); // Detener el anterior si está activo
+                oscillator.stop(); 
             }
             oscillator = audioContext.createOscillator();
             gainNode = audioContext.createGain();
 
-            oscillator.type = 'sine'; // Un sonido simple, ajusta la frecuencia para que suene a baqueta
-            oscillator.frequency.value = 1000; // Frecuencia más alta para un sonido "clicky"
+            oscillator.type = 'sine'; 
+            oscillator.frequency.value = 1200; 
             
-            gainNode.gain.setValueAtTime(0.7, audioContext.currentTime); // Volumen inicial
-            gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.05); // Ataque rápido y decaimiento
+            gainNode.gain.setValueAtTime(0.7, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.05);
 
             oscillator.connect(gainNode);
             gainNode.connect(audioContext.destination);
             oscillator.start(audioContext.currentTime);
-            oscillator.stop(audioContext.currentTime + 0.1); // Detener rápidamente para un sonido corto
+            oscillator.stop(audioContext.currentTime + 0.1);
         }
 
         let count = 4;
         countdownNumber.textContent = count;
-        playStickSound(); // Reproducir sonido para el primer número
+        playStickSound(); 
 
         countdownInterval = setInterval(() => {
           count--;
           
           if (count > 0) {
-            playStickSound(); // Reproducir sonido para cada número
+            playStickSound(); 
             countdownNumber.textContent = count;
           } else {
             clearInterval(countdownInterval);
@@ -416,30 +478,41 @@
         }
       }
 
-      // Event Listeners
-      menuButton.addEventListener('click', () => {
-        songSelectorOverlay.classList.remove('hidden');
-      });
+      // Toggle Menu
+      function toggleMenu() {
+        const isMenuHidden = songSelectorOverlay.classList.contains('hidden');
+        if (isMenuHidden) {
+            songSelectorOverlay.classList.remove('hidden');
+        } else {
+            songSelectorOverlay.classList.add('hidden');
+        }
+      }
 
+      // Event Listeners
       document.addEventListener('keydown', (e) => {
-        if (songSelectorOverlay.classList.contains('hidden')) { // Solo si el menú no está abierto
+        // Hotkey para abrir/cerrar menú (O)
+        if (e.key === 'o' || e.key === 'O') {
+            toggleMenu();
+        } else if (songSelectorOverlay.classList.contains('hidden')) { 
+            // Estos hotkeys solo funcionan si el menú NO está abierto
             if (e.key === 'm' || e.key === 'M') {
                 toggleMute();
             } else if (e.key === 'p' || e.key === 'P' || e.key === ' ') {
-                e.preventDefault(); // Prevenir el desplazamiento de la página
+                e.preventDefault(); 
                 togglePlayPause();
             } else if (e.key === 'f' || e.key === 'F') {
                 toggleFullscreen();
             }
-        } else { // Si el menú está abierto, permitir salir con Escape
+        } else { 
+            // Si el menú está abierto, se puede salir con Escape
             if (e.key === 'Escape') {
-                songSelectorOverlay.classList.add('hidden');
+                toggleMenu();
             }
         }
       });
       
       // Inicializar
-      loadSongs();
+      loadResources();
     });
   </script>
 </body>
