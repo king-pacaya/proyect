@@ -10,26 +10,24 @@
   <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
   <style>
     @font-face {
-      font-family: 'Moderat-Bold'; /* Aseguramos Moderat-Bold */
+      font-family: 'Moderat-Bold';
       src: url('Moderat-Bold.ttf') format('opentype');
     }
 
     * {
       font-family: 'Moderat-Bold', sans-serif;
-      /* Eliminamos cursor: none; global aquí */
     }
     
     body {
       overflow: hidden;
-      background-color: black; /* Fondo negro inicial */
-      cursor: auto; /* Cursor visible por defecto */
+      background-color: black;
+      cursor: auto;
     }
 
     .hide-cursor {
-        cursor: none; /* Clase para ocultar el cursor */
+        cursor: none;
     }
 
-    /* Estilos para el video de fondo */
     .background-video {
       position: fixed;
       top: 0;
@@ -40,10 +38,6 @@
       object-fit: cover;
     }
 
-    /* Fondo translúcido eliminado */
-    /* .screen-overlay { display: none; } */ 
-
-    /* Estilos para el contador */
     .countdown-overlay {
       position: fixed;
       top: 0;
@@ -70,7 +64,6 @@
       100% { transform: scale(1); opacity: 1; }
     }
     
-    /* Estilos para el reproductor */
     .lyrics-container {
       width: 100%;
       margin: auto;
@@ -87,23 +80,20 @@
     }
     
     .current-line {
-      font-size: 2.3rem;
+      font-size: 3rem;
       font-weight: bold;
       color: #ffffff;
-      min-height: 1.8rem;
+      min-height: 2rem;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      text-transform: uppercase; /* Convertir a mayúsculas */
-      
-      /* Fondo negro detrás del texto */
+      text-transform: uppercase;    
       background-color: black;
       padding: 0.2em 0.5em;
       display: inline-block;
       line-height: 1.2;
     }
 
-    /* Ocultar current-line al inicio */
     .current-line.hidden {
       display: none;
     }
@@ -114,38 +104,38 @@
 
     .song-selector-overlay {
       position: fixed;
-      bottom: 2rem; /* Ubicado abajo */
+      bottom: 2rem;
       left: 50%;
-      transform: translateX(-50%); /* Centrado horizontalmente */
-      width: 90%; /* Más pequeño */
-      max-width: 400px; /* Ancho máximo */
+      transform: translateX(-50%);
+      width: 90%;
+      max-width: 400px;
       background-color: rgba(0, 0, 0, 0.95);
       display: flex;
       justify-content: center;
       align-items: center;
-      z-index: 150; /* Z-index para el menú */
+      z-index: 150;
       flex-direction: column;
-      padding: 1rem; /* Padding reducido */
+      padding: 1rem;
       box-sizing: border-box;
       border-radius: 0.5rem;
     }
     
     .song-list-container {
-      max-height: 250px; /* Altura máxima para scroll */
+      max-height: 250px;
       overflow-y: auto;
       width: 100%;
       background-color: rgba(255, 255, 255, 0.1);
-      padding: 0.5rem; /* Padding reducido */
+      padding: 0.5rem;
       border-radius: 0.5rem;
     }
 
     .song-item {
-      padding: 0.5rem 0.75rem; /* Padding reducido */
+      padding: 0.5rem 0.75rem;
       cursor: pointer;
       border-radius: 0.25rem;
       color: white;
-      font-size: 1rem; /* Tamaño de fuente reducido */
-      margin-bottom: 0.3rem; /* Margen reducido */
+      font-size: 1rem;
+      margin-bottom: 0.3rem;
     }
     
     .song-item:hover {
@@ -156,7 +146,6 @@
       background-color: #3b82f6;
     }
 
-    /* Ocultar la barra de progreso y tiempo */
     .player-controls {
         display: none;
     }
@@ -171,10 +160,10 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        z-index: -100; /* Z-index para el logo principal, detrás de todo */
+        z-index: -100;
     }
 
-    .song-info-display { /* Se reutilizará para la primera línea del TXT */
+    .song-info-display {
       position: absolute;
       top: 50%;
       left: 50%;
@@ -183,12 +172,12 @@
       font-weight: bold;
       color: white;
       text-align: center;
-      z-index: 100; /* Asegurarse de que esté por encima de las letras al inicio */
-      background-color: black; /* Fondo negro para el texto */
-      padding: 0.2em 0.5em; /* Padding para el fondo */
-      display: inline-block; /* Ajusta el fondo al contenido */
+      z-index: 100;
+      background-color: black;
+      padding: 0.2em 0.5em;
+      display: inline-block;
       line-height: 1.2;
-      text-transform: uppercase; /* También en mayúsculas */
+      text-transform: uppercase;
     }
   </style>
   <title>Visualizador de Letras Sincronizadas</title>
@@ -228,9 +217,8 @@
       const countdownNumber = document.getElementById('countdownNumber');
       const backgroundVideo = document.getElementById('backgroundVideo');
       const initialLogoContainer = document.getElementById('initialLogoContainer');
-      const songInfoDisplay = document.getElementById('songInfoDisplay'); // Reutilizado para la primera línea del TXT
+      const songInfoDisplay = document.getElementById('songInfoDisplay');
       
-      // Variables de estado
       let songs = [];
       let currentSong = null;
       let lyricsData = [];
@@ -240,9 +228,8 @@
       let audioContext = null;
       let oscillator = null;
       let gainNode = null;
-      let songIntroTimeout = null; // Para controlar la duración de la primera línea del TXT
+      let songIntroTimeout = null;
 
-      // Cargar canciones
       async function loadResources() {
         try {
           const songsResponse = await fetch('songs/songs.json'); 
@@ -259,7 +246,6 @@
         }
       }
       
-      // Mostrar lista de canciones
       function displaySongs() {
         songList.innerHTML = '';
         songs.forEach((song, index) => {
@@ -269,24 +255,22 @@
           songItem.addEventListener('click', () => {
             selectSong(index);
             songSelectorOverlay.classList.add('hidden');
-            initialLogoContainer.classList.add('hidden'); // Ocultar logo inicial al seleccionar canción
-            body.classList.add('hide-cursor'); // Ocultar cursor al salir del menú
+            initialLogoContainer.classList.add('hidden');
+            body.classList.add('hide-cursor');
           });
           songList.appendChild(songItem);
         });
       }
       
-      // Seleccionar canción
       async function selectSong(index) {
-        // Resetear estado
         audioPlayer.pause();
         audioPlayer.currentTime = 0;
         currentLine.textContent = ''; 
-        currentLine.classList.add('hidden'); // Asegurarse de que currentLine esté oculta inicialmente
-        songInfoDisplay.classList.add('hidden'); // Ocultar la primera línea del TXT
+        currentLine.classList.add('hidden');
+        songInfoDisplay.classList.add('hidden');
         
         clearInterval(countdownInterval);
-        clearTimeout(songIntroTimeout); // Limpiar timeout de la intro
+        clearTimeout(songIntroTimeout);
         
         if (oscillator) {
             oscillator.stop();
@@ -295,14 +279,12 @@
         countdownOverlay.classList.add('hidden');
         isCountingDown = false;
         
-        // Actualizar UI de selección
         const songItems = document.querySelectorAll('.song-item');
         songItems.forEach(item => item.classList.remove('active-song'));
         songItems[index].classList.add('active-song');
         
         currentSong = songs[index];
 
-        // Establecer el fondo del video de la canción seleccionada
         if (currentSong.fondo) {
             backgroundVideo.src = currentSong.fondo;
             backgroundVideo.load(); 
@@ -311,44 +293,39 @@
         } else {
             backgroundVideo.style.display = 'none'; 
         }
-        
-        // Cargar letra
+
         try {
           const response = await fetch(currentSong.txt_link);
           if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
           const text = await response.text();
           lyricsData = parseLyrics(text);
           
-          // Mostrar la primera línea del TXT por 3 segundos
           if (lyricsData.length > 0) {
-            const firstLineText = lyricsData[0].rawText.replace(/^\[\d{2}:\d{2}\.\d{2}\]/, '').trim(); // Obtener texto sin timestamp
+            const firstLineText = lyricsData[0].rawText.replace(/^\[\d{2}:\d{2}\.\d{2}\]/, '').trim();
             songInfoDisplay.textContent = firstLineText;
             songInfoDisplay.classList.remove('hidden');
             
             songIntroTimeout = setTimeout(() => {
                 songInfoDisplay.classList.add('hidden');
-                currentLine.classList.remove('hidden'); // Mostrar currentLine después de la intro
+                currentLine.classList.remove('hidden');
             }, 3000);
           } else {
-            currentLine.classList.remove('hidden'); // Si no hay intro, mostrar currentLine
+            currentLine.classList.remove('hidden');
           }
 
-          // Iniciar conteo y reproducción
           startCountdown();
         } catch (error) {
           console.error('Error al cargar la letra:', error);
           currentLine.textContent = 'ERROR AL CARGAR LA LETRA.';
-          currentLine.classList.remove('hidden'); // Asegurarse de que sea visible para mostrar el error
+          currentLine.classList.remove('hidden');
         }
       }
-      
-      // Parsear letra con marcas de tiempo
+
       function parseLyrics(text) {
         const lines = text.split('\n');
         const lyrics = [];
         let bpm = 120;
         
-        // Extraer metadatos
         const metadataLines = lines.filter(line => line.startsWith('[') && line.endsWith(']'));
         metadataLines.forEach(line => {
           if (line.toLowerCase().includes('[bpm:')) {
@@ -357,25 +334,23 @@
           }
         });
         
-        // Procesar líneas con tiempo
         lines.forEach(line => {
-          const timeMatch = line.match(/^\[(\d{2}):(\d{2})\.(\d{2})\](.*)/); // Ajuste para 2 dígitos de milisegundos
+          const timeMatch = line.match(/^\[(\d{2}):(\d{2})\.(\d{2})\](.*)/);
           if (timeMatch) {
             const minutes = parseInt(timeMatch[1]);
             const seconds = parseInt(timeMatch[2]);
             const milliseconds = parseInt(timeMatch[3]);
             const text = timeMatch[4].trim();
             
-            const timeInSeconds = minutes * 60 + seconds + milliseconds / 100; // Milisegundos / 100 para xx.xx
+            const timeInSeconds = minutes * 60 + seconds + milliseconds / 100;
             lyrics.push({
               time: timeInSeconds,
               text: text,
-              rawText: line // Guardar la línea completa para mostrarla en la intro
+              rawText: line
             });
           }
         });
         
-        // Ordenar por tiempo
         lyrics.sort((a, b) => a.time - b.time);
         
         if (lyrics.length > 0) {
@@ -384,8 +359,7 @@
         
         return lyrics;
       }
-      
-      // Iniciar conteo regresivo
+
       function startCountdown() {
         isCountingDown = true;
         countdownOverlay.classList.remove('hidden');
@@ -397,7 +371,6 @@
             audioContext = new (window.AudioContext || window.webkitAudioContext)();
         }
         
-        // Función para reproducir el sonido de baqueta
         function playStickSound() {
             if (oscillator) {
                 oscillator.stop(); 
@@ -441,22 +414,19 @@
         }, interval);
       }
       
-      // Iniciar reproducción
       function startPlayback() {
         audioPlayer.src = currentSong.mp3_link;
         audioPlayer.play();
         audioPlayer.addEventListener('timeupdate', updateLyrics);
       }
       
-      // Actualizar letras según el tiempo actual
       function updateLyrics() {
         if (!lyricsData.length || isCountingDown) return;
         
         const currentTime = audioPlayer.currentTime;
         let currentLyricIndex = -1;
         
-        // Find the index of the current lyric, skipping the first line (intro)
-        for (let i = 1; i < lyricsData.length; i++) { // Start from index 1 to skip the intro line
+        for (let i = 1; i < lyricsData.length; i++) {
           if (lyricsData[i].time <= currentTime) {
             currentLyricIndex = i;
           } else {
@@ -464,32 +434,26 @@
           }
         }
         
-        // Actualizar UI - solo la línea actual
         if (currentLyricIndex !== -1) {
           currentLine.textContent = lyricsData[currentLyricIndex].text;
         } else {
-          // Si no hay letra activa (por ejemplo, antes de la primera letra real)
-          // y la intro ya pasó, limpiar el currentLine
-          if (!songInfoDisplay.classList.contains('hidden')) { // Si la intro aún está visible
-             currentLine.textContent = ''; // No mostrar nada todavía
+          if (!songInfoDisplay.classList.contains('hidden')) {
+             currentLine.textContent = '';
           } else {
-             currentLine.textContent = ''; // Limpiar si no hay letra y la intro ya se ocultó
+             currentLine.textContent = '';
           }
         }
 
-        // Si la intro ya pasó, asegúrate de que currentLine esté visible
         if (songInfoDisplay.classList.contains('hidden')) {
             currentLine.classList.remove('hidden');
         }
       }
       
-      // Toggle Mute
       function toggleMute() {
         isMuted = !isMuted;
         audioPlayer.muted = isMuted;
       }
 
-      // Toggle Play/Pause
       function togglePlayPause() {
         if (audioPlayer.paused) {
           audioPlayer.play();
@@ -498,7 +462,6 @@
         }
       }
 
-      // Toggle Fullscreen
       function toggleFullscreen() {
         if (!document.fullscreenElement) {
           document.documentElement.requestFullscreen().catch(err => {
@@ -511,31 +474,26 @@
         }
       }
 
-      // Toggle Menu
       function toggleMenu() {
         const isMenuHidden = songSelectorOverlay.classList.contains('hidden');
         if (isMenuHidden) {
             songSelectorOverlay.classList.remove('hidden');
-            body.classList.remove('hide-cursor'); // Mostrar cursor al abrir el menú
-            initialLogoContainer.style.display = 'flex'; // Asegurarse de que el logo sea visible detrás
+            body.classList.remove('hide-cursor');
+            initialLogoContainer.style.display = 'flex';
         } else {
             songSelectorOverlay.classList.add('hidden');
-            body.classList.add('hide-cursor'); // Ocultar cursor al cerrar el menú
-            // Si no hay una canción seleccionada, mostrar el logo de nuevo al cerrar el menú
+            body.classList.add('hide-cursor');
             if (!currentSong) {
               initialLogoContainer.style.display = 'flex';
             }
         }
       }
 
-      // Event Listeners
       document.addEventListener('keydown', (e) => {
-        // Hotkey para abrir/cerrar menú (O)
         if (e.key === 'o' || e.key === 'O') {
             e.preventDefault(); 
             toggleMenu();
         } else if (songSelectorOverlay.classList.contains('hidden')) { 
-            // Estos hotkeys solo funcionan si el menú NO está abierto
             if (e.key === 'm' || e.key === 'M') {
                 toggleMute();
             } else if (e.key === 'p' || e.key === 'P' || e.key === ' ') {
@@ -544,18 +502,15 @@
             } else if (e.key === 'f' || e.key === 'F') {
                 toggleFullscreen();
             }
-        } else { 
-            // Si el menú está abierto, se puede salir con Escape
+        } else {
             if (e.key === 'Escape') {
                 toggleMenu();
             }
         }
       });
       
-      // Inicializar
       loadResources();
 
-      // Asegurarse de que el currentLine esté oculto al cargar la página inicialmente
       currentLine.classList.add('hidden');
       songInfoDisplay.classList.add('hidden');
     });
