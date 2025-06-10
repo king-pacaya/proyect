@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="favicon.svg">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+  <style>
+    @font-face {
+      font-family: 'Moderat-Bold'; /* Aseguramos Moderat-Bold */
+      src: url('Moderat-Bold.ttf') format('opentype');
+    }
+
+    * {
+      font-family: 'Moderat-Bold', sans-serif;
+      /* Eliminamos cursor: none; global aquí */
+    }
+    
+    body {
+      overflow: hidden;
+      background-color: black; /* Fondo negro inicial */
+      cursor: auto; /* Cursor visible por defecto */
+    }
+
+    .hide-cursor {
+        cursor: none; /* Clase para ocultar el cursor */
+    }
+
+    /* Estilos para el video de fondo */
+    .background-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      object-fit: cover;
+    }
+
+    /* Fondo translúcido eliminado */
+    /* .screen-overlay { display: none; } */ 
+
+    /* Estilos para el contador */
+    .countdown-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.9);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    
+    .countdown-number {
+      font-size: 15rem;
+      color: white;
+      font-weight: bold;
+      animation: pulse 0.5s ease-out;
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(0.8); opacity: 0.5; }
+      50% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    
+    /* Estilos para el reproductor */
+    .lyrics-container {
+      width: 100%;
+      margin: auto;
+      padding: 0;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      box-sizing: border-box;
+      position: relative;
+      z-index: 10;
+    }
+    
+    .current-line {
+      font-size: 2.3rem;
+      font-weight: bold;
+      color: #ffffff;
+      min-height: 1.8rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-transform: uppercase; /* Convertir a mayúsculas */
+      
+      /* Fondo negro detrás del texto */
+      background-color: black;
+      padding: 0.2em 0.5em;
+      display: inline-block;
+      line-height: 1.2;
+    }
+
+    /* Ocultar current-line al inicio */
+    .current-line.hidden {
+      display: none;
+    }
+    
+    #menuButton { 
+        display: none; 
+    }
+
+    .song-selector-overlay {
+      position: fixed;
+      bottom: 2rem; /* Ubicado abajo */
+      left: 50%;
+      transform: translateX(-50%); /* Centrado horizontalmente */
+      width: 90%; /* Más pequeño */
+      max-width: 400px; /* Ancho máximo */
+      background-color: rgba(0, 0, 0, 0.95);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 150; /* Z-index para el menú */
+      flex-direction: column;
+      padding: 1rem; /* Padding reducido */
+      box-sizing: border-box;
+      border-radius: 0.5rem;
+    }
+    
+    .song-list-container {
+      max-height: 250px; /* Altura máxima para scroll */
+      overflow-y: auto;
+      width: 100%;
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 0.5rem; /* Padding reducido */
+      border-radius: 0.5rem;
+    }
+
+    .song-item {
+      padding: 0.5rem 0.75rem; /* Padding reducido */
+      cursor: pointer;
+      border-radius: 0.25rem;
+      color: white;
+      font-size: 1rem; /* Tamaño de fuente reducido */
+      margin-bottom: 0.3rem; /* Margen reducido */
+    }
+    
+    .song-item:hover {
+      background-color: rgba(255, 255, 255, 0.15);
+    }
+    
+    .active-song {
+      background-color: #3b82f6;
+    }
+
+    /* Ocultar la barra de progreso y tiempo */
+    .player-controls {
+        display: none;
+    }
+
+    .initial-logo-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: -100; /* Z-index para el logo principal, detrás de todo */
+    }
+
+    .song-info-display { /* Se reutilizará para la primera línea del TXT */
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 3rem;
+      font-weight: bold;
+      color: white;
+      text-align: center;
+      z-index: 100; /* Asegurarse de que esté por encima de las letras al inicio */
+      background-color: black; /* Fondo negro para el texto */
+      padding: 0.2em 0.5em; /* Padding para el fondo */
+      display: inline-block; /* Ajusta el fondo al contenido */
+      line-height: 1.2;
+      text-transform: uppercase; /* También en mayúsculas */
+    }
+  </style>
+  <title>Visualizador de Letras Sincronizadas</title>
+</head>
+<body class="bg-gray-900 text-white hide-cursor">
+  <div id="initialLogoContainer" class="initial-logo-container">
+    <img src="multimedia/logo-5l.svg" alt="Logo" class="w-1/2 max-w-sm">
+  </div>
+
+  <video id="backgroundVideo" class="background-video" autoplay muted loop></video>
+
+  <div id="songSelectorOverlay" class="song-selector-overlay hidden">
+    <h2 class="text-xl font-bold mb-4">SELECCIONA UNA CANCIÓN:</h2>
+    <div id="songList" class="song-list-container"></div>
+  </div>
+  
+  <div class="lyrics-container">
+    <div id="currentLine" class="current-line hidden"></div> </div>
+
+  <div id="songInfoDisplay" class="song-info-display hidden"></div>
+  
+  <div id="countdownOverlay" class="countdown-overlay hidden">
+    <div id="countdownNumber" class="countdown-number"></div>
+  </div>
+  
+  <audio id="audioPlayer"></audio>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Elementos del DOM
+      const body = document.body;
+      const songSelectorOverlay = document.getElementById('songSelectorOverlay');
+      const songList = document.getElementById('songList');
+      const currentLine = document.getElementById('currentLine');
+      const audioPlayer = document.getElementById('audioPlayer');
+      const countdownOverlay = document.getElementById('countdownOverlay');
+      const countdownNumber = document.getElementById('countdownNumber');
+      const backgroundVideo = document.getElementById('backgroundVideo');
+      const initialLogoContainer = document.getElementById('initialLogoContainer');
+      const songInfoDisplay = document.getElementById('songInfoDisplay'); // Reutilizado para la primera línea del TXT
+      
+      // Variables de estado
+      let songs = [];
+      let currentSong = null;
+      let lyricsData = [];
+      let isMuted = false;
+      let isCountingDown = false;
+      let countdownInterval = null;
+      let audioContext = null;
+      let oscillator = null;
+      let gainNode = null;
+      let songIntroTimeout = null; // Para controlar la duración de la primera línea del TXT
+
+      // Cargar canciones
+      async function loadResources() {
+        try {
+          const songsResponse = await fetch('songs/songs.json'); 
+          if (!songsResponse.ok) {
+            throw new Error(`HTTP error! status: ${songsResponse.status}`);
+          }
+          const songsData = await songsResponse.json();
+          songs = songsData.canciones;
+          
+          displaySongs();
+        } catch (error) {
+          console.error('Error al cargar recursos:', error);
+          songList.innerHTML = '<div class="text-red-500">Error al cargar los recursos. Verifica la consola para más detalles.</div>';
+        }
+      }
+      
+      // Mostrar lista de canciones
+      function displaySongs() {
+        songList.innerHTML = '';
+        songs.forEach((song, index) => {
+          const songItem = document.createElement('div');
+          songItem.className = 'song-item';
+          songItem.textContent = `${song.titulo} - ${song.artista}`;
+          songItem.addEventListener('click', () => {
+            selectSong(index);
+            songSelectorOverlay.classList.add('hidden');
+            initialLogoContainer.classList.add('hidden'); // Ocultar logo inicial al seleccionar canción
+            body.classList.add('hide-cursor'); // Ocultar cursor al salir del menú
+          });
+          songList.appendChild(songItem);
+        });
+      }
+      
+      // Seleccionar canción
+      async function selectSong(index) {
+        // Resetear estado
+        audioPlayer.pause();
+        audioPlayer.currentTime = 0;
+        currentLine.textContent = ''; 
+        currentLine.classList.add('hidden'); // Asegurarse de que currentLine esté oculta inicialmente
+        songInfoDisplay.classList.add('hidden'); // Ocultar la primera línea del TXT
+        
+        clearInterval(countdownInterval);
+        clearTimeout(songIntroTimeout); // Limpiar timeout de la intro
+        
+        if (oscillator) {
+            oscillator.stop();
+            oscillator = null;
+        }
+        countdownOverlay.classList.add('hidden');
+        isCountingDown = false;
+        
+        // Actualizar UI de selección
+        const songItems = document.querySelectorAll('.song-item');
+        songItems.forEach(item => item.classList.remove('active-song'));
+        songItems[index].classList.add('active-song');
+        
+        currentSong = songs[index];
+
+        // Establecer el fondo del video de la canción seleccionada
+        if (currentSong.fondo) {
+            backgroundVideo.src = currentSong.fondo;
+            backgroundVideo.load(); 
+            backgroundVideo.play(); 
+            backgroundVideo.style.display = 'block'; 
+        } else {
+            backgroundVideo.style.display = 'none'; 
+        }
+        
+        // Cargar letra
+        try {
+          const response = await fetch(currentSong.txt_link);
+          if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+          const text = await response.text();
+          lyricsData = parseLyrics(text);
+          
+          // Mostrar la primera línea del TXT por 3 segundos
+          if (lyricsData.length > 0) {
+            const firstLineText = lyricsData[0].rawText.replace(/^\[\d{2}:\d{2}\.\d{2}\]/, '').trim(); // Obtener texto sin timestamp
+            songInfoDisplay.textContent = firstLineText;
+            songInfoDisplay.classList.remove('hidden');
+            
+            songIntroTimeout = setTimeout(() => {
+                songInfoDisplay.classList.add('hidden');
+                currentLine.classList.remove('hidden'); // Mostrar currentLine después de la intro
+            }, 3000);
+          } else {
+            currentLine.classList.remove('hidden'); // Si no hay intro, mostrar currentLine
+          }
+
+          // Iniciar conteo y reproducción
+          startCountdown();
+        } catch (error) {
+          console.error('Error al cargar la letra:', error);
+          currentLine.textContent = 'ERROR AL CARGAR LA LETRA.';
+          currentLine.classList.remove('hidden'); // Asegurarse de que sea visible para mostrar el error
+        }
+      }
+      
+      // Parsear letra con marcas de tiempo
+      function parseLyrics(text) {
+        const lines = text.split('\n');
+        const lyrics = [];
+        let bpm = 120;
+        
+        // Extraer metadatos
+        const metadataLines = lines.filter(line => line.startsWith('[') && line.endsWith(']'));
+        metadataLines.forEach(line => {
+          if (line.toLowerCase().includes('[bpm:')) {
+            const bpmMatch = line.match(/\[bpm:\s*(\d+)\]/i);
+            if (bpmMatch) bpm = parseInt(bpmMatch[1]);
+          }
+        });
+        
+        // Procesar líneas con tiempo
+        lines.forEach(line => {
+          const timeMatch = line.match(/^\[(\d{2}):(\d{2})\.(\d{2})\](.*)/); // Ajuste para 2 dígitos de milisegundos
+          if (timeMatch) {
+            const minutes = parseInt(timeMatch[1]);
+            const seconds = parseInt(timeMatch[2]);
+            const milliseconds = parseInt(timeMatch[3]);
+            const text = timeMatch[4].trim();
+            
+            const timeInSeconds = minutes * 60 + seconds + milliseconds / 100; // Milisegundos / 100 para xx.xx
+            lyrics.push({
+              time: timeInSeconds,
+              text: text,
+              rawText: line // Guardar la línea completa para mostrarla en la intro
+            });
+          }
+        });
+        
+        // Ordenar por tiempo
+        lyrics.sort((a, b) => a.time - b.time);
+        
+        if (lyrics.length > 0) {
+          lyrics[0].bpm = bpm;
+        }
+        
+        return lyrics;
+      }
+      
+      // Iniciar conteo regresivo
+      function startCountdown() {
+        isCountingDown = true;
+        countdownOverlay.classList.remove('hidden');
+        
+        const bpm = lyricsData[0]?.bpm || 120;
+        const interval = 60 / bpm * 1000;
+        
+        if (!audioContext) {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        
+        // Función para reproducir el sonido de baqueta
+        function playStickSound() {
+            if (oscillator) {
+                oscillator.stop(); 
+            }
+            oscillator = audioContext.createOscillator();
+            gainNode = audioContext.createGain();
+
+            oscillator.type = 'sine'; 
+            oscillator.frequency.value = 1200; 
+            
+            gainNode.gain.setValueAtTime(0.7, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.05);
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.1);
+        }
+
+        let count = 4;
+        countdownNumber.textContent = count;
+        playStickSound(); 
+
+        countdownInterval = setInterval(() => {
+          count--;
+          
+          if (count > 0) {
+            playStickSound(); 
+            countdownNumber.textContent = count;
+          } else {
+            clearInterval(countdownInterval);
+            if (oscillator) {
+                oscillator.stop();
+                oscillator = null;
+            }
+            countdownOverlay.classList.add('hidden');
+            isCountingDown = false;
+            
+            startPlayback();
+          }
+        }, interval);
+      }
+      
+      // Iniciar reproducción
+      function startPlayback() {
+        audioPlayer.src = currentSong.mp3_link;
+        audioPlayer.play();
+        audioPlayer.addEventListener('timeupdate', updateLyrics);
+      }
+      
+      // Actualizar letras según el tiempo actual
+      function updateLyrics() {
+        if (!lyricsData.length || isCountingDown) return;
+        
+        const currentTime = audioPlayer.currentTime;
+        let currentLyricIndex = -1;
+        
+        // Find the index of the current lyric, skipping the first line (intro)
+        for (let i = 1; i < lyricsData.length; i++) { // Start from index 1 to skip the intro line
+          if (lyricsData[i].time <= currentTime) {
+            currentLyricIndex = i;
+          } else {
+            break;
+          }
+        }
+        
+        // Actualizar UI - solo la línea actual
+        if (currentLyricIndex !== -1) {
+          currentLine.textContent = lyricsData[currentLyricIndex].text;
+        } else {
+          // Si no hay letra activa (por ejemplo, antes de la primera letra real)
+          // y la intro ya pasó, limpiar el currentLine
+          if (!songInfoDisplay.classList.contains('hidden')) { // Si la intro aún está visible
+             currentLine.textContent = ''; // No mostrar nada todavía
+          } else {
+             currentLine.textContent = ''; // Limpiar si no hay letra y la intro ya se ocultó
+          }
+        }
+
+        // Si la intro ya pasó, asegúrate de que currentLine esté visible
+        if (songInfoDisplay.classList.contains('hidden')) {
+            currentLine.classList.remove('hidden');
+        }
+      }
+      
+      // Toggle Mute
+      function toggleMute() {
+        isMuted = !isMuted;
+        audioPlayer.muted = isMuted;
+      }
+
+      // Toggle Play/Pause
+      function togglePlayPause() {
+        if (audioPlayer.paused) {
+          audioPlayer.play();
+        } else {
+          audioPlayer.pause();
+        }
+      }
+
+      // Toggle Fullscreen
+      function toggleFullscreen() {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch(err => {
+            console.error(`Error al intentar entrar en modo pantalla completa: ${err.message} (${err.name})`);
+          });
+        } else {
+          if (document.exitFullscreen) {
+            document.exitFullscreen();
+          }
+        }
+      }
+
+      // Toggle Menu
+      function toggleMenu() {
+        const isMenuHidden = songSelectorOverlay.classList.contains('hidden');
+        if (isMenuHidden) {
+            songSelectorOverlay.classList.remove('hidden');
+            body.classList.remove('hide-cursor'); // Mostrar cursor al abrir el menú
+            initialLogoContainer.style.display = 'flex'; // Asegurarse de que el logo sea visible detrás
+        } else {
+            songSelectorOverlay.classList.add('hidden');
+            body.classList.add('hide-cursor'); // Ocultar cursor al cerrar el menú
+            // Si no hay una canción seleccionada, mostrar el logo de nuevo al cerrar el menú
+            if (!currentSong) {
+              initialLogoContainer.style.display = 'flex';
+            }
+        }
+      }
+
+      // Event Listeners
+      document.addEventListener('keydown', (e) => {
+        // Hotkey para abrir/cerrar menú (O)
+        if (e.key === 'o' || e.key === 'O') {
+            e.preventDefault(); 
+            toggleMenu();
+        } else if (songSelectorOverlay.classList.contains('hidden')) { 
+            // Estos hotkeys solo funcionan si el menú NO está abierto
+            if (e.key === 'm' || e.key === 'M') {
+                toggleMute();
+            } else if (e.key === 'p' || e.key === 'P' || e.key === ' ') {
+                e.preventDefault(); 
+                togglePlayPause();
+            } else if (e.key === 'f' || e.key === 'F') {
+                toggleFullscreen();
+            }
+        } else { 
+            // Si el menú está abierto, se puede salir con Escape
+            if (e.key === 'Escape') {
+                toggleMenu();
+            }
+        }
+      });
+      
+      // Inicializar
+      loadResources();
+
+      // Asegurarse de que el currentLine esté oculto al cargar la página inicialmente
+      currentLine.classList.add('hidden');
+      songInfoDisplay.classList.add('hidden');
+    });
+  </script>
+</body>
+</html>

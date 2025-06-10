@@ -1,0 +1,18 @@
+{
+  "canciones": [
+    {
+      "titulo": "Bueno es Alabar",
+      "artista": "Danilo Montero",
+      "mp3_link": "songs/Bueno es Alabar.mp3",
+      "txt_link": "songs/Bueno es Alabar.txt",
+      "fondo": "fondos/fondo1.mp4"
+    },
+    {
+      "titulo": "Hoy y Siempre te Alabaré",
+      "artista": "Danilo Montero",
+      "mp3_link": "songs/Hoy y Siempre te Alabaré.mp3",
+      "txt_link": "songs/Hoy y Siempre te Alabaré.txt",
+      "fondo": "fondos/fondo2.mp4"
+    }
+  ]
+}
