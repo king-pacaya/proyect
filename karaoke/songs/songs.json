@@ -13,6 +13,13 @@
       "mp3_link": "songs/Hoy y Siempre te Alabaré.mp3",
       "txt_link": "songs/Hoy y Siempre te Alabaré.txt",
       "fondo": "fondos/fondo4.mp4"
+    },
+    {
+      "titulo": "Te amo más que a mi misma vida",
+      "artista": "Rojo",
+      "mp3_link": "songs/Te amo más que a mi misma vida.mp3",
+      "txt_link": "songs/Te amo más que a mi misma vida.txt",
+      "fondo": "fondos/fondo5.mp4"
     }
   ]
 }
