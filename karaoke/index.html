@@ -8,6 +8,7 @@
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+  <title>Visualizador de Letras Sincronizadas</title>
   <style>
     @font-face {
       font-family: 'Moderat-Bold';
@@ -36,6 +37,10 @@
       height: 100%;
       z-index: -1;
       object-fit: cover;
+      /* Asegura una reproducción fluida en bucle */
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      transform: translate3d(0,0,0);
     }
 
     .countdown-overlay {
@@ -113,7 +118,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      z-index: 150;
+      z-index: 150; /* Mayor z-index para que esté por encima del video y letras */
       flex-direction: column;
       padding: 1rem;
       box-sizing: border-box;
@@ -121,14 +126,34 @@
     }
     
     .song-list-container {
-      max-height: 250px;
+      max-height: calc(3 * (1rem + 0.5rem * 2 + 0.3rem)); /* 3 items * (font-size + padding-y * 2 + margin-bottom) */
       overflow-y: auto;
       width: 100%;
       background-color: rgba(255, 255, 255, 0.1);
       padding: 0.5rem;
       border-radius: 0.5rem;
+
+      /* Estilos para el scrollbar sutil */
+      scrollbar-width: thin; /* Firefox */
+      scrollbar-color: rgba(255, 255, 255, 0.3) rgba(0, 0, 0, 0.5); /* Firefox */
     }
 
+    /* Webkit (Chrome, Safari) scrollbar styles */
+    .song-list-container::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .song-list-container::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.5);
+        border-radius: 10px;
+    }
+
+    .song-list-container::-webkit-scrollbar-thumb {
+        background-color: rgba(255, 255, 255, 0.3);
+        border-radius: 10px;
+        border: 2px solid rgba(0, 0, 0, 0.5);
+    }
+    
     .song-item {
       padding: 0.5rem 0.75rem;
       cursor: pointer;
@@ -160,7 +185,11 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        z-index: -100;
+        z-index: 100; /* Z-index alto para que esté encima de todo al inicio */
+    }
+
+    .initial-logo-container.hidden {
+        z-index: -100; /* Ocultar y enviar al fondo */
     }
 
     .song-info-display {
@@ -180,7 +209,6 @@
       text-transform: uppercase;
     }
   </style>
-  <title>Visualizador de Letras Sincronizadas</title>
 </head>
 <body class="bg-gray-900 text-white hide-cursor">
   <div id="initialLogoContainer" class="initial-logo-container">
@@ -190,14 +218,13 @@
   <video id="backgroundVideo" class="background-video" autoplay muted loop></video>
 
   <div id="songSelectorOverlay" class="song-selector-overlay hidden">
-    <h2 class="text-xl font-bold mb-4">SELECCIONA UNA CANCIÓN:</h2>
+    <input type="text" id="songSearchInput" placeholder="Buscar canción..." class="w-full p-2 mb-4 rounded bg-gray-700 text-white placeholder-gray-400 border border-gray-600 focus:outline-none focus:border-blue-500">
     <div id="songList" class="song-list-container"></div>
   </div>
   
   <div class="lyrics-container">
-    <div id="currentLine" class="current-line hidden"></div> </div>
-
-  <div id="songInfoDisplay" class="song-info-display hidden"></div>
+    <div id="currentLine" class="current-line hidden"></div>
+  </div>
   
   <div id="countdownOverlay" class="countdown-overlay hidden">
     <div id="countdownNumber" class="countdown-number"></div>
@@ -217,10 +244,11 @@
       const countdownNumber = document.getElementById('countdownNumber');
       const backgroundVideo = document.getElementById('backgroundVideo');
       const initialLogoContainer = document.getElementById('initialLogoContainer');
-      const songInfoDisplay = document.getElementById('songInfoDisplay');
+      const songSearchInput = document.getElementById('songSearchInput');
       
       let songs = [];
-      let currentSong = null;
+      let filteredSongs = []; 
+      let currentSongIndex = -1; 
       let lyricsData = [];
       let isMuted = false;
       let isCountingDown = false;
@@ -228,7 +256,6 @@
       let audioContext = null;
       let oscillator = null;
       let gainNode = null;
-      let songIntroTimeout = null;
 
       async function loadResources() {
         try {
@@ -237,7 +264,8 @@
             throw new Error(`HTTP error! status: ${songsResponse.status}`);
           }
           const songsData = await songsResponse.json();
-          songs = songsData.canciones;
+          songs = songsData.canciones.sort((a, b) => a.titulo.localeCompare(b.titulo)); 
+          filteredSongs = [...songs]; 
           
           displaySongs();
         } catch (error) {
@@ -248,29 +276,43 @@
       
       function displaySongs() {
         songList.innerHTML = '';
-        songs.forEach((song, index) => {
+        filteredSongs.forEach((song, index) => {
           const songItem = document.createElement('div');
           songItem.className = 'song-item';
-          songItem.textContent = song.titulo; // MODIFICADO: Ya no se usa song.artista
+          songItem.textContent = song.titulo;
+          songItem.dataset.index = songs.indexOf(song); 
           songItem.addEventListener('click', () => {
-            selectSong(index);
-            songSelectorOverlay.classList.add('hidden');
-            initialLogoContainer.classList.add('hidden');
+            selectSong(parseInt(songItem.dataset.index));
+            songSelectorOverlay.classList.add('hidden'); // Ocultar el menú al seleccionar canción
             body.classList.add('hide-cursor');
+            initialLogoContainer.classList.add('hidden'); // Asegurarse de ocultar el logo cuando una canción se reproduce
           });
           songList.appendChild(songItem);
         });
+        if (currentSongIndex !== -1) {
+          const activeItem = songList.querySelector(`[data-index="${currentSongIndex}"]`);
+          if (activeItem) {
+            activeItem.classList.add('active-song');
+          }
+        }
       }
+
+      songSearchInput.addEventListener('input', (e) => {
+        const searchTerm = e.target.value.toLowerCase();
+        filteredSongs = songs.filter(song => 
+          song.titulo.toLowerCase().includes(searchTerm)
+        );
+        displaySongs();
+      });
       
       async function selectSong(index) {
+        currentSongIndex = index;
         audioPlayer.pause();
         audioPlayer.currentTime = 0;
         currentLine.textContent = ''; 
         currentLine.classList.add('hidden');
-        songInfoDisplay.classList.add('hidden');
         
         clearInterval(countdownInterval);
-        clearTimeout(songIntroTimeout);
         
         if (oscillator) {
             oscillator.stop();
@@ -281,12 +323,16 @@
         
         const songItems = document.querySelectorAll('.song-item');
         songItems.forEach(item => item.classList.remove('active-song'));
-        songItems[index].classList.add('active-song');
         
-        currentSong = songs[index];
+        const activeItemInFilteredList = songList.querySelector(`[data-index="${index}"]`);
+        if (activeItemInFilteredList) {
+          activeItemInFilteredList.classList.add('active-song');
+        }
+        
+        const selectedSong = songs[index];
 
-        if (currentSong.fondo) {
-            backgroundVideo.src = currentSong.fondo;
+        if (selectedSong.fondo) {
+            backgroundVideo.src = selectedSong.fondo;
             backgroundVideo.load(); 
             backgroundVideo.play(); 
             backgroundVideo.style.display = 'block'; 
@@ -295,30 +341,16 @@
         }
 
         try {
-          // MODIFICADO: Se construye la ruta al archivo .txt dinámicamente
-          const txt_link = `songs/${currentSong.titulo}.txt`;
+          const txt_link = `songs/${selectedSong.titulo}.txt`;
           const response = await fetch(txt_link);
           if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
           const text = await response.text();
           lyricsData = parseLyrics(text);
           
-          if (lyricsData.length > 0) {
-            const firstLineText = lyricsData[0].rawText.replace(/^\[\d{2}:\d{2}\.\d{2}\]/, '').trim();
-            songInfoDisplay.textContent = firstLineText;
-            songInfoDisplay.classList.remove('hidden');
-            
-            songIntroTimeout = setTimeout(() => {
-                songInfoDisplay.classList.add('hidden');
-                currentLine.classList.remove('hidden');
-            }, 3000);
-          } else {
-            currentLine.classList.remove('hidden');
-          }
-
           startCountdown();
         } catch (error) {
           console.error('Error al cargar la letra:', error);
-          currentLine.textContent = 'ERROR AL CARGAR LA LETRA.';
+          currentLine.textContent = 'ERROR AL GARCAR LA LETRA.';
           currentLine.classList.remove('hidden');
         }
       }
@@ -355,6 +387,15 @@
         
         lyrics.sort((a, b) => a.time - b.time);
         
+        // Filtrar la primera línea si no contiene letra real (ej. solo bpm o título)
+        if (lyrics.length > 0 && (lyrics[0].text.trim() === '' || lyrics[0].rawText.toLowerCase().includes('[bpm:'))) {
+            lyrics.shift();
+        }
+        // También si es un patrón "Título - Artista"
+        if (lyrics.length > 0 && lyrics[0].rawText.match(/^\[\d{2}:\d{2}\.\d{2}\].* - .*/)) {
+            lyrics.shift();
+        }
+
         if (lyrics.length > 0) {
           lyrics[0].bpm = bpm;
         }
@@ -417,9 +458,10 @@
       }
       
       function startPlayback() {
-        // MODIFICADO: Se construye la ruta al archivo .mp3 dinámicamente
-        audioPlayer.src = `songs/${currentSong.titulo}.mp3`;
+        const selectedSong = songs[currentSongIndex];
+        audioPlayer.src = `songs/${selectedSong.titulo}.mp3`;
         audioPlayer.play();
+        audioPlayer.removeEventListener('timeupdate', updateLyrics); 
         audioPlayer.addEventListener('timeupdate', updateLyrics);
       }
       
@@ -427,28 +469,21 @@
         if (!lyricsData.length || isCountingDown) return;
         
         const currentTime = audioPlayer.currentTime;
-        let currentLyricIndex = -1;
+        let currentLyricText = '';
         
-        for (let i = 1; i < lyricsData.length; i++) {
+        for (let i = lyricsData.length - 1; i >= 0; i--) {
           if (lyricsData[i].time <= currentTime) {
-            currentLyricIndex = i;
-          } else {
+            currentLyricText = lyricsData[i].text;
             break;
           }
         }
         
-        if (currentLyricIndex !== -1) {
-          currentLine.textContent = lyricsData[currentLyricIndex].text;
+        if (currentLyricText) {
+          currentLine.textContent = currentLyricText;
+          currentLine.classList.remove('hidden');
         } else {
-          if (!songInfoDisplay.classList.contains('hidden')) {
-             currentLine.textContent = '';
-          } else {
-             currentLine.textContent = '';
-          }
-        }
-
-        if (songInfoDisplay.classList.contains('hidden')) {
-            currentLine.classList.remove('hidden');
+          currentLine.textContent = '';
+          currentLine.classList.add('hidden'); 
         }
       }
       
@@ -477,46 +512,131 @@
         }
       }
 
+      function increaseVolume() {
+        if (audioPlayer.volume < 1) {
+          audioPlayer.volume = Math.min(1, audioPlayer.volume + 0.05);
+        }
+      }
+
+      function decreaseVolume() {
+        if (audioPlayer.volume > 0) {
+          audioPlayer.volume = Math.max(0, audioPlayer.volume - 0.05);
+        }
+      }
+
+      function showLobby() {
+        audioPlayer.pause();
+        audioPlayer.currentTime = 0;
+        clearInterval(countdownInterval);
+        if (oscillator) {
+            oscillator.stop();
+            oscillator = null;
+        }
+        currentLine.classList.add('hidden');
+        countdownOverlay.classList.add('hidden');
+        initialLogoContainer.classList.remove('hidden'); // Mostrar el logo
+        songSelectorOverlay.classList.add('hidden'); // Ocultar el menú al volver al lobby
+        body.classList.remove('hide-cursor');
+        backgroundVideo.style.display = 'none'; // Ocultar el video de fondo
+        currentSongIndex = -1; 
+        songSearchInput.value = ''; 
+        filteredSongs = [...songs]; 
+        displaySongs(); 
+      }
+
       function toggleMenu() {
         const isMenuHidden = songSelectorOverlay.classList.contains('hidden');
         if (isMenuHidden) {
             songSelectorOverlay.classList.remove('hidden');
             body.classList.remove('hide-cursor');
-            initialLogoContainer.style.display = 'flex';
+            initialLogoContainer.classList.add('hidden'); // Ocultar el logo del lobby al abrir el menú (si estamos en el video)
         } else {
             songSelectorOverlay.classList.add('hidden');
             body.classList.add('hide-cursor');
-            if (!currentSong) {
-              initialLogoContainer.style.display = 'flex';
+            // Si el menú se cierra y no hay una canción activa, mostrar el logo del lobby
+            if (currentSongIndex === -1) { 
+                initialLogoContainer.classList.remove('hidden');
             }
         }
+      }
+
+      function goToNextSong() {
+        if (songs.length === 0) return;
+        currentSongIndex = (currentSongIndex + 1) % songs.length;
+        selectSong(currentSongIndex);
+      }
+
+      function goToPreviousSong() {
+        if (songs.length === 0) return;
+        currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+        selectSong(currentSongIndex);
       }
 
       document.addEventListener('keydown', (e) => {
         if (e.key === 'o' || e.key === 'O') {
             e.preventDefault(); 
             toggleMenu();
-        } else if (songSelectorOverlay.classList.contains('hidden')) { 
-            if (e.key === 'm' || e.key === 'M') {
-                toggleMute();
-            } else if (e.key === 'p' || e.key === 'P' || e.key === ' ') {
-                e.preventDefault(); 
-                togglePlayPause();
-            } else if (e.key === 'f' || e.key === 'F') {
-                toggleFullscreen();
+        } else if (e.key === 'e' || e.key === 'E') { // Nueva tecla 'e' para ir al lobby
+            e.preventDefault();
+            showLobby();
+        } else if (e.key === 'f' || e.key === 'F') { // Tecla 'f' para fullscreen (también sale)
+            e.preventDefault();
+            toggleFullscreen();
+        } else if (e.key === 'Escape') { // Escape también sale de fullscreen
+            if (document.fullscreenElement) {
+                toggleFullscreen(); // Sale de fullscreen
+            } else {
+                // Si no está en fullscreen, y tampoco está el menú, va al lobby
+                if (songSelectorOverlay.classList.contains('hidden')) {
+                    showLobby();
+                } else { // Si está el menú, Escape lo cierra
+                    toggleMenu();
+                }
             }
-        } else {
-            if (e.key === 'Escape') {
-                toggleMenu();
+        } else { // El resto de hotkeys solo funcionan si el menú está oculto
+            if (songSelectorOverlay.classList.contains('hidden')) { 
+                if (e.key === 'm' || e.key === 'M') {
+                    toggleMute();
+                } else if (e.key === 'p' || e.key === 'P' || e.key === ' ') {
+                    e.preventDefault(); 
+                    togglePlayPause();
+                } else if (e.key === 'ArrowRight') {
+                    goToNextSong();
+                } else if (e.key === 'ArrowLeft') {
+                    goToPreviousSong();
+                } else if (e.key === 'ArrowUp') {
+                    increaseVolume();
+                } else if (e.key === 'ArrowDown') {
+                    decreaseVolume();
+                }
             }
         }
       });
       
       loadResources();
 
+      // Al inicio, asegurar que el menú esté oculto y el logo inicial visible
       currentLine.classList.add('hidden');
-      songInfoDisplay.classList.add('hidden');
+      songSelectorOverlay.classList.add('hidden'); // Ocultar el menú al inicio
+      initialLogoContainer.classList.remove('hidden'); 
+      backgroundVideo.style.display = 'none'; 
     });
+
+    // Sobrescribir el mensaje de pantalla completa (esto es solo un intento, muchos navegadores lo ignoran)
+    // El mensaje predeterminado suele ser controlado por el navegador por motivos de seguridad.
+    document.addEventListener('fullscreenchange', () => {
+      if (document.fullscreenElement) {
+        document.body.setAttribute('data-fullscreen', 'true');
+        // No se puede modificar el mensaje nativo de salir de pantalla completa
+      } else {
+        document.body.removeAttribute('data-fullscreen');
+      }
+    });
+
+    document.addEventListener('fullscreenerror', (event) => {
+      console.error('Error al intentar entrar en modo pantalla completa:', event);
+    });
+
   </script>
 </body>
 </html>
