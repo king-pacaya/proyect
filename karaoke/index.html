@@ -251,6 +251,7 @@
       let audioContext = null;
       let oscillator = null;
       let gainNode = null;
+      let lastLyricIndex = -1;
 
       async function loadResources() {
         try {
@@ -306,6 +307,7 @@
         audioPlayer.currentTime = 0;
         currentLine.textContent = ''; 
         currentLine.classList.add('hidden');
+        lastLyricIndex = -1;
         
         clearInterval(countdownInterval);
         
@@ -371,7 +373,7 @@
             const milliseconds = parseInt(timeMatch[3]);
             const text = timeMatch[4].trim();
             
-            const timeInSeconds = minutes * 60 + seconds + milliseconds / 100;
+            const timeInSeconds = minutes * 60 + seconds + milliseconds / 100; // Asumiendo centésimas de segundo
             lyrics.push({
               time: timeInSeconds,
               text: text,
@@ -464,21 +466,24 @@
         if (!lyricsData.length || isCountingDown) return;
         
         const currentTime = audioPlayer.currentTime;
-        let currentLyricText = '';
+        let foundLyricIndex = -1;
         
-        for (let i = lyricsData.length - 1; i >= 0; i--) {
+        for (let i = 0; i < lyricsData.length; i++) {
           if (lyricsData[i].time <= currentTime) {
-            currentLyricText = lyricsData[i].text;
+            foundLyricIndex = i;
+          } else {
             break;
           }
         }
         
-        if (currentLyricText) {
-          currentLine.textContent = currentLyricText;
+        if (foundLyricIndex !== -1 && foundLyricIndex !== lastLyricIndex) {
+          currentLine.textContent = lyricsData[foundLyricIndex].text;
           currentLine.classList.remove('hidden');
-        } else {
+          lastLyricIndex = foundLyricIndex;
+        } else if (foundLyricIndex === -1 && lastLyricIndex !== -1) {
           currentLine.textContent = '';
-          currentLine.classList.add('hidden'); 
+          currentLine.classList.add('hidden');
+          lastLyricIndex = -1;
         }
       }
       
