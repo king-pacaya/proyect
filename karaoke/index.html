@@ -37,7 +37,6 @@
       height: 100%;
       z-index: -1;
       object-fit: cover;
-      /* Asegura una reproducción fluida en bucle */
       -webkit-backface-visibility: hidden;
       backface-visibility: hidden;
       transform: translate3d(0,0,0);
@@ -118,7 +117,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      z-index: 150; /* Mayor z-index para que esté por encima del video y letras */
+      z-index: 150;
       flex-direction: column;
       padding: 1rem;
       box-sizing: border-box;
@@ -126,19 +125,16 @@
     }
     
     .song-list-container {
-      max-height: calc(3 * (1rem + 0.5rem * 2 + 0.3rem)); /* 3 items * (font-size + padding-y * 2 + margin-bottom) */
+      max-height: calc(3 * (1rem + 0.5rem * 2 + 0.3rem));
       overflow-y: auto;
       width: 100%;
       background-color: rgba(255, 255, 255, 0.1);
       padding: 0.5rem;
       border-radius: 0.5rem;
-
-      /* Estilos para el scrollbar sutil */
-      scrollbar-width: thin; /* Firefox */
+      scrollbar-width: thin;
       scrollbar-color: rgba(255, 255, 255, 0.3) rgba(0, 0, 0, 0.5); /* Firefox */
     }
 
-    /* Webkit (Chrome, Safari) scrollbar styles */
     .song-list-container::-webkit-scrollbar {
         width: 8px;
     }
@@ -185,11 +181,11 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        z-index: 100; /* Z-index alto para que esté encima de todo al inicio */
+        z-index: 100;
     }
 
     .initial-logo-container.hidden {
-        z-index: -100; /* Ocultar y enviar al fondo */
+        z-index: -100;
     }
 
     .song-info-display {
@@ -234,7 +230,6 @@
   
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // Elementos del DOM
       const body = document.body;
       const songSelectorOverlay = document.getElementById('songSelectorOverlay');
       const songList = document.getElementById('songList');
@@ -283,9 +278,9 @@
           songItem.dataset.index = songs.indexOf(song); 
           songItem.addEventListener('click', () => {
             selectSong(parseInt(songItem.dataset.index));
-            songSelectorOverlay.classList.add('hidden'); // Ocultar el menú al seleccionar canción
+            songSelectorOverlay.classList.add('hidden');
             body.classList.add('hide-cursor');
-            initialLogoContainer.classList.add('hidden'); // Asegurarse de ocultar el logo cuando una canción se reproduce
+            initialLogoContainer.classList.add('hidden');
           });
           songList.appendChild(songItem);
         });
@@ -387,11 +382,9 @@
         
         lyrics.sort((a, b) => a.time - b.time);
         
-        // Filtrar la primera línea si no contiene letra real (ej. solo bpm o título)
         if (lyrics.length > 0 && (lyrics[0].text.trim() === '' || lyrics[0].rawText.toLowerCase().includes('[bpm:'))) {
             lyrics.shift();
         }
-        // También si es un patrón "Título - Artista"
         if (lyrics.length > 0 && lyrics[0].rawText.match(/^\[\d{2}:\d{2}\.\d{2}\].* - .*/)) {
             lyrics.shift();
         }
@@ -463,6 +456,8 @@
         audioPlayer.play();
         audioPlayer.removeEventListener('timeupdate', updateLyrics); 
         audioPlayer.addEventListener('timeupdate', updateLyrics);
+        audioPlayer.removeEventListener('ended', showLobby);
+        audioPlayer.addEventListener('ended', showLobby);
       }
       
       function updateLyrics() {
@@ -534,10 +529,10 @@
         }
         currentLine.classList.add('hidden');
         countdownOverlay.classList.add('hidden');
-        initialLogoContainer.classList.remove('hidden'); // Mostrar el logo
-        songSelectorOverlay.classList.add('hidden'); // Ocultar el menú al volver al lobby
+        initialLogoContainer.classList.remove('hidden');
+        songSelectorOverlay.classList.add('hidden');
         body.classList.remove('hide-cursor');
-        backgroundVideo.style.display = 'none'; // Ocultar el video de fondo
+        backgroundVideo.style.display = 'none';
         currentSongIndex = -1; 
         songSearchInput.value = ''; 
         filteredSongs = [...songs]; 
@@ -549,13 +544,16 @@
         if (isMenuHidden) {
             songSelectorOverlay.classList.remove('hidden');
             body.classList.remove('hide-cursor');
-            initialLogoContainer.classList.add('hidden'); // Ocultar el logo del lobby al abrir el menú (si estamos en el video)
+            if (currentSongIndex !== -1) { 
+                initialLogoContainer.classList.add('hidden'); 
+            }
         } else {
             songSelectorOverlay.classList.add('hidden');
             body.classList.add('hide-cursor');
-            // Si el menú se cierra y no hay una canción activa, mostrar el logo del lobby
             if (currentSongIndex === -1) { 
                 initialLogoContainer.classList.remove('hidden');
+            } else {
+                initialLogoContainer.classList.add('hidden');
             }
         }
       }
@@ -576,24 +574,23 @@
         if (e.key === 'o' || e.key === 'O') {
             e.preventDefault(); 
             toggleMenu();
-        } else if (e.key === 'e' || e.key === 'E') { // Nueva tecla 'e' para ir al lobby
+        } else if (e.key === 'e' || e.key === 'E') {
             e.preventDefault();
             showLobby();
-        } else if (e.key === 'f' || e.key === 'F') { // Tecla 'f' para fullscreen (también sale)
+        } else if (e.key === 'f' || e.key === 'F') {
             e.preventDefault();
             toggleFullscreen();
-        } else if (e.key === 'Escape') { // Escape también sale de fullscreen
+        } else if (e.key === 'Escape') {
             if (document.fullscreenElement) {
-                toggleFullscreen(); // Sale de fullscreen
+                toggleFullscreen();
             } else {
-                // Si no está en fullscreen, y tampoco está el menú, va al lobby
-                if (songSelectorOverlay.classList.contains('hidden')) {
-                    showLobby();
-                } else { // Si está el menú, Escape lo cierra
+                if (!songSelectorOverlay.classList.contains('hidden')) {
                     toggleMenu();
+                } else {
+                    showLobby();
                 }
             }
-        } else { // El resto de hotkeys solo funcionan si el menú está oculto
+        } else {
             if (songSelectorOverlay.classList.contains('hidden')) { 
                 if (e.key === 'm' || e.key === 'M') {
                     toggleMute();
@@ -615,19 +612,15 @@
       
       loadResources();
 
-      // Al inicio, asegurar que el menú esté oculto y el logo inicial visible
       currentLine.classList.add('hidden');
-      songSelectorOverlay.classList.add('hidden'); // Ocultar el menú al inicio
+      songSelectorOverlay.classList.add('hidden');
       initialLogoContainer.classList.remove('hidden'); 
       backgroundVideo.style.display = 'none'; 
     });
 
-    // Sobrescribir el mensaje de pantalla completa (esto es solo un intento, muchos navegadores lo ignoran)
-    // El mensaje predeterminado suele ser controlado por el navegador por motivos de seguridad.
     document.addEventListener('fullscreenchange', () => {
       if (document.fullscreenElement) {
         document.body.setAttribute('data-fullscreen', 'true');
-        // No se puede modificar el mensaje nativo de salir de pantalla completa
       } else {
         document.body.removeAttribute('data-fullscreen');
       }
