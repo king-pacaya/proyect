@@ -1,0 +1,28 @@
+{
+  "canciones": [
+    {
+      "titulo": "Bueno es Alabar",
+      "fondo": "fondos/fondo1.mp4"
+    },
+    {
+      "titulo": "Gracia Sublime Es",
+      "fondo": "fondos/fondo2.mp4"
+    },
+    {
+      "titulo": "Vengan (En Vivo)",
+      "fondo": "fondos/fondo3.mp4"
+    },
+    {
+      "titulo": "Hoy y Siempre te Alabaré",
+      "fondo": "fondos/fondo4.mp4"
+    },
+    {
+      "titulo": "Te amo más que a mi misma vida",
+      "fondo": "fondos/fondo5.mp4"
+    },
+    {
+      "titulo": "Te Seguiré",
+      "fondo": "fondos/fondo6.mp4"
+    }
+  ]
+}
