@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="favicon.svg">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+  <style>
+    * {
+      font-family: 'Montserrat', sans-serif;
+    }
+  </style>
+  <title>Iniciar Sesión - Monitoreo de Maquinaria</title>
+</head>
+<body class="bg-gray-900 flex items-center justify-center min-h-screen p-4">
+  <div class="bg-gray-800 p-6 md:p-8 rounded-lg shadow-2xl w-full max-w-md border border-blue-700">
+    <div class="text-center mb-6">
+      <span class="iconify mx-auto h-16 w-16 mb-4 text-blue-500" data-icon="ic:outline-heavy-equipment"></span>
+      <h1 class="text-3xl font-bold text-white">Bienvenido</h1>
+      <p class="text-gray-400 mt-2">Inicia sesión para monitorear tu maquinaria.</p>
+    </div>
+    <form id="loginForm">
+      <div class="mb-4">
+        <label for="email" class="block text-gray-300 text-sm font-semibold mb-2">Correo Electrónico</label>
+        <input type="email" id="email" name="email" class="shadow appearance-none border border-gray-700 bg-gray-700 rounded-lg w-full py-2 px-3 text-white leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="ejemplo@dominio.com" required>
+      </div>
+      <div class="mb-6">
+        <label for="password" class="block text-gray-300 text-sm font-semibold mb-2">Contraseña</label>
+        <input type="password" id="password" name="password" class="shadow appearance-none border border-gray-700 bg-gray-700 rounded-lg w-full py-2 px-3 text-white mb-3 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="********" required>
+      </div>
+      <div id="errorMessage" class="text-red-500 text-sm text-center mb-4 hidden"></div>
+      <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg w-full focus:outline-none focus:shadow-outline transition duration-300">
+        Iniciar Sesión
+      </button>
+      <div class="mt-6 text-center text-gray-400 text-sm">
+        <p>¿Nuevo por aquí?</p>
+        <button id="trialButton" class="mt-2 text-blue-500 hover:text-blue-400 font-semibold focus:outline-none">
+          Iniciar Prueba Gratuita de 30 Días
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
