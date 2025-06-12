@@ -18,7 +18,7 @@
     * {
       font-family: 'Moderat-Bold', sans-serif;
     }
-    
+
     body {
       overflow: hidden;
       background-color: black;
@@ -54,20 +54,20 @@
       align-items: center;
       z-index: 1000;
     }
-    
+
     .countdown-number {
       font-size: 15rem;
       color: white;
       font-weight: bold;
       animation: pulse 0.5s ease-out;
     }
-    
+
     @keyframes pulse {
       0% { transform: scale(0.8); opacity: 0.5; }
       50% { transform: scale(1.2); opacity: 1; }
       100% { transform: scale(1); opacity: 1; }
     }
-    
+
     .lyrics-container {
       width: 100%;
       margin: auto;
@@ -82,7 +82,7 @@
       position: relative;
       z-index: 10;
     }
-    
+
     .current-line {
       font-size: 3rem;
       font-weight: bold;
@@ -91,19 +91,48 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      text-transform: uppercase;    
-      background-color: black;
+      text-transform: uppercase;
+      background-color: rgba(0, 0, 0);
       padding: 0.2em 0.5em;
       display: inline-block;
       line-height: 1.2;
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.3s ease-out, transform 0.3s ease-out, font-size 0.3s ease-out;
     }
 
     .current-line.hidden {
       display: none;
     }
-    
-    #menuButton { 
-        display: none; 
+
+    .current-line.fade-out-up {
+      opacity: 0;
+      transform: translateY(-50px);
+      font-size: 2.5rem;
+    }
+
+    .next-line {
+      font-size: 2.1rem;
+      color: rgba(255, 255, 255);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-transform: uppercase;
+      background-color: rgba(0, 0, 0);
+      padding: 0.1em 0.3em;
+      display: inline-block;
+      line-height: 1.2;
+      margin-top: 0.5rem;
+      opacity: 0.6;
+      transition: opacity 0.3s ease-out, transform 0.3s ease-out, font-size 0.3s ease-out;
+    }
+
+    .next-line.hidden {
+      display: none;
+    }
+
+    #menuButton {
+        display: none;
     }
 
     .song-selector-overlay {
@@ -123,7 +152,7 @@
       box-sizing: border-box;
       border-radius: 0.5rem;
     }
-    
+
     .song-list-container {
       max-height: calc(3 * (1rem + 0.5rem * 2 + 0.3rem));
       overflow-y: auto;
@@ -149,7 +178,7 @@
         border-radius: 10px;
         border: 2px solid rgba(0, 0, 0, 0.5);
     }
-    
+
     .song-item {
       padding: 0.5rem 0.75rem;
       cursor: pointer;
@@ -158,11 +187,11 @@
       font-size: 1rem;
       margin-bottom: 0.3rem;
     }
-    
+
     .song-item:hover {
       background-color: rgba(255, 255, 255, 0.15);
     }
-    
+
     .active-song {
       background-color: #3b82f6;
     }
@@ -217,33 +246,35 @@
     <input type="text" id="songSearchInput" placeholder="Buscar canción..." class="w-full p-2 mb-4 rounded bg-gray-700 text-white placeholder-gray-400 border border-gray-600 focus:outline-none focus:border-blue-500">
     <div id="songList" class="song-list-container"></div>
   </div>
-  
+
   <div class="lyrics-container">
     <div id="currentLine" class="current-line hidden"></div>
+    <div id="nextLine" class="next-line hidden"></div>
   </div>
-  
+
   <div id="countdownOverlay" class="countdown-overlay hidden">
     <div id="countdownNumber" class="countdown-number"></div>
   </div>
-  
+
   <audio id="audioPlayer"></audio>
-  
+
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const body = document.body;
       const songSelectorOverlay = document.getElementById('songSelectorOverlay');
       const songList = document.getElementById('songList');
       const currentLine = document.getElementById('currentLine');
+      const nextLine = document.getElementById('nextLine');
       const audioPlayer = document.getElementById('audioPlayer');
       const countdownOverlay = document.getElementById('countdownOverlay');
       const countdownNumber = document.getElementById('countdownNumber');
       const backgroundVideo = document.getElementById('backgroundVideo');
       const initialLogoContainer = document.getElementById('initialLogoContainer');
       const songSearchInput = document.getElementById('songSearchInput');
-      
+
       let songs = [];
-      let filteredSongs = []; 
-      let currentSongIndex = -1; 
+      let filteredSongs = [];
+      let currentSongIndex = -1;
       let lyricsData = [];
       let isMuted = false;
       let isCountingDown = false;
@@ -255,28 +286,28 @@
 
       async function loadResources() {
         try {
-          const songsResponse = await fetch('songs/songs.json'); 
+          const songsResponse = await fetch('songs/songs.json');
           if (!songsResponse.ok) {
             throw new Error(`HTTP error! status: ${songsResponse.status}`);
           }
           const songsData = await songsResponse.json();
-          songs = songsData.canciones.sort((a, b) => a.titulo.localeCompare(b.titulo)); 
-          filteredSongs = [...songs]; 
-          
+          songs = songsData.canciones.sort((a, b) => a.titulo.localeCompare(b.titulo));
+          filteredSongs = [...songs];
+
           displaySongs();
         } catch (error) {
           console.error('Error al cargar recursos:', error);
           songList.innerHTML = '<div class="text-red-500">Error al cargar los recursos. Verifica la consola para más detalles.</div>';
         }
       }
-      
+
       function displaySongs() {
         songList.innerHTML = '';
         filteredSongs.forEach((song, index) => {
           const songItem = document.createElement('div');
           songItem.className = 'song-item';
           songItem.textContent = song.titulo;
-          songItem.dataset.index = songs.indexOf(song); 
+          songItem.dataset.index = songs.indexOf(song);
           songItem.addEventListener('click', () => {
             selectSong(parseInt(songItem.dataset.index));
             songSelectorOverlay.classList.add('hidden');
@@ -295,46 +326,48 @@
 
       songSearchInput.addEventListener('input', (e) => {
         const searchTerm = e.target.value.toLowerCase();
-        filteredSongs = songs.filter(song => 
+        filteredSongs = songs.filter(song =>
           song.titulo.toLowerCase().includes(searchTerm)
         );
         displaySongs();
       });
-      
+
       async function selectSong(index) {
         currentSongIndex = index;
         audioPlayer.pause();
         audioPlayer.currentTime = 0;
-        currentLine.textContent = ''; 
+        currentLine.textContent = '';
         currentLine.classList.add('hidden');
+        nextLine.textContent = '';
+        nextLine.classList.add('hidden');
         lastLyricIndex = -1;
-        
+
         clearInterval(countdownInterval);
-        
+
         if (oscillator) {
             oscillator.stop();
             oscillator = null;
         }
         countdownOverlay.classList.add('hidden');
         isCountingDown = false;
-        
+
         const songItems = document.querySelectorAll('.song-item');
         songItems.forEach(item => item.classList.remove('active-song'));
-        
+
         const activeItemInFilteredList = songList.querySelector(`[data-index="${index}"]`);
         if (activeItemInFilteredList) {
           activeItemInFilteredList.classList.add('active-song');
         }
-        
+
         const selectedSong = songs[index];
 
         if (selectedSong.fondo) {
             backgroundVideo.src = selectedSong.fondo;
-            backgroundVideo.load(); 
-            backgroundVideo.play(); 
-            backgroundVideo.style.display = 'block'; 
+            backgroundVideo.load();
+            backgroundVideo.play();
+            backgroundVideo.style.display = 'block';
         } else {
-            backgroundVideo.style.display = 'none'; 
+            backgroundVideo.style.display = 'none';
         }
 
         try {
@@ -343,12 +376,13 @@
           if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
           const text = await response.text();
           lyricsData = parseLyrics(text);
-          
+
           startCountdown();
         } catch (error) {
           console.error('Error al cargar la letra:', error);
-          currentLine.textContent = 'ERROR AL GARCAR LA LETRA.';
+          currentLine.textContent = 'ERROR AL CARGAR LA LETRA.';
           currentLine.classList.remove('hidden');
+          nextLine.classList.add('hidden');
         }
       }
 
@@ -356,7 +390,7 @@
         const lines = text.split('\n');
         const lyrics = [];
         let bpm = 120;
-        
+
         const metadataLines = lines.filter(line => line.startsWith('[') && line.endsWith(']'));
         metadataLines.forEach(line => {
           if (line.toLowerCase().includes('[bpm:')) {
@@ -364,7 +398,7 @@
             if (bpmMatch) bpm = parseInt(bpmMatch[1]);
           }
         });
-        
+
         lines.forEach(line => {
           const timeMatch = line.match(/^\[(\d{2}):(\d{2})\.(\d{2})\](.*)/);
           if (timeMatch) {
@@ -372,8 +406,8 @@
             const seconds = parseInt(timeMatch[2]);
             const milliseconds = parseInt(timeMatch[3]);
             const text = timeMatch[4].trim();
-            
-            const timeInSeconds = minutes * 60 + seconds + milliseconds / 100; // Asumiendo centésimas de segundo
+
+            const timeInSeconds = minutes * 60 + seconds + milliseconds / 100;
             lyrics.push({
               time: timeInSeconds,
               text: text,
@@ -381,9 +415,9 @@
             });
           }
         });
-        
+
         lyrics.sort((a, b) => a.time - b.time);
-        
+
         if (lyrics.length > 0 && (lyrics[0].text.trim() === '' || lyrics[0].rawText.toLowerCase().includes('[bpm:'))) {
             lyrics.shift();
         }
@@ -394,31 +428,31 @@
         if (lyrics.length > 0) {
           lyrics[0].bpm = bpm;
         }
-        
+
         return lyrics;
       }
 
       function startCountdown() {
         isCountingDown = true;
         countdownOverlay.classList.remove('hidden');
-        
+
         const bpm = lyricsData[0]?.bpm || 120;
         const interval = 60 / bpm * 1000;
-        
+
         if (!audioContext) {
             audioContext = new (window.AudioContext || window.webkitAudioContext)();
         }
-        
+
         function playStickSound() {
             if (oscillator) {
-                oscillator.stop(); 
+                oscillator.stop();
             }
             oscillator = audioContext.createOscillator();
             gainNode = audioContext.createGain();
 
-            oscillator.type = 'sine'; 
-            oscillator.frequency.value = 1200; 
-            
+            oscillator.type = 'sine';
+            oscillator.frequency.value = 1200;
+
             gainNode.gain.setValueAtTime(0.7, audioContext.currentTime);
             gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.05);
 
@@ -430,13 +464,13 @@
 
         let count = 4;
         countdownNumber.textContent = count;
-        playStickSound(); 
+        playStickSound();
 
         countdownInterval = setInterval(() => {
           count--;
-          
+
           if (count > 0) {
-            playStickSound(); 
+            playStickSound();
             countdownNumber.textContent = count;
           } else {
             clearInterval(countdownInterval);
@@ -446,47 +480,82 @@
             }
             countdownOverlay.classList.add('hidden');
             isCountingDown = false;
-            
+
             startPlayback();
           }
         }, interval);
       }
-      
+
       function startPlayback() {
         const selectedSong = songs[currentSongIndex];
         audioPlayer.src = `songs/${selectedSong.titulo}.mp3`;
         audioPlayer.play();
-        audioPlayer.removeEventListener('timeupdate', updateLyrics); 
+        audioPlayer.removeEventListener('timeupdate', updateLyrics);
         audioPlayer.addEventListener('timeupdate', updateLyrics);
         audioPlayer.removeEventListener('ended', showLobby);
         audioPlayer.addEventListener('ended', showLobby);
       }
-      
+
       function updateLyrics() {
         if (!lyricsData.length || isCountingDown) return;
-        
+
         const currentTime = audioPlayer.currentTime;
-        let foundLyricIndex = -1;
-        
+        let currentLyricIndex = -1;
+
         for (let i = 0; i < lyricsData.length; i++) {
           if (lyricsData[i].time <= currentTime) {
-            foundLyricIndex = i;
+            currentLyricIndex = i;
           } else {
             break;
           }
         }
-        
-        if (foundLyricIndex !== -1 && foundLyricIndex !== lastLyricIndex) {
-          currentLine.textContent = lyricsData[foundLyricIndex].text;
-          currentLine.classList.remove('hidden');
-          lastLyricIndex = foundLyricIndex;
-        } else if (foundLyricIndex === -1 && lastLyricIndex !== -1) {
+
+        if (currentLyricIndex !== -1 && currentLyricIndex !== lastLyricIndex) {
+          // Si hay una línea actual anterior, la preparamos para que se desvanezca
+          if (lastLyricIndex !== -1) {
+            currentLine.classList.add('fade-out-up');
+            // Esperar un breve momento para que la animación de salida empiece
+            setTimeout(() => {
+              // Actualizar el texto de la línea actual
+              currentLine.textContent = lyricsData[currentLyricIndex].text;
+              currentLine.classList.remove('fade-out-up'); // Quitar la clase de salida para que la nueva línea aparezca normalmente
+              currentLine.classList.remove('hidden');
+
+              // Actualizar la siguiente línea
+              if (currentLyricIndex < lyricsData.length - 1) {
+                nextLine.textContent = lyricsData[currentLyricIndex + 1].text;
+                nextLine.classList.remove('hidden');
+              } else {
+                nextLine.textContent = '';
+                nextLine.classList.add('hidden');
+              }
+            }, 50); // Pequeño retraso para que la animación de salida sea visible
+          } else {
+            // Primera línea de la canción, simplemente aparece
+            currentLine.textContent = lyricsData[currentLyricIndex].text;
+            currentLine.classList.remove('hidden');
+            if (currentLyricIndex < lyricsData.length - 1) {
+              nextLine.textContent = lyricsData[currentLyricIndex + 1].text;
+              nextLine.classList.remove('hidden');
+            } else {
+              nextLine.textContent = '';
+              nextLine.classList.add('hidden');
+            }
+          }
+
+          lastLyricIndex = currentLyricIndex;
+
+        } else if (currentLyricIndex === -1 && lastLyricIndex !== -1) {
+          // Esto ocurre si el currentTime es menor que la primera línea o se resetea la canción.
           currentLine.textContent = '';
           currentLine.classList.add('hidden');
+          currentLine.classList.remove('fade-out-up'); // Asegurarse de limpiar
+          nextLine.textContent = '';
+          nextLine.classList.add('hidden');
           lastLyricIndex = -1;
         }
       }
-      
+
       function toggleMute() {
         isMuted = !isMuted;
         audioPlayer.muted = isMuted;
@@ -532,16 +601,20 @@
             oscillator.stop();
             oscillator = null;
         }
+        currentLine.textContent = '';
         currentLine.classList.add('hidden');
+        currentLine.classList.remove('fade-out-up'); // Asegurarse de limpiar
+        nextLine.textContent = '';
+        nextLine.classList.add('hidden');
         countdownOverlay.classList.add('hidden');
         initialLogoContainer.classList.remove('hidden');
         songSelectorOverlay.classList.add('hidden');
         body.classList.remove('hide-cursor');
         backgroundVideo.style.display = 'none';
-        currentSongIndex = -1; 
-        songSearchInput.value = ''; 
-        filteredSongs = [...songs]; 
-        displaySongs(); 
+        currentSongIndex = -1;
+        songSearchInput.value = '';
+        filteredSongs = [...songs];
+        displaySongs();
       }
 
       function toggleMenu() {
@@ -549,13 +622,13 @@
         if (isMenuHidden) {
             songSelectorOverlay.classList.remove('hidden');
             body.classList.remove('hide-cursor');
-            if (currentSongIndex !== -1) { 
-                initialLogoContainer.classList.add('hidden'); 
+            if (currentSongIndex !== -1) {
+                initialLogoContainer.classList.add('hidden');
             }
         } else {
             songSelectorOverlay.classList.add('hidden');
             body.classList.add('hide-cursor');
-            if (currentSongIndex === -1) { 
+            if (currentSongIndex === -1) {
                 initialLogoContainer.classList.remove('hidden');
             } else {
                 initialLogoContainer.classList.add('hidden');
@@ -577,7 +650,7 @@
 
       document.addEventListener('keydown', (e) => {
         if (e.key === 'o' || e.key === 'O') {
-            e.preventDefault(); 
+            e.preventDefault();
             toggleMenu();
         } else if (e.key === 'e' || e.key === 'E') {
             e.preventDefault();
@@ -596,11 +669,11 @@
                 }
             }
         } else {
-            if (songSelectorOverlay.classList.contains('hidden')) { 
+            if (songSelectorOverlay.classList.contains('hidden')) {
                 if (e.key === 'm' || e.key === 'M') {
                     toggleMute();
                 } else if (e.key === 'p' || e.key === 'P' || e.key === ' ') {
-                    e.preventDefault(); 
+                    e.preventDefault();
                     togglePlayPause();
                 } else if (e.key === 'ArrowRight') {
                     goToNextSong();
@@ -614,13 +687,14 @@
             }
         }
       });
-      
+
       loadResources();
 
       currentLine.classList.add('hidden');
+      nextLine.classList.add('hidden');
       songSelectorOverlay.classList.add('hidden');
-      initialLogoContainer.classList.remove('hidden'); 
-      backgroundVideo.style.display = 'none'; 
+      initialLogoContainer.classList.remove('hidden');
+      backgroundVideo.style.display = 'none';
     });
 
     document.addEventListener('fullscreenchange', () => {
