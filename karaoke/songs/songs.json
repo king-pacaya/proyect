@@ -27,6 +27,10 @@
     {
       "titulo": "Sing Along With Me",
       "fondo": "fondos/fondo6.mp4"
+    },
+    {
+      "titulo": "Hosanna",
+      "fondo": "fondos/fondo5.mp4"
     }
   ]
 }
