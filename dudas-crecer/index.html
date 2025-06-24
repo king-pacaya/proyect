@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="../favicon.png">
+  <meta property="og:title" content="Grandes Preguntas sobre Dios y la Vida | IBBLaVerdad">
+  <meta property="og:description" content="Un viaje simple por la teología cristiana que explora el propósito de la existencia, el origen del mal, la redención en Jesús y más.">
+  <meta property="og:image" content="https://ibblaverdad.com/multimedia/main-sharing-image.jpg"> <meta property="og:url" content="https://ibblaverdad.com/ruta/a/esta/pagina.html"> <meta property="og:type" content="article">
+  <meta property="og:site_name" content="IBBLaVerdad">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+  <link rel="stylesheet" type="text/css" href="fonts.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+  <style>
+    @font-face {
+        font-family: 'Moderat';
+        src: url('../sources/font/Moderat-Regular.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+    }
+    @font-face {
+        font-family: 'Moderat';
+        src: url('../sources/font/Moderat-Medium.ttf') format('truetype');
+        font-weight: 500;
+        font-style: normal;
+    }
+    @font-face {
+        font-family: 'Moderat';
+        src: url('../sources/font/Moderat-Bold.ttf') format('truetype');
+        font-weight: bold;
+        font-style: normal;
+    }
+    @font-face {
+        font-family: 'Moderat';
+        src: url('../sources/font/Moderat-Black.ttf') format('truetype');
+        font-weight: 900;
+        font-style: normal;
+    }
+    :root {
+      --green: #83DC5A;
+      --dark-blue: #203855;
+      --blue: #1D54C0;
+      --light-blue: #A0C3EA;
+      --extra-light-blue: #EDF5FF;
+    }
+    * {
+      font-family: 'Moderat', sans-serif !important;
+      font-weight: 500;
+      font-style: normal;
+    }
+    body {
+      line-height: 1.8;
+      color: var(--dark-blue);
+      background-color: white;
+    }
+    h1, h2, h3 {
+      font-family: 'Moderat', sans-serif !important;
+      font-weight: bold;
+    }
+    .header-border {
+      border-bottom: 3px double var(--dark-blue);
+      padding-bottom: 1rem;
+    }
+    .section-border {
+      border-left: 4px solid var(--blue);
+      padding-left: 1.5rem;
+    }
+    .verse-link, .glossary-term {
+      color: var(--blue);
+      font-weight: bold;
+      cursor: pointer;
+      border-bottom: 1px dotted var(--blue);
+    }
+    .verse-link:hover, .glossary-term:hover {
+      color: var(--dark-blue);
+      border-bottom-style: solid;
+    }
+    .modal-content {
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+    .academic-figure {
+      border: 1px solid var(--light-blue);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      margin: 1.5rem auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      width: fit-content;
+    }
+    .academic-figure img:first-of-type {
+      max-width: 100%;
+      display: block;
+    }
+    /* La regla .watermark ha sido eliminada */
+    .academic-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem auto;
+      border: 1px solid var(--light-blue);
+    }
+    .academic-table th, .academic-table td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid var(--light-blue);
+    }
+    .academic-table th {
+      background-color: var(--extra-light-blue);
+      font-weight: bold;
+    }
+    .academic-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+    .table-caption {
+      text-align: center;
+      font-style: italic;
+      color: var(--dark-blue);
+      opacity: 0.7;
+      padding: 0.5rem;
+    }
+    .text-gray-900 { color: var(--dark-blue); }
+    .text-gray-800 { color: var(--dark-blue); }
+    .text-gray-700 { color: var(--dark-blue); }
+    .text-gray-600 { color: var(--dark-blue); opacity: 0.8; }
+    .text-gray-500 { color: var(--dark-blue); opacity: 0.7; }
+    .bg-gray-50 { background-color: var(--extra-light-blue); }
+    .bg-gray-100 { background-color: var(--extra-light-blue); }
+    .border-blue-800 { border-color: var(--blue); }
+    .border-gray-200 { border-color: var(--light-blue); }
+
+    .roadmap {
+        background-color: var(--extra-light-blue);
+        border-radius: 8px;
+        padding: 2rem;
+        margin-bottom: 3rem;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+    .roadmap h3 {
+        color: var(--blue);
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+    .roadmap-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+    .roadmap-item:last-child {
+        margin-bottom: 0;
+    }
+    .roadmap-icon {
+        background-color: var(--blue);
+        color: white;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: bold;
+        margin-right: 1rem;
+        flex-shrink: 0;
+    }
+    .roadmap-text {
+        color: var(--dark-blue);
+        font-weight: normal;
+    }
+    .roadmap-text a {
+      color: var(--blue);
+      font-weight: bold;
+      text-decoration: underline;
+    }
+    .roadmap-text a:hover {
+      color: var(--dark-blue);
+    }
+    .explanation-block {
+      background-color: var(--extra-light-blue);
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+      margin-bottom: 1.5rem;
+      border-left: 4px solid var(--blue);
+    }
+    .explanation-block h3 {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      color: var(--blue);
+    }
+    .explanation-block p {
+      font-size: 1.125rem;
+      line-height: 1.7;
+    }
+    .list-header {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+    .glosary {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 3px double var(--dark-blue);
+    }
+    .glosary h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: var(--blue);
+    }
+    .glosary dl {
+      margin-bottom: 2rem;
+    }
+    .glosary dt {
+      font-weight: bold;
+      color: var(--dark-blue);
+      margin-bottom: 0.5rem;
+    }
+    .glosary dd {
+      margin-left: 1.5rem;
+      margin-bottom: 1rem;
+      color: var(--dark-blue);
+      opacity: 0.9;
+    }
+  </style>
+  <title>Grandes Preguntas sobre Dios y la Vida | IBBLaVerdad</title>
+</head>
+<body class="container mx-auto px-4 py-8 max-w-4xl" style="background-color: white;">
+
+<header class="text-center mb-12 header-border">
+  <img src="../favicon.png" alt="Logo IBBLaVerdad" class="mx-auto mb-4 rounded-full" style="max-height: 80px;">
+  <h1 class="text-3xl md:text-4xl font-bold mb-2" style="color: var(--dark-blue);">Grandes Preguntas sobre Dios y la Vida</h1>
+  <h2 class="text-xl md:text-2xl" style="color: var(--dark-blue); opacity: 0.8;">Un Viaje Simple por la Teología Cristiana</h2>
+  <div class="text-sm" style="color: var(--dark-blue); opacity: 0.7;">Publicado el 24 de junio de 2025 | Teología para todos</div>
+</header>
+
+<main class="space-y-12">
+
+  <section class="roadmap">
+    <h3 class="text-2xl font-bold">¡Un Mapa para Entender a Dios!</h3>
+    <p class="mb-4 roadmap-text">Aquí te mostramos un camino para entender las respuestas a las preguntas más importantes sobre Dios, paso a paso:</p>
+    <div class="space-y-3">
+      <div class="roadmap-item">
+        <div class="roadmap-icon">1</div>
+        <p class="roadmap-text">Empecemos con: <strong>¿Por qué existimos?</strong> Descubre el <a href="#proposito-creacion">Propósito de Dios al Crearnos</a>.</p>
+      </div>
+      <div class="roadmap-item">
+        <div class="roadmap-icon">2</div>
+        <p class="roadmap-text">Luego, una pregunta difícil: <strong>¿Por qué hay cosas malas en el mundo?</strong> Aprende sobre el <a href="#origen-mal">Origen del Mal</a>.</p>
+      </div>
+      <div class="roadmap-item">
+        <div class="roadmap-icon">3</div>
+        <p class="roadmap-text">Y si hay mal, <strong>¿por qué sufrimos?</strong> Entiende la <a href="#consecuencias-pecado">entrada del Pecado y sus Consecuencias</a>.</p>
+      </div>
+      <div class="roadmap-item">
+        <div class="roadmap-icon">4</div>
+        <p class="roadmap-text">Pero, ¡no todo está perdido! <strong>¿Hay una solución para el problema del mal?</strong> Conoce el <a href="#plan-redencion">Plan de Dios para Salvarnos</a>.</p>
+      </div>
+      <div class="roadmap-item">
+        <div class="roadmap-icon">5</div>
+        <p class="roadmap-text">Y para vivir bien, <strong>¿Dios nos dio reglas?</strong> Descubre el <a href="#ley-divina">Propósito de los Diez Mandamientos</a>.</p>
+      </div>
+      <div class="roadmap-item">
+        <div class="roadmap-icon">6</div>
+        <p class="roadmap-text">El personaje principal: <strong>¿Quién es Jesús y por qué es tan especial?</strong> Explora <a href="#jesus-redencion">Su Sacrificio y Resurrección</a>.</p>
+      </div>
+      <div class="roadmap-item">
+        <div class="roadmap-icon">7</div>
+        <p class="roadmap-text">Y la ciencia, <strong>¿está peleada con Dios?</strong> Reflexiona sobre <a href="#evolucion-fe">la Evolución y la Fe Cristiana</a>.</p>
+      </div>
+      <div class="roadmap-item">
+        <div class="roadmap-icon">8</div>
+        <p class="roadmap-text">Finalmente, <strong>¿qué significa amar en el plan de Dios?</strong> Entiende la <a href="#naturaleza-amor">Naturaleza del Amor</a>.</p>
+      </div>
+    </div>
+    <p class="mt-4 roadmap-text text-center">¡Esperamos que este viaje te ayude a conocer más a Dios!</p>
+  </section>
+
+  <article id="proposito-creacion" class="section-border">
+    <h2 class="text-2xl md:text-3xl font-bold mb-4" style="color: var(--dark-blue);">1. ¿Cuál es el propósito de nuestra existencia?</h2>
+    <figure class="academic-figure">
+      <img src="multimedia/1.png" alt="Universo y creación">
+      <figcaption>Fig. 1 - La creación del universo según la cosmovisión cristiana.</figcaption>
+    </figure>
+    <p class="mb-4 text-lg">La Biblia nos enseña que Dios, en Su gran amor, creó todo el universo y a nosotros, los humanos, con un <strong>propósito muy especial</strong>: Él quería tener una <strong>relación de amistad y amor</strong> con nosotros. Nos hizo ¡a Su imagen! (eso lo puedes leer en <span class="verse-link" data-verse="Génesis 1:26-27">Génesis 1:26-27</span>). Esto significa que nos dio la capacidad de pensar, sentir, elegir lo correcto y ser creativos, como Él.</p>
+    <p class="mb-4 text-lg">Además, nos dio una tarea importante: cuidar todo lo que creó (<span class="verse-link" data-verse="Génesis 1:28">Génesis 1:28</span>). Y para que el amor y la obediencia fueran de verdad, no obligados, Dios nos dio un regalo grandioso: el <span class="glossary-term" data-term="libre-albedrio">libre albedrío</span>. ¿Qué es eso? Es la capacidad de elegir por nosotros mismos entre lo bueno y lo malo. ¡Los ángeles también tuvieron ese regalo!</p>
+    <div class="explanation-block">
+        <h3 class="font-bold">Para entenderlo mejor:</h3>
+        <p>Imagina que Dios es como el mejor constructor y artista del mundo. Él no quería que sus creaciones fueran solo objetos que obedecen sin pensar. Quería seres que pudieran elegir amarlo y relacionarse con Él de forma genuina. Por eso, nos dio la libertad de decidir. Es como cuando alguien te da la libertad de elegir tus propias acciones, porque lo que más valora es una relación basada en la elección y el amor verdadero.</p>
+    </div>
+  </article>
+
+  <article id="origen-mal" class="section-border">
+    <h2 class="text-2xl md:text-3xl font-bold mb-4" style="color: var(--dark-blue);">2. ¿Cómo se originó el mal?</h2>
+    <figure class="academic-figure">
+      <img src="multimedia/2.png" alt="Representación del ángel caído">
+      <figcaption>Fig. 2 - Representación del ángel caído.</figcaption>
+    </figure>
+    <p class="mb-4 text-lg">¡Dios no creó el mal! El mal es como un vacío o una imperfección en algo que originalmente era bueno. No es una sustancia en sí misma, sino la ausencia o la distorsión de lo que fue creado con perfección. Como señala Agustín de Hipona (354-430 d.C.), el mal es <span class="glossary-term" data-term="privatio-boni">privatio boni</span> (privación del bien). El mal moral que vemos en el universo, como el egoísmo o la violencia, surgió por la <strong>desobediencia</strong> de seres que tenían la capacidad de elegir libremente.</p>
+
+    <div class="p-4 my-6 border-l-4 border-blue-800" style="background-color: var(--extra-light-blue);">
+      <p class="italic text-lg">"El primero en desobedecer fue <strong>Satanás</strong> (originalmente conocido como Lucifer), un ángel de gran rango y perfección. Él, movido por un inmenso orgullo, deseó exaltarse por encima de Dios (<span class="verse-link" data-verse="Isaías 14:12-15">Isaías 14:12-15</span>; <span class="verse-link" data-verse="Ezequiel 28:12-19">Ezequiel 28:12-19</span>). Su acto de rebeldía puede resumirse así:"</p>
+      <p class="text-center font-bold text-xl my-4" style="color: var(--dark-blue);">Orgullo &rarr; Rebeldía &rarr; Desobediencia &rarr; Pecado</p>
+    </div>
+
+    <p class="mb-4 text-lg">Al elegir separarse de Dios, quien es la fuente de todo bien y vida, la naturaleza de Satanás se corrompió. Ahora, todo lo que él hace está intrínsecamente alejado del bien. Sin embargo, no todos los ángeles siguieron este camino. Aquellos que permanecieron fieles a Dios lo hicieron por un <strong>amor inquebrantable</strong> y una <strong>obediencia confirmada</strong>. Esto nació de su profunda contemplación de la gloria divina (conocida como la <span class="glossary-term" data-term="vision-beatifica">visión beatífica</span>) y de una sabia conciencia de las graves consecuencias de la rebelión.</p>
+    <div class="explanation-block">
+        <h3 class="font-bold">Para entenderlo mejor:</h3>
+        <p>Imagina que la creación de Dios era como una obra de arte perfecta. El mal no es una parte que Dios creó, sino como una mancha que apareció cuando una parte de la creación (Satanás) decidió ir en contra del diseño original. Satanás, siendo un ser con gran libertad, se llenó de orgullo y quiso ser como Dios. Al alejarse de Dios, que es la fuente de todo lo bueno, su naturaleza se distorsionó. Los ángeles que permanecieron fieles, lo hicieron porque pudieron ver la increíble perfección y bondad de Dios, y entendieron que nada era mejor que estar con Él.</p>
+    </div>
+  </article>
+
+  <article id="consecuencias-pecado" class="section-border">
+    <h2 class="text-2xl md:text-3xl font-bold mb-4" style="color: var(--dark-blue);">3. ¿Por qué hay tanto sufrimiento en el mundo?</h2>
+    <figure class="academic-figure">
+      <img src="multimedia/3.png" alt="Adán y Eva en el Jardín del Edén">
+      <figcaption>Fig. 3 - Adán y Eva en el Jardín del Edén.</figcaption>
+    </figure>
+    <p class="mb-4 text-lg">Después de la rebelión de Satanás, el <span class="glossary-term" data-term="pecado">pecado</span> también entró en la humanidad a través de la desobediencia de Adán y Eva en el Jardín del Edén (<span class="verse-link" data-verse="Génesis 3">Génesis 3</span>). Esto tuvo una consecuencia profunda: toda la humanidad heredó una <span class="glossary-term" data-term="naturaleza-pecaminosa">naturaleza pecaminosa</span> (<span class="verse-link" data-verse="Romanos 5:12">Romanos 5:12</span>) y la inevitable "paga del pecado es muerte" (<span class="verse-link" data-verse="Romanos 6:23">Romanos 6:23</span>).</p>
+    <p class="mb-4 text-lg list-header">Las consecuencias teológicas clave de la entrada del pecado incluyen:</p>
+    <ul class="list-disc list-inside ml-6 mb-4 text-lg space-y-2">
+      <li>Nuestra naturaleza humana quedó dañada, lo que nos lleva a una inclinación al mal y, en última instancia, a la muerte (<span class="verse-link" data-verse="Romanos 6:23">Romanos 6:23</span>).</li>
+      <li>La relación con Dios, con nosotros mismos, con los demás y con la creación se rompió.</li>
+      <li>El sufrimiento, el dolor y la muerte física se hicieron parte de la experiencia humana en este mundo.</li>
+    </ul>
+    <p class="mb-4 text-lg">Dios manifiesta Su bondad con bendiciones y Su justicia con consecuencias o "maldiciones" por el pecado (<span class="verse-link" data-verse="Génesis 3:16-19">Génesis 3:16-19</span>; <span class="verse-link" data-verse="Deuteronomio 28">Deuteronomio 28</span>). Estas consecuencias no son caprichos divinos, sino el resultado directo de la desobediencia y la separación de Dios, quien es la fuente de vida y bien. Conceptos como la sobrepoblación, con sus problemas asociados, solo tienen sentido en un mundo caído, afectado por el pecado y sus limitaciones, no en el plan original y perfecto de Dios para una humanidad inmortal.</p>
+    <div class="explanation-block">
+        <h3 class="font-bold">Para entenderlo mejor:</h3>
+        <p>Cuando Adán y Eva desobedecieron, fue como si hubieran introducido un "virus" en la humanidad. Ese virus del pecado no solo nos afecta a nosotros por dentro, sino que también afecta el mundo que nos rodea. Por eso vemos sufrimiento, enfermedades y la muerte. Dios no nos castiga por diversión; más bien, el sufrimiento es el resultado natural de vivir en un mundo que se ha separado de su diseño original perfecto, donde Dios es la fuente de toda bendición y vida.</p>
+    </div>
+  </article>
+
+  <article id="plan-redencion" class="section-border">
+    <h2 class="text-2xl md:text-3xl font-bold mb-4" style="color: var(--dark-blue);">4. ¿Hay alguna esperanza o solución para el problema del pecado?</h2>
+    <figure class="academic-figure">
+      <img src="multimedia/4.png" alt="Símbolo de la redención">
+      <figcaption>Fig. 4 - Símbolo del plan de redención de Dios.</figcaption>
+    </figure>
+    <p class="mb-4 text-lg">A pesar de la entrada del pecado en el mundo, este evento no tomó a Dios por sorpresa. En Su <span class="glossary-term" data-term="omnisciencia">omnisciencia</span> (que todo lo sabe) y <span class="glossary-term" data-term="soberania-de-dios">soberanía</span> (que tiene el control total), Él ya tenía un <span class="glossary-term" data-term="redencion">plan de redención</span> establecido desde antes de la fundación del mundo (<span class="verse-link" data-verse="Efesios 1:4">Efesios 1:4</span>). Este plan no fue un "parche" o una improvisación ante un error, sino la manera perfecta en que Dios manifestaría plenamente Su amor, Su misericordia, Su justicia y Su gloria.</p>
+
+    <blockquote class="border-l-4 border-blue-800 pl-4 my-6 italic text-lg" style="background-color: var(--extra-light-blue);">
+      "La caída no tomó a Dios por sorpresa. Su plan eterno incluía permitir el pecado para luego vencerlo de manera que manifestara plenamente sus atributos de amor, misericordia, justicia y gloria." (Frame, 2013)
+    </blockquote>
+    <p class="mb-4 text-lg">Él permite el pecado (sin ser la causa del mismo), pero lo usa dentro de Su plan más grande para Sus propios propósitos de gloria y redención.</p>
+    <div class="explanation-block">
+        <h3 class="font-bold">Para entenderlo mejor:</h3>
+        <p>Imagina que Dios es como un gran estratega que siempre tiene un plan perfecto, incluso antes de que algo "salga mal". El pecado no lo tomó desprevenido. En lugar de ser un problema que arruinó Su plan, Dios ya había diseñado una forma de usarlo para mostrar cuán grande es Su amor, Su capacidad para perdonar y Su justicia. Su plan de rescate no es un "plan B", ¡es el plan principal y más glorioso que siempre tuvo!</p>
+    </div>
+  </article>
+
+  <article id="ley-divina" class="section-border">
+    <h2 class="text-2xl md:text-3xl font-bold mb-4" style="color: var(--dark-blue);">5. El Propósito de la Ley y los Diez Mandamientos</h2>
+    <figure class="academic-figure">
+      <img src="multimedia/5.png" alt="Las Tablas de la Ley">
+      <figcaption>Fig. 5 - Representación de las Tablas de la Ley.</figcaption>
+    </figure>
+    <p class="mb-4 text-lg">La <span class="glossary-term" data-term="ley-mosaica">Ley Mosaica</span>, incluyendo los Diez Mandamientos, no fue una "actualización" tardía porque Dios no lo hubiera previsto. Más bien, fue una revelación progresiva de la voluntad de Dios, dada en un momento específico de la historia de Israel (<span class="verse-link" data-verse="Éxodo 20">Éxodo 20</span>). Los propósitos de la Ley fueron multifacéticos:</p>
+    <ol class="list-decimal list-inside ml-6 mb-4 text-lg space-y-2">
+      <li><strong>Revelar el pecado:</strong> Mostrar claramente a la humanidad su incapacidad de cumplir los estándares perfectos de Dios y, por lo tanto, su profunda necesidad de un Salvador (<span class="verse-link" data-verse="Gálatas 3:24">Gálatas 3:24</span>).</li>
+      <li><strong>Educar y guiar:</strong> Enseñar al pueblo de Israel cómo vivir en una relación de pacto con un Dios santo y establecer normas para una sociedad justa y ordenada.</li>
+      <li><strong>Preparar el camino para el Mesías:</strong> La Ley era una sombra de las cosas buenas que habrían de venir (<span class="verse-link" data-verse="Hebreos 10:1">Hebreos 10:1</span>), señalando la necesidad de un sacrificio perfecto que la cumpliera.</li>
+    </ol>
+    <p class="mb-4 text-lg">Los Diez Mandamientos incluyen principios como: no tener otros dioses, no hacer imágenes, no tomar el nombre de Dios en vano, acordarse del día de reposo, honrar a los padres, no matar, no cometer adulterio, no hurtar, no hablar falso testimonio y no codiciar (<span class="verse-link" data-verse="Éxodo 20:3-17">Éxodo 20:3-17</span>).</p>
+    <div class="explanation-block">
+        <h3 class="font-bold">Para entenderlo mejor:</h3>
+        <p>Piensa en la Ley como un espejo. Cuando te miras al espejo, ves si estás limpio o si tienes alguna mancha. La Ley de Dios es así: nos muestra lo perfectos que debemos ser y, al mismo tiempo, nos revela que no somos capaces de cumplir esa perfección por nosotros mismos. Nos ayuda a darnos cuenta de que necesitamos ayuda externa, un "limpiador" o un "salvador", que es Jesús. También nos da pautas para vivir de una manera que honre a Dios y sea buena para nuestra sociedad.</p>
+    </div>
+  </article>
+
+  <article id="jesus-redencion" class="section-border">
+    <h2 class="text-2xl md:text-3xl font-bold mb-4" style="color: var(--dark-blue);">6. ¿Quién es Jesús y por qué es tan importante para la salvación?</h2>
+    <figure class="academic-figure">
+      <img src="multimedia/6.png" alt="Jesús en la cruz y resucitado">
+      <figcaption>Fig. 6 - Jesús en la cruz y resucitado.</figcaption>
+    </figure>
+    <p class="mb-4 text-lg">Jesús es una figura central porque Él es <strong>plenamente Dios y plenamente hombre</strong> al mismo tiempo. Nació sin pecado (<span class="verse-link" data-verse="Hebreos 4:15">Hebreos 4:15</span>) gracias a su concepción por el Espíritu Santo (<span class="verse-link" data-verse="Lucas 1:35">Lucas 1:35</span>). Su <span class="glossary-term" data-term="impecabilidad-de-cristo">impecabilidad</span> (ser sin pecado) fue crucial porque solo un ser sin mancha podía pagar el precio por los pecados de toda la humanidad.</p>
+    <p class="mb-4 text-lg">La <span class="glossary-term" data-term="resurreccion-de-jesus">resurrección de Jesús</span> al tercer día fue la confirmación suprema de que Su sacrificio fue aceptado por Dios y que Él venció al pecado y a la muerte de una vez por todas (<span class="verse-link" data-verse="Romanos 4:25">Romanos 4:25</span>). Por medio de Jesús, Dios obra la redención completa para la humanidad pecadora (<span class="verse-link" data-verse="1 Corintios 1:30">1 Corintios 1:30</span>).</p>
+    <p class="mb-4 text-lg">Ya no necesitamos sacrificios continuos de animales, pues Jesús fue el sacrificio definitivo y perfecto, el "Cordero de Dios que quita el pecado del mundo" (<span class="verse-link" data-verse="Juan 1:29">Juan 1:29</span>; <span class="verse-link" data-verse="Hebreos 9:26-28">Hebreos 9:26-28</span>). La salvación y la <span class="glossary-term" data-term="justificacion">justificación</span> (ser declarados justos ante Dios) se obtienen por <strong>fe en Él</strong>, no por obras humanas (<span class="verse-link" data-verse="Efesios 2:8-9">Efesios 2:8-9</span>).</p>
+    <div class="explanation-block">
+        <h3 class="font-bold">Para entenderlo mejor:</h3>
+        <p>Piensa que la humanidad tenía una deuda enorme con Dios por nuestros pecados, una deuda que nadie podía pagar. Jesús vino como el único que no tenía deudas, y Él se ofreció a pagar la deuda de todos nosotros con Su propia vida. Su resurrección fue como el recibo de que la deuda fue pagada por completo y aceptada por Dios. Así que, para ser "limpiados" y tener una relación correcta con Dios, no necesitamos esforzarnos en pagar esa deuda (no podemos), sino simplemente confiar en que Jesús ya la pagó por nosotros.</p>
+    </div>
+  </article>
+
+  <article id="evolucion-fe" class="section-border">
+    <h2 class="text-2xl md:text-3xl font-bold mb-4" style="color: var(--dark-blue);">7. ¿Puede la ciencia (como la evolución) coexistir con la fe en Dios como Creador?</h2>
+    <figure class="academic-figure">
+      <img src="multimedia/7.png" alt="Símbolo de la evolución y la fe">
+      <figcaption>Fig. 7 - Símbolo de la evolución y la fe.</figcaption>
+    </figure>
+    <p class="mb-4 text-lg">Muchos cristianos adoptan la perspectiva de la <span class="glossary-term" data-term="evolucion-teista">evolución teísta</span> o <strong>creacionismo evolutivo</strong>, que concilia la teoría científica de la evolución con la creencia en Dios como Creador. Esta visión interpreta los "seis días" de la creación en Génesis como largos períodos o eras de tiempo, no días literales de 24 horas. Esto es plausible dado que Dios está fuera de las limitaciones del tiempo humano (<span class="verse-link" data-verse="2 Pedro 3:8">2 Pedro 3:8</span>: "Mas, oh amados, no ignoréis esto: que para con el Señor un día es como mil años, y mil años como un día").</p>
+    <p class="mb-4 text-lg">Desde esta perspectiva, la evolución es vista como el mecanismo o método que Dios estableció y sustentó para desarrollar la biodiversidad y la vida en la Tierra. El relato de Génesis se considera una verdad teológica sobre el <strong>"quién"</strong> (Dios es el Creador) y el <strong>"por qué"</strong> de la creación, más que un manual científico detallado del "cómo". En algún punto del proceso evolutivo, Dios actuó de manera especial para infundir el alma o el espíritu en la humanidad, haciéndonos portadores de Su imagen.</p>
+    <div class="explanation-block">
+        <h3 class="font-bold">Para entenderlo mejor:</h3>
+        <p>Imagina que la Biblia es un libro que te dice que una casa fue construida por un arquitecto brillante (Dios) y que la construyó con un propósito (para vivir en ella). La ciencia, por otro lado, es como el manual de ingeniería que explica los materiales que se usaron y cómo se ensamblaron. Ambos te dicen cosas ciertas sobre la casa, pero desde perspectivas diferentes. La fe te habla del Creador y Su propósito, y la ciencia puede explorar los procesos que Él usó para llevar a cabo Su creación. No tienen por qué contradecirse, sino complementarse en una visión más completa de la realidad.</p>
+    </div>
+  </article>
+
+  <article id="naturaleza-amor" class="section-border">
+    <h2 class="text-2xl md:text-3xl font-bold mb-4" style="color: var(--dark-blue);">8. ¿Qué significa amar en el plan de Dios?</h2>
+    <figure class="academic-figure">
+      <img src="multimedia/8.png" alt="Corazones representando el amor divino, angélico y humano">
+      <figcaption>Fig. 8 - Diferentes tipos de amor.</figcaption>
+    </figure>
+    <p class="mb-4 text-lg">Existen diferentes cualidades de amor en el plan de Dios, cada una con un valor único:</p>
+    <ul class="list-disc list-inside ml-6 mb-4 text-lg space-y-2">
+      <li><strong>El Amor de Dios:</strong> Es el amor perfecto, incondicional, santo y soberano. Dios se glorifica a sí mismo (no es un orgullo pecaminoso), manifestando Su infinita excelencia a través de Su ser y Sus obras.</li>
+      <li><strong>El Amor de los Ángeles Fieles:</strong> Es un amor de adoración, obediencia y servicio perfectos, nacido de la <span class="glossary-term" data-term="vision-beatifica">visión beatífica</span> (la contemplación directa de la gloria de Dios) y de una obediencia confirmada.</li>
+      <li><strong>El Amor de la Humanidad Redimida:</strong> Es un amor de gratitud profunda, fe y elección consciente. Aunque somos más susceptibles al pecado que los ángeles y vivimos en un mundo caído, nuestro amor es inmensamente precioso para Dios. Este amor se manifiesta al elegirlo y buscarlo a Él, a pesar de las tentaciones y nuestras debilidades, como una respuesta a Su inmensa gracia y <span class="glossary-term" data-term="redencion">redención</span>. Esto trae una gloria única a Dios, ya que Su amor y poder son evidentes al transformar corazones que estaban en rebelión.</li>
+    </ul>
+    <div class="explanation-block">
+        <h3 class="font-bold">Para entenderlo mejor:</h3>
+        <p>El amor de Dios es la fuente de todo amor, es perfecto y no necesita nada de nosotros. El amor de los ángeles que permanecieron fieles es un amor puro de adoración, porque ellos ven a Dios tal como es y no tienen duda. Nuestro amor, el de los humanos que hemos sido rescatados por Jesús, es especial para Dios. Aunque no somos perfectos y todavía luchamos con el pecado, cuando elegimos amarlo y confiar en Él, incluso con nuestras debilidades, eso le da una gloria muy particular. Es un amor que viene de la gratitud por haber sido perdonados y transformados, mostrando el poder increíble de Su gracia.</p>
+    </div>
+  </article>
+
+</main>
+
+<footer class="glosary">
+    <h2 class="text-2xl md:text-3xl font-bold mb-4">Glosario Teológico</h2>
+    <dl>
+        <dt><span class="glossary-term" data-term="libre-albedrio">Libre albedrío</span>:</dt>
+        <dd>La capacidad dada por Dios a los seres racionales (ángeles y humanos) para tomar decisiones y elegir entre diferentes cursos de acción, incluyendo el bien y el mal. Implica la responsabilidad moral por dichas elecciones.</dd>
+
+        <dt><span class="glossary-term" data-term="omnisciencia">Omnisciencia</span>:</dt>
+        <dd>El atributo de Dios de poseer conocimiento completo y perfecto de todas las cosas, pasadas, presentes y futuras, reales y posibles.</dd>
+
+        <dt><span class="glossary-term" data-term="soberania-de-dios">Soberanía de Dios</span>:</dt>
+        <dd>La autoridad suprema y el control absoluto de Dios sobre toda la creación y todos los eventos. Implica que nada ocurre sin Su permiso o sin que forme parte de Su propósito final.</dd>
+
+        <dt><span class="glossary-term" data-term="pecado">Pecado</span>:</dt>
+        <dd>Cualquier transgresión de la ley de Dios o de Su carácter santo. Es la desobediencia a la voluntad divina, ya sea por acción, omisión, pensamiento o actitud. Se considera una privación del bien.</dd>
+
+        <dt><span class="glossary-term" data-term="naturaleza-pecaminosa">Naturaleza pecaminosa</span>:</dt>
+        <dd>La condición inherente de la humanidad después de la Caída de Adán y Eva, que se inclina al pecado y está separada de Dios. No implica que cada persona sea tan mala como podría ser, sino que la inclinación al pecado está presente en todos.</dd>
+
+        <dt><span class="glossary-term" data-term="redencion">Redención</span>:</dt>
+        <dd>El acto de Dios de rescatar a la humanidad del poder y las consecuencias del pecado a través del sacrificio de Jesucristo. Significa "comprar de nuevo" o liberar mediante un pago.</dd>
+
+        <dt><span class="glossary-term" data-term="ley-mosaica">Ley Mosaica</span>:</dt>
+        <dd>El conjunto de leyes, mandamientos y reglamentos que Dios dio a Moisés en el Monte Sinaí para el pueblo de Israel. Incluye los Diez Mandamientos y otras leyes ceremoniales, civiles y morales.</dd>
+
+        <dt><span class="glossary-term" data-term="impecabilidad-de-cristo">Impecabilidad de Cristo</span>:</dt>
+        <dd>La doctrina que afirma que Jesús, siendo plenamente Dios y plenamente hombre, fue absolutamente sin pecado en Su naturaleza, pensamientos, palabras y acciones durante toda Su vida terrenal. Esta impecabilidad fue esencial para que Su sacrificio pudiera ser un pago válido por los pecados de la humanidad.</dd>
+
+        <dt><span class="glossary-term" data-term="resurreccion-de-jesus">Resurrección de Jesús</span>:</dt>
+        <dd>El evento central de la fe cristiana, en el que Jesús volvió a la vida corporalmente al tercer día después de Su crucifixión, demostrando Su victoria sobre el pecado y la muerte. Es la garantía de la futura resurrección y vida eterna para los creyentes.</dd>
+
+        <dt><span class="glossary-term" data-term="justificacion">Justificación</span>:</dt>
+        <dd>El acto de Dios por el cual declara justo al pecador que cree en Jesucristo, absolviéndolo de la culpa y la pena del pecado, basándose en la justicia de Cristo imputada al creyente.</dd>
+
+        <dt><span class="glossary-term" data-term="evolucion-teista">Evolución teísta (o creacionismo evolutivo)</span>:</dt>
+        <dd>La postura que busca reconciliar la ciencia moderna de la evolución biológica con la creencia en Dios como Creador. Sugiere que Dios utilizó el proceso evolutivo como Su método para desarrollar la vida en la Tierra, y que los relatos de la creación en Génesis son teológicos en su naturaleza, no científicos literales.</dd>
+
+        <dt><span class="glossary-term" data-term="vision-beatifica">Visión beatífica</span>:</dt>
+        <dd>El concepto teológico, especialmente en la tradición católica, de la contemplación directa e inmediata de Dios en Su esencia por parte de los bienaventurados (ángeles fieles y santos en el cielo). Se considera el fin último del ser humano y la fuente de la felicidad suprema.</dd>
+
+        <dt><span class="glossary-term" data-term="privatio-boni">Privatio Boni</span>:</dt>
+        <dd>Doctrina agustiniana que define el mal como ausencia o privación del bien, no como sustancia independiente. El mal es corrupción de lo creado como bueno.</dd>
+
+        <dt><span class="glossary-term" data-term="teodicea">Teodicea</span>:</dt>
+        <dd>Rama de la teología que busca reconciliar la existencia de Dios con la presencia del mal y el sufrimiento en el mundo.</dd>
+
+        <dt><span class="glossary-term" data-term="cristologia">Cristología</span>:</dt>
+        <dd>Estudio teológico sistemático de la persona, naturaleza y obra de Jesucristo.</dd>
+    </dl>
+</footer>
+
+<div id="verseModal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center p-4 hidden z-50">
+  <div class="bg-white rounded-lg p-6 shadow-xl w-full max-w-md modal-content relative" style="color: var(--dark-blue);">
+    <button id="closeVerseModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-2xl font-bold">&times;</button>
+    <h3 id="modalVerseReference" class="text-xl font-bold mb-4" style="color: var(--blue);"></h3>
+    <p id="modalVerseText" class="text-lg"></p>
+  </div>
+</div>
+
+<div id="glossaryModal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center p-4 hidden z-50">
+  <div class="bg-white rounded-lg p-6 shadow-xl w-full max-w-md modal-content relative" style="color: var(--dark-blue);">
+    <button id="closeGlossaryModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-2xl font-bold">&times;</button>
+    <h3 id="modalGlossaryTitle" class="text-xl font-bold mb-4" style="color: var(--blue);"></h3>
+    <p id="modalGlossaryDefinition" class="text-lg"></p>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+      const verses = {
+          "Génesis 1:26-27": "Entonces dijo Dios: Hagamos al hombre a nuestra imagen, conforme a nuestra semejanza; y señoree en los peces del mar, en las aves de los cielos, en las bestias, en toda la tierra, y en todo animal que se arrastra sobre la tierra. Y creó Dios al hombre a su imagen, a imagen de Dios lo creó; varón y hembra los creó.",
+          "Génesis 1:28": "Y los bendijo Dios, y les dijo: Fructificad y multiplicaos; llenad la tierra, y sojuzgadla, y señoread en los peces del mar, en las aves de los cielos, y en todas las bestias que se mueven sobre la tierra.",
+          "Isaías 14:12-15": "¡Cómo caíste del cielo, oh Lucero, hijo de la mañana! Cortado fuiste por tierra, tú que debilitabas a las naciones. Tú que decías en tu corazón: Subiré al cielo; en lo alto, junto a las estrellas de Dios, levantaré mi trono, y en el monte del testimonio me sentaré, a los lados del norte; sobre las alturas de las nubes subiré, y seré semejante al Altísimo. Mas tú derribado eres hasta el Seol, a los lados del abismo.",
+          "Ezequiel 28:12-19": "Hijo de hombre, levanta endechas sobre el rey de Tiro, y dile: Así ha dicho Jehová el Señor: Tú eras el sello de la perfección, lleno de sabiduría, y acabado de hermosura. En Edén, en el huerto de Dios estuviste; de toda piedra preciosa era tu vestidura; de cornerina, topacio, jaspe, crisólito, berilo y ónice; de zafiro, carbunclo, esmeralda y oro; los primores de tus tamboriles y flautas estuvieron preparados para ti en el día de tu creación. Tú, querubín grande, protector, yo te puse en el santo monte de Dios; allí estuviste; en medio de las piedras de fuego te paseabas. Perfecto eras en todos tus caminos desde el día en que fuiste creado, hasta que se halló en ti maldad. A causa de la multitud de tus contrataciones fuiste lleno de iniquidad, y pecaste; por lo que yo te eché del monte de Dios, y te arrojé de entre las piedras del fuego, oh querubín protector. Se enalteció tu corazón a causa de tu hermosura, corrompiste tu sabiduría a causa de tu esplendor; yo te arrojaré por tierra; delante de los reyes te pondré para que miren en ti. Con la multitud de tus maldades y con la iniquidad de tus contrataciones profanaste tus santuarios; yo, pues, saqué de en medio de ti fuego que te consumió, y te puse en ceniza sobre la tierra a los ojos de todos los que te miran. Todos los que te conocieron de entre los pueblos se maravillarán sobre ti; espanto serás, y para siempre dejarás de ser.",
+          "Génesis 3": "El capítulo 3 de Génesis narra la tentación de Adán y Eva en el Jardín del Edén por la serpiente, su desobediencia al comer del árbol del conocimiento del bien y del mal, y las consecuencias de su pecado, incluyendo la expulsión del Edén y las maldiciones sobre la humanidad y la creación.",
+          "Romanos 5:12": "Por tanto, como el pecado entró en el mundo por un hombre, y por el pecado la muerte, así la muerte pasó a todos los hombres, por cuanto todos pecaron;",
+          "Romanos 6:23": "Porque la paga del pecado es muerte, mas la dádiva de Dios es vida eterna en Cristo Jesús Señor nuestro.",
+          "Génesis 3:16-19": "A la mujer dijo: Multiplicaré en gran manera los dolores en tus preñeces; con dolor darás a luz los hijos; y tu deseo será para tu marido, y y él se enseñoreará de ti. Y al hombre dijo: Por cuanto obedeciste a la voz de tu mujer, y comiste del árbol de que te mandé diciendo: No comerás de él; maldita será la tierra por tu causa; con dolor comerás de ella todos los días de tu vida. Espinos y cardos te producirá, y comerás hierba del campo. Con el sudor de tu rostro comerás el pan hasta que vuelvas a la tierra; porque de ella fuiste tomado; pues polvo eres, y al polvo volverás.",
+          "Deuteronomio 28": "El capítulo 28 de Deuteronomio describe una serie extensa de bendiciones por la obediencia a Dios y una serie mucho más detallada de maldiciones por la desobediencia. Estas maldiciones incluyen enfermedades, derrotas militares, sequía, hambre, opresión por enemigos, y dispersión entre las naciones. Un extracto representativo de las maldiciones es Deuteronomio 28:15: 'Pero acontecerá, si no oyeres la voz de Jehová tu Dios, para guardar y poner por obra todos sus mandamientos y sus estatutos que yo te mando hoy, que vendrán sobre ti todas estas maldiciones, y te alcanzarán.'",
+          "Efesios 1:4": "según nos escogió en él antes de la fundación del mundo, para que fuésemos santos y sin mancha delante de él en amor,",
+          "Éxodo 20": "El capítulo 20 de Éxodo contiene los Diez Mandamientos dados por Dios a Moisés en el monte Sinaí, que sirven como fundamento de la ley moral y de pacto para el pueblo de Israel.",
+          "Gálatas 3:24": "De manera que la ley ha sido nuestro ayo, para llevarnos a Cristo, a fin de que fuésemos justificados por la fe.",
+          "Hebreos 10:1": "Porque la ley, teniendo la sombra de los bienes venideros, no la imagen misma de las cosas, nunca puede, por los mismos sacrificios que se ofrecen continuamente cada año, hacer perfectos a los que se acercan.",
+          "Hebreos 4:15": "Porque no tenemos un sumo sacerdote que no pueda compadecerse de nuestras debilidades, sino uno que fue tentado en todo según nuestra semejanza, pero sin pecado.",
+          "Lucas 1:35": "Respondiendo el ángel, le dijo: El Espíritu Santo vendrá sobre ti, y el poder del Altísimo te cubrirá con su sombra; por lo cual también el Santo Ser que nacerá, será llamado Hijo de Dios.",
+          "Romanos 4:25": "el cual fue entregado por nuestras transgresiones, y resucitado para nuestra justificación.",
+          "1 Corintios 1:30": "Mas por él estáis vosotros en Cristo Jesús, el cual nos ha sido hecho por Dios sabiduría, justificación, santificación y redención.",
+          "Juan 1:29": "El siguiente día vio Juan a Jesús que venía a él, y dijo: He aquí el Cordero de Dios, que quita el pecado del mundo.",
+          "Hebreos 9:26-28": "De otra manera le hubiera sido necesario padecer muchas veces desde el principio del mundo; pero ahora, en la consumación de los siglos, se presentó una vez para siempre para quitar de en medio el pecado por el sacrificio de sí mismo. Y de la manera que está establecido para los hombres que mueran una sola vez, y después de esto el juicio, así también Cristo fue ofrecido una sola vez para llevar los pecados de muchos; y aparecerá por segunda vez, sin relación con el pecado, para salvar a los que le esperan.",
+          "Efesios 2:8-9": "Porque por gracia sois salvos por medio de la fe; y esto no de vosotros, pues es don de Dios; no por obras, para que nadie se gloríe.",
+          "2 Pedro 3:8": "Mas, oh amados, no ignoréis esto: que para con el Señor un día es como mil años, y mil años como un día.",
+          "1 Juan 4:8": "El que no ama, no ha conocido a Dios; porque Dios es amor.",
+          "Juan 3:16": "Porque de tal manera amó Dios al mundo, que ha dado a su Hijo unigénito, para que todo aquel que en él cree, no se pierda, mas tenga vida eterna.",
+          "Romanos 5:8": "Mas Dios muestra su amor para con nosotros, en que siendo aún pecadores, Cristo murió por nosotros.",
+          "Salmos 103:20": "Bendecid a Jehová, vosotros sus ángeles, poderosos en fortaleza, que ejecutáis su palabra, obedeciendo a la voz de su precepto.",
+          "Apocalipsis 5:11-12": "Y miré, y oí la voz de muchos ángeles alrededor del trono, y de los seres vivientes, y de los ancianos; y su número era millones de millones, que decían a gran voz: El Cordero que fue inmolado es digno de tomar el poder, las riquezas, la sabiduría, la fortaleza, la honra, la gloria y la alabanza.",
+          "Romanos 12:1": "Así que, hermanos, os ruego por las misericordias de Dios, que presentéis vuestros cuerpos en sacrificio vivo, santo, agradable a Dios, que es vuestro culto racional.",
+          "Efesios 5:1-2": "Sed, pues, imitadores de Dios como hijos amados. Y andad en amor, como también Cristo nos amó, y se entregó a sí mismo por nosotros, ofrenda y sacrificio a Dios en olor fragante."
+      };
+
+      const glossaryTerms = {
+          "libre-albedrio": {
+              title: "Libre albedrío",
+              definition: "La capacidad dada por Dios a los seres racionales (ángeles y humanos) para tomar decisiones y elegir entre diferentes cursos de acción, incluyendo el bien y el mal. Implica la responsabilidad moral por dichas elecciones."
+          },
+          "omnisciencia": {
+              title: "Omnisciencia",
+              definition: "El atributo de Dios de poseer conocimiento completo y perfecto de todas las cosas, pasadas, presentes y futuras, reales y posibles."
+          },
+          "soberania-de-dios": {
+              title: "Soberanía de Dios",
+              definition: "La autoridad suprema y el control absoluto de Dios sobre toda la creación y todos los eventos. Implica que nada ocurre sin Su permiso o sin que forme parte de Su propósito final."
+          },
+          "pecado": {
+              title: "Pecado",
+              definition: "Cualquier transgresión de la ley de Dios o de Su carácter santo. Es la desobediencia a la voluntad divina, ya sea por acción, omisión, pensamiento o actitud. Se considera una privación del bien."
+          },
+          "naturaleza-pecaminosa": {
+              title: "Naturaleza pecaminosa",
+              definition: "La condición inherente de la humanidad después de la Caída de Adán y Eva, que se inclina al pecado y está separada de Dios. No implica que cada persona sea tan mala como podría ser, sino que la inclinación al pecado está presente en todos."
+          },
+          "redencion": {
+              title: "Redención",
+              definition: "El acto de Dios de rescatar a la humanidad del poder y las consecuencias del pecado a través del sacrificio de Jesucristo. Significa 'comprar de nuevo' o liberar mediante un pago."
+          },
+          "ley-mosaica": {
+              title: "Ley Mosaica",
+              definition: "El conjunto de leyes, mandamientos y reglamentos que Dios dio a Moisés en el Monte Sinaí para el pueblo de Israel. Incluye los Diez Mandamientos y otras leyes ceremoniales, civiles y morales."
+          },
+          "impecabilidad-de-cristo": {
+              title: "Impecabilidad de Cristo",
+              definition: "La doctrina que afirma que Jesús, siendo plenamente Dios y plenamente hombre, fue absolutamente sin pecado en Su naturaleza, pensamientos, palabras y acciones durante toda Su vida terrenal. Esta impecabilidad fue esencial para que Su sacrificio pudiera ser un pago válido por los pecados de la humanidad."
+          },
+          "resurreccion-de-jesus": {
+              title: "Resurrección de Jesús",
+              definition: "El evento central de la fe cristiana, en el que Jesús volvió a la vida corporalmente al tercer día después de Su crucifixión, demostrando Su victoria sobre el pecado y la muerte. Es la garantía de la futura resurrección y vida eterna para los creyentes."
+          },
+          "justificacion": {
+              title: "Justificación",
+              definition: "El acto de Dios por el cual declara justo al pecador que cree en Jesucristo, absolviéndolo de la culpa y la pena del pecado, basándose en la justicia de Cristo imputada al creyente."
+          },
+          "evolucion-teista": {
+              title: "Evolución teísta (o creacionismo evolutivo)",
+              definition: "La postura que busca reconciliar la ciencia moderna de la evolución biológica con la creencia en Dios como Creador. Sugiere que Dios utilizó el proceso evolutivo como Su método para desarrollar la vida en la Tierra, y que los relatos de la creación en Génesis son teológicos en su naturaleza, no científicos literales."
+          },
+          "vision-beatifica": {
+              title: "Visión beatífica",
+              definition: "El concepto teológico, especialmente en la tradición católica, de la contemplación directa e inmediata de Dios en Su esencia por parte de los bienaventurados (ángeles fieles y santos en el cielo). Se considera el fin último del ser humano y la fuente de la felicidad suprema."
+          },
+          "privatio-boni": {
+              title: "Privatio Boni",
+              definition: "Doctrina agustiniana que define el mal como ausencia o privación del bien, no como sustancia independiente. El mal es corrupción de lo creado como bueno."
+          },
+          "teodicea": {
+              title: "Teodicea",
+              definition: "Rama de la teología que busca reconciliar la existencia de Dios con la presencia del mal y el sufrimiento en el mundo."
+          },
+          "cristologia": {
+              title: "Cristología",
+              definition: "Estudio teológico sistemático de la persona, naturaleza y obra de Jesucristo."
+          }
+      };
+
+      const verseModal = document.getElementById('verseModal');
+      const modalVerseRef = document.getElementById('modalVerseReference');
+      const modalVerseText = document.getElementById('modalVerseText');
+      const closeVerseModalBtn = document.getElementById('closeVerseModal');
+
+      document.querySelectorAll('.verse-link').forEach(link => {
+          link.addEventListener('click', (e) => {
+              e.preventDefault();
+              const reference = e.target.dataset.verse;
+              modalVerseRef.textContent = reference;
+              modalVerseText.textContent = verses[reference] || "Referencia bíblica no encontrada. Consulte su Biblia para el texto completo.";
+              verseModal.classList.remove('hidden');
+          });
+      });
+
+      closeVerseModalBtn.addEventListener('click', () => {
+          verseModal.classList.add('hidden');
+      });
+
+      verseModal.addEventListener('click', (e) => {
+          if (e.target === verseModal) {
+              verseModal.classList.add('hidden');
+          }
+      });
+
+      const glossaryModal = document.getElementById('glossaryModal');
+      const modalGlossaryTitle = document.getElementById('modalGlossaryTitle');
+      const modalGlossaryDefinition = document.getElementById('modalGlossaryDefinition');
+      const closeGlossaryModalBtn = document.getElementById('closeGlossaryModal');
+
+      document.querySelectorAll('.glossary-term').forEach(termLink => {
+          termLink.addEventListener('click', (e) => {
+              e.preventDefault();
+              const termKey = e.target.dataset.term;
+              const termData = glossaryTerms[termKey];
+              if (termData) {
+                  modalGlossaryTitle.textContent = termData.title;
+                  modalGlossaryDefinition.textContent = termData.definition;
+                  glossaryModal.classList.remove('hidden');
+              } else {
+                  console.warn(`Término de glosario '${termKey}' no encontrado.`);
+              }
+          });
+      });
+
+      closeGlossaryModalBtn.addEventListener('click', () => {
+          glossaryModal.classList.add('hidden');
+      });
+
+      glossaryModal.addEventListener('click', (e) => {
+          if (e.target === glossaryModal) {
+              glossaryModal.classList.add('hidden');
+          }
+      });
+  });
+</script>
+</body>
+</html>
