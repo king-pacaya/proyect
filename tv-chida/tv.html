@@ -18,6 +18,10 @@
     * {
       font-family: 'VCR', sans-serif;
     }
+    body {
+      /* Añadido para que el body pueda recibir el foco programáticamente */
+      tabindex: -1; 
+    }
   </style>
   <script src="https://www.youtube.com/iframe_api"></script>
   <title>TV Chida</title>
@@ -249,6 +253,33 @@
         toggleFullScreen();
       }
     });
+
+    // ====================================================================================
+    // | ARREGLO DE FOCO PARA EL PROBLEMA DE LOS ANUNCIOS: DEVOLVER EL FOCO AL BODY |
+    // ====================================================================================
+
+    // 1. Asegurar que el body tenga tabindex="-1" (ya lo puse en el <style> de arriba).
+
+    // 2. Escuchar el evento 'mousedown' (al hacer click) en cualquier parte del documento.
+    document.addEventListener('mousedown', function() {
+      // 3. Usar un pequeño timeout para que el navegador primero procese el click
+      //    (que le da el foco al iframe del video, especialmente al hacer clic en 'Omitir Anuncio').
+      setTimeout(function() {
+        // 4. Devolverle el foco al cuerpo del documento.
+        //    Esto asegura que el 'document.addEventListener('keydown', ...)'
+        //    vuelva a capturar las pulsaciones de teclado.
+        document.body.focus();
+        // Opcional para debug:
+        // console.log('Foco restaurado a:', document.activeElement);
+      }, 100); // 100ms es un buen valor para asegurar que el evento de foco se complete.
+    });
+
+    // 5. Opcional, asegurar el foco inicial al cargar.
+    window.onload = function() {
+      // Necesitas asegurarte de que el body tenga la propiedad 'tabindex="-1"' en el <style> o JS.
+      document.body.focus();
+    };
+
   </script>
 </body>
 </html>
