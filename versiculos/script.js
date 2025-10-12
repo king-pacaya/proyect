@@ -19,7 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const verseSearchInput = document.getElementById('verse-search-input');
     const practiceScreen = document.getElementById('practice-screen');
     const practiceTitle = document.getElementById('practice-title');
-    const practiceInstructions = document.getElementById('practice-instructions');
     const practiceVerseContainer = document.getElementById('practice-verse-container');
     const practiceWordBankContainer = document.getElementById('practice-word-bank-container');
     const practiceWordBank = document.getElementById('practice-word-bank');
@@ -32,6 +31,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalPracticesStat = document.getElementById('total-practices-stat');
 
     // --- ESTADO DE LA APP ---
+    let currentFetchedVerse = null;
+    let isEditing = false;
+    let currentVerseId = null;
     let practiceState = {};
     const TOTAL_LEVELS = 4;
 
@@ -46,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const getSavedVerses = () => JSON.parse(localStorage.getItem('myVerses')) || [];
     const saveVersesToStorage = (v) => localStorage.setItem('myVerses', JSON.stringify(v));
     const addVerseToList = (verseData) => { let verses = getSavedVerses(); if (verses.some(v => v.reference === verseData.reference)) return false; verses.push({ ...verseData, id: Date.now(), currentLevel: 1, completionCount: 0, lastPracticed: null, isDominated: false, practiceCount: 0 }); saveVersesToStorage(verses); return true; };
-    const saveVerse = (vd, isEditing, currentVerseId) => { if (isEditing) { let sv = getSavedVerses(); const i = sv.findIndex(v => v.id === currentVerseId); if (i !== -1) { sv[i] = { ...sv[i], text: vd.text, reference: vd.reference, originalInput: vd.originalInput }; saveVersesToStorage(sv); return { success: true } } } else { const added = addVerseToList(vd); return added ? { success: true } : { success: false, message: '¡Ese versículo ya está guardado, che!' }; } };
+    const saveVerse = (vd) => { if (isEditing) { let sv = getSavedVerses(); const i = sv.findIndex(v => v.id === currentVerseId); if (i !== -1) { sv[i] = { ...sv[i], text: vd.text, reference: vd.reference, originalInput: vd.originalInput }; saveVersesToStorage(sv); return { success: true } } } else { const added = addVerseToList(vd); return added ? { success: true } : { success: false, message: '¡Ese versículo ya está guardado, che!' }; } };
     const deleteVerse = (id) => { saveVersesToStorage(getSavedVerses().filter(v => v.id !== id)); renderPage(); };
     const updateVerseLevel = (id, newLevel) => { let verses = getSavedVerses(); const index = verses.findIndex(v => v.id === id); if (index !== -1) { verses[index].lastPracticed = Date.now(); if (newLevel > TOTAL_LEVELS) { verses[index].isDominated = true; if (verses[index].currentLevel <= TOTAL_LEVELS) { verses[index].completionCount = (verses[index].completionCount || 0) + 1; } } verses[index].currentLevel = newLevel; saveVersesToStorage(verses); } };
     const resetVerseProgress = (id) => { let verses = getSavedVerses(); const index = verses.findIndex(v => v.id === id); if (index !== -1) { verses[index].currentLevel = 1; verses[index].lastPracticed = Date.now(); saveVersesToStorage(verses); renderPage(); } };
@@ -71,33 +73,22 @@ document.addEventListener('DOMContentLoaded', () => {
             const card = document.createElement("div");
             card.className = "saved-verse-card space-y-4";
             card.dataset.id = verse.id;
-            card.innerHTML = `<div class="flex items-start justify-between"><div class="flex items-center gap-3"><span class="iconify text-2xl text-gray-300" data-icon="bi:quote"></span><h4 class="text-xl font-bold text-gray-800">${verse.reference}</h4></div><div class="flex items-center gap-2">${badgeHTML}<div class="relative options-menu"><button class="options-menu-btn text-gray-500 hover:text-gray-800 p-1 rounded-full"><span class="iconify text-2xl" data-icon="mdi:dots-vertical"></span></button><div class="options-menu-dropdown hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border origin-top-right"><a href="#" class="share-verse-btn flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"><span class="iconify text-lg" data-icon="ic:twotone-whatsapp"></span>Compartir</a><a href="#" class="edit-verse-btn flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"><span class="iconify" data-icon="material-symbols:edit-note-outline-rounded"></span>Editar</a><a href="#" class="delete-verse-btn flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-gray-100"><span class="iconify" data-icon="material-symbols:delete-forever-outline-rounded"></span>Eliminar</a></div></div></div></div><p class="verse-text">${verse.text}</p><div class="space-y-3"><div class="flex justify-between items-center text-sm font-medium text-gray-500"><span>Progreso de memorización</span><span>${progress}%</span></div><div class="progress-bar-container"><div class="progress-bar-fill" style="width: ${progress}%;"></div></div><div class="flex justify-between items-center"><div class="flex gap-4 text-sm text-gray-500"><span class="flex items-center gap-1"><span class="iconify" data-icon="material-symbols:shield-outline"></span> ${verse.completionCount || 0} veces</span><span class="flex items-center gap-1"><span class="iconify" data-icon="material-symbols:timer-outline"></span> ${formatLastPracticed(verse.lastPracticed)}</span></div><div class="flex justify-end gap-3 items-center">${actionButtonHTML}</div></div></div>`;
+            card.innerHTML = `<div class="flex items-start justify-between"><div class="flex items-center gap-3"><span class="iconify text-2xl text-gray-300" data-icon="bi:quote"></span><h4 class="text-xl font-bold text-gray-800">${verse.reference}</h4></div><div class="flex items-center gap-2">${badgeHTML}<div class="relative options-menu"><button class="options-menu-btn text-gray-500 hover:text-gray-800 p-1 rounded-full"><span class="iconify text-2xl" data-icon="mdi:dots-vertical"></span></button><div class="options-menu-dropdown hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border origin-top-right"><a href="#" class="share-verse-btn flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"><span class="iconify text-lg" data-icon="logos:whatsapp-icon"></span>Compartir</a><a href="#" class="edit-verse-btn flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"><span class="iconify" data-icon="material-symbols:edit-note-outline-rounded"></span>Editar</a><a href="#" class="delete-verse-btn flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-gray-100"><span class="iconify" data-icon="material-symbols:delete-forever-outline-rounded"></span>Eliminar</a></div></div></div></div><p class="verse-text">${verse.text}</p><div class="space-y-3"><div class="flex justify-between items-center text-sm font-medium text-gray-500"><span>Progreso de memorización</span><span>${progress}%</span></div><div class="progress-bar-container"><div class="progress-bar-fill" style="width: ${progress}%;"></div></div><div class="flex justify-between items-center"><div class="flex gap-4 text-sm text-gray-500"><span class="flex items-center gap-1"><span class="iconify" data-icon="material-symbols:shield-outline"></span> ${verse.completionCount || 0} veces</span><span class="flex items-center gap-1"><span class="iconify" data-icon="material-symbols:timer-outline"></span> ${formatLastPracticed(verse.lastPracticed)}</span></div><div class="flex justify-end gap-3 items-center">${actionButtonHTML}</div></div></div>`;
             savedVersesList.appendChild(card);
         });
     };
     const renderPage = () => { const allVerses = getSavedVerses(); renderStats(allVerses); filterVerses(); };
     const filterVerses = () => { const searchTerm = verseSearchInput.value.toLowerCase().trim(); const allVerses = getSavedVerses(); const filteredVerses = allVerses.filter(verse => verse.reference.toLowerCase().includes(searchTerm) || verse.text.toLowerCase().includes(searchTerm)); renderVerseList(filteredVerses); };
-    const openAddEditModal = (v=null) => {
-        const isEditing = !!v; const currentVerseId = v ? v.id : null; let currentFetchedVerse = v || null;
-        modalTitleAdd.classList.toggle('hidden', isEditing);
-        modalTitleEdit.classList.toggle('hidden', !isEditing);
-        verseInput.value=v?v.originalInput:""; statusMessageEl.textContent=""; 
-        searchVerseBtn.disabled=!verseInput.value; saveModalBtn.textContent=isEditing?"Guardar Cambios":"Agregar Versículo"; saveModalBtn.disabled=!isEditing; 
-        verseInfoContainer.classList.toggle("hidden",!v); if(v)verseTextEl.textContent=v.text; 
-        verseModalOverlay.classList.add("open");
-        saveModalBtn.onclick = () => { if (currentFetchedVerse) { const result = saveVerse(currentFetchedVerse, isEditing, currentVerseId); if (result.success) { renderPage(); closeAddEditModal(); } else { statusMessageEl.textContent = result.message; } } };
-        searchVerseBtn.onclick = async () => { searchVerseBtn.disabled = true; statusMessageEl.textContent = 'Buscando...'; const data = await fetchVerseData(verseInput.value); if (!data.error) { currentFetchedVerse = data; verseTextEl.textContent = data.text; verseInfoContainer.classList.remove('hidden'); saveModalBtn.disabled = false; statusMessageEl.textContent = '¡Versículo encontrado!'; } else { statusMessageEl.textContent = data.error; } searchVerseBtn.disabled = false; };
-    };
+    const openAddEditModal = (v=null) => { isEditing = !!v; currentVerseId = v ? v.id : null; currentFetchedVerse = v || null; modalTitleAdd.classList.toggle('hidden', isEditing); modalTitleEdit.classList.toggle('hidden', !isEditing); verseInput.value=v?v.originalInput:""; statusMessageEl.textContent=""; searchVerseBtn.disabled = !verseInput.value; saveModalBtn.textContent=isEditing?"Guardar Cambios":"Agregar Versículo"; saveModalBtn.disabled=!isEditing; verseInfoContainer.classList.toggle("hidden",!v); if(v)verseTextEl.textContent=v.text; verseModalOverlay.classList.add("open"); };
     const closeAddEditModal = () => verseModalOverlay.classList.remove("open");
 
     // --- LÓGICA DE NIVELES Y PRÁCTICA ---
-    const openPracticeScreen = (verseId) => { const verse = getSavedVerses().find(v => v.id === verseId); if (!verse) return; practiceState = { verse }; practiceTitle.textContent = verse.reference; practiceStatusMessage.textContent = ''; practiceCheckBtn.disabled = false; let instructions = ''; const level = verse.currentLevel || 1; practiceWordBankContainer.classList.add('hidden'); switch(level) { case 1: instructions = 'Escribe las palabras correctas. Las que aciertes desaparecerán de la lista de ayuda.'; setupLevel1(); break; case 2: instructions = 'Completa los espacios con la palabra correcta. Tienes la primera letra como pista.'; setupLevelWithHints(0.4, true); break; case 3: instructions = 'Completa los espacios vacíos con la palabra correcta.'; setupLevelWithHints(0.6, false); break; case 4: instructions = '¡El reto final! Escribe el versículo completo de memoria.'; setupLevelWithHints(1.0, false); break; } practiceInstructions.textContent = instructions; incrementPracticeCount(verseId); document.addEventListener('keydown', handlePracticeKeystrokes); practiceScreen.classList.add('open'); };
+    const openPracticeScreen = (verseId) => { const verse = getSavedVerses().find(v => v.id === verseId); if (!verse) return; practiceState = { verse }; practiceTitle.textContent = verse.reference; practiceStatusMessage.textContent = ''; practiceCheckBtn.disabled = false; const level = verse.currentLevel || 1; practiceWordBankContainer.classList.add('hidden'); switch(level) { case 1: setupLevel1(); break; case 2: setupLevelWithHints(0.4, true); break; case 3: setupLevelWithHints(0.6, false); break; case 4: setupLevelWithHints(1.0, false); break; } incrementPracticeCount(verseId); document.addEventListener('keydown', handlePracticeKeystrokes); practiceScreen.classList.add('open'); };
     const closePracticeScreen = () => { practiceScreen.classList.remove('open', 'partial'); practiceToggleBtn.querySelector('.iconify').dataset.icon = 'material-symbols:keyboard-arrow-down-rounded'; document.removeEventListener('keydown', handlePracticeKeystrokes); };
     const togglePracticeScreen = () => { practiceScreen.classList.toggle('partial'); const icon = practiceToggleBtn.querySelector('.iconify'); icon.dataset.icon = practiceScreen.classList.contains('partial') ? 'material-symbols:keyboard-arrow-up-rounded' : 'material-symbols:keyboard-arrow-down-rounded'; };
     const handlePracticeKeystrokes = (e) => {
         const activeEl = document.activeElement;
-        // CORRECCIÓN: Evitar que el espacio se escriba en el input en MÓVIL Y DESKTOP
-        if (activeEl && activeEl.tagName === 'INPUT' && e.key === ' ') {
+        if (activeEl && activeEl.classList.contains('blank-input') && e.key === ' ') {
             e.preventDefault();
             const inputs = Array.from(practiceVerseContainer.querySelectorAll('.blank-input'));
             const currentIndex = inputs.indexOf(activeEl);
@@ -109,29 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.key === 'Enter') { e.preventDefault(); practiceCheckBtn.click(); }
         else if (e.key === 'Escape') { closePracticeScreen(); }
     };
-    const createBlanks = (text, percentage, withHint) => {
-        const words = text.match(/\b[\wáéíóúüñ']+\b/g) || [];
-        const blankCount = percentage === 1.0 ? words.length : Math.max(1, Math.floor(words.length * percentage));
-        const wordsToHide = percentage === 1.0 ? words : [...words].sort(() => 0.5 - Math.random()).slice(0, blankCount);
-        let verseHTML = text;
-        let wordOccurrences = {};
-        const blanksData = wordsToHide.map(word => {
-            const key = word.toLowerCase();
-            const occurrence = wordOccurrences[key] || 0;
-            wordOccurrences[key] = occurrence + 1;
-            const id = `${key}_${occurrence}`;
-            const placeholder = `__BLANK_${id}__`;
-            const regex = new RegExp(`\\b${word}\\b`);
-            verseHTML = verseHTML.replace(regex, placeholder);
-            return { placeholder, word, id };
-        });
-        blanksData.forEach(({ placeholder, word, id }) => {
-            const inputWidth = Math.max(70, word.length * 10); // Ancho reducido para mobile
-            const hint = withHint ? `placeholder="${word.charAt(0)}"` : '';
-            verseHTML = verseHTML.replace(placeholder, `<input type="text" class="blank-input" data-correct="${word.toLowerCase()}" data-word-id="${id}" style="width:${inputWidth}px" ${hint} autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">`);
-        });
-        return { verseHTML, blanksData };
-    };
+    const createBlanks = (text, percentage, withHint) => { const words = text.match(/\b[\wáéíóúüñ']+\b/g) || []; const blankCount = percentage === 1.0 ? words.length : Math.max(1, Math.floor(words.length * percentage)); const wordsToHide = percentage === 1.0 ? words : [...words].sort(() => 0.5 - Math.random()).slice(0, blankCount); let verseHTML = text; let wordOccurrences = {}; const blanksData = wordsToHide.map(word => { const key = word.toLowerCase(); const occurrence = wordOccurrences[key] || 0; wordOccurrences[key] = occurrence + 1; const id = `${key}_${occurrence}`; const placeholder = `__BLANK_${id}__`; const regex = new RegExp(`\\b${word}\\b`); verseHTML = verseHTML.replace(regex, placeholder); return { placeholder, word, id }; }); blanksData.forEach(({ placeholder, word, id }) => { const inputWidth = Math.max(70, word.length * 10); const hint = withHint ? `placeholder="${word.charAt(0)}"` : ''; verseHTML = verseHTML.replace(placeholder, `<input type="text" class="blank-input" data-correct="${word.toLowerCase()}" data-word-id="${id}" style="width:${inputWidth}px" ${hint} autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">`); }); return { verseHTML, blanksData }; };
     const setupLevel1 = () => { practiceWordBankContainer.classList.remove('hidden'); const { verseHTML, blanksData } = createBlanks(practiceState.verse.text, 0.2, false); practiceVerseContainer.innerHTML = verseHTML; practiceWordBank.innerHTML = ""; blanksData.sort(() => 0.5 - Math.random()).forEach(({ word, id }) => { const wordEl = document.createElement('span'); wordEl.className = 'word-bank-item bg-blue-100 text-blue-800 font-bold py-2 px-4 rounded-lg'; wordEl.textContent = word; wordEl.dataset.wordId = id; practiceWordBank.appendChild(wordEl); }); practiceVerseContainer.querySelectorAll('.blank-input').forEach(input => input.addEventListener('input', handleWordBankVisibility)); practiceVerseContainer.querySelector("input")?.focus(); };
     const setupLevelWithHints = (percentage, withHint) => { const { verseHTML } = createBlanks(practiceState.verse.text, percentage, withHint); practiceVerseContainer.innerHTML = verseHTML; practiceVerseContainer.querySelector("input")?.focus(); };
     const handleWordBankVisibility=(e)=>{const typedValue=e.target.value.trim().toLowerCase();const correctValue=e.target.dataset.correct;const wordId=e.target.dataset.wordId;const wordBankItem=practiceWordBank.querySelector(`[data-word-id="${wordId}"]`);if(wordBankItem){const isCorrect=typedValue===correctValue;wordBankItem.style.opacity=isCorrect?"0.3":"1";wordBankItem.style.transform=isCorrect?"scale(0.9)":"scale(1)"}};
@@ -143,11 +112,38 @@ document.addEventListener('DOMContentLoaded', () => {
     openModalBtn.addEventListener('click', () => openAddEditModal());
     [cancelModalBtn, closeModalXBtn].forEach(el => el.addEventListener('click', closeAddEditModal));
     verseModalOverlay.addEventListener('click', e => { if (e.target === verseModalOverlay) closeAddEditModal(); });
+    verseInput.addEventListener('input', () => { searchVerseBtn.disabled = !verseInput.value.trim(); verseInfoContainer.classList.add('hidden'); saveModalBtn.disabled = true; });
+    searchVerseBtn.addEventListener('click', async () => {
+        searchVerseBtn.disabled = true;
+        statusMessageEl.textContent = 'Buscando...';
+        currentFetchedVerse = await fetchVerseData(verseInput.value); // Asigna a la variable de alcance superior
+        if (!currentFetchedVerse.error) {
+            verseTextEl.textContent = currentFetchedVerse.text;
+            verseInfoContainer.classList.remove('hidden');
+            saveModalBtn.disabled = false;
+            statusMessageEl.textContent = '¡Versículo encontrado!';
+        } else {
+            statusMessageEl.textContent = currentFetchedVerse.error;
+            saveModalBtn.disabled = true;
+        }
+        searchVerseBtn.disabled = false;
+    });
+    saveModalBtn.addEventListener('click', () => {
+        if (currentFetchedVerse) {
+            const result = saveVerse(currentFetchedVerse, isEditing, currentVerseId);
+            if (result.success) {
+                renderPage();
+                closeAddEditModal();
+            } else {
+                statusMessageEl.textContent = result.message;
+            }
+        }
+    });
     practiceCloseBtn.addEventListener('click', closePracticeScreen);
     practiceToggleBtn.addEventListener('click', togglePracticeScreen);
     practiceCheckBtn.addEventListener('click', checkAnswers);
     verseSearchInput.addEventListener('input', filterVerses);
-
+    
     savedVersesList.addEventListener('click', async (e) => {
         const verseCard = e.target.closest('[data-id]');
         if (!verseCard) return;
