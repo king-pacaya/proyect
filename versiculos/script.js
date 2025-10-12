@@ -26,8 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const practiceStatusMessage = document.getElementById('practice-status-message');
     const practiceCheckBtn = document.getElementById('practice-check-btn');
     const practiceCloseBtn = document.getElementById('practice-close-btn');
-    const practiceToggleBtn = document.getElementById('practice-toggle-btn'); // Nuevo
-    // Nuevos contadores
+    const practiceToggleBtn = document.getElementById('practice-toggle-btn');
     const totalVersesStat = document.getElementById('total-verses-stat');
     const dominatedVersesStat = document.getElementById('dominated-verses-stat');
     const totalPracticesStat = document.getElementById('total-practices-stat');
@@ -55,13 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- RENDERIZADO Y LÓGICA DE PÁGINA ---
     const formatLastPracticed = (timestamp) => { if (!timestamp) return 'Nunca'; const now = new Date(); const lastDate = new Date(timestamp); if ((now - lastDate) < 60000) return 'Ahora mismo'; const diffDays = Math.floor((now - lastDate) / 86400000); if (diffDays === 0) return 'Hoy'; if (diffDays === 1) return 'Ayer'; return `Hace ${diffDays} días`; };
-    
-    const renderStats = (verses) => {
-        totalVersesStat.textContent = verses.length;
-        dominatedVersesStat.textContent = verses.filter(v => v.isDominated).length;
-        totalPracticesStat.textContent = verses.reduce((sum, v) => sum + (v.practiceCount || 0), 0);
-    };
-
+    const renderStats = (verses) => { totalVersesStat.textContent = verses.length; dominatedVersesStat.textContent = verses.filter(v => v.isDominated).length; totalPracticesStat.textContent = verses.reduce((sum, v) => sum + (v.practiceCount || 0), 0); };
     const renderVerseList = (verses) => {
         savedVersesList.innerHTML = '';
         const sortedVerses = verses.sort((a, b) => (b.lastPracticed || 0) - (a.lastPracticed || 0));
@@ -70,7 +63,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (verses.length === 0 && getSavedVerses().length > 0) {
             noResultsState.classList.remove('hidden');
         }
-
         sortedVerses.forEach(verse => {
             const level = verse.currentLevel || 1;
             const progress = level > TOTAL_LEVELS ? 100 : Math.round(((level - 1) / TOTAL_LEVELS) * 100);
@@ -83,60 +75,18 @@ document.addEventListener('DOMContentLoaded', () => {
             savedVersesList.appendChild(card);
         });
     };
-
-    const renderPage = () => {
-        const allVerses = getSavedVerses();
-        renderStats(allVerses);
-        filterVerses(); // Esto se encarga de renderizar la lista filtrada
-    };
-
-    const filterVerses = () => {
-        const searchTerm = verseSearchInput.value.toLowerCase().trim();
-        const allVerses = getSavedVerses();
-        const filteredVerses = allVerses.filter(verse => 
-            verse.reference.toLowerCase().includes(searchTerm) || 
-            verse.text.toLowerCase().includes(searchTerm)
-        );
-        renderVerseList(filteredVerses);
-    };
-
+    const renderPage = () => { const allVerses = getSavedVerses(); renderStats(allVerses); filterVerses(); };
+    const filterVerses = () => { const searchTerm = verseSearchInput.value.toLowerCase().trim(); const allVerses = getSavedVerses(); const filteredVerses = allVerses.filter(verse => verse.reference.toLowerCase().includes(searchTerm) || verse.text.toLowerCase().includes(searchTerm)); renderVerseList(filteredVerses); };
     const openAddEditModal = (v=null) => {
-        const isEditing = !!v; 
-        const currentVerseId = v ? v.id : null;
-        let currentFetchedVerse = v || null;
+        const isEditing = !!v; const currentVerseId = v ? v.id : null; let currentFetchedVerse = v || null;
         modalTitleAdd.classList.toggle('hidden', isEditing);
         modalTitleEdit.classList.toggle('hidden', !isEditing);
-        verseInput.value=v?v.originalInput:""; 
-        statusMessageEl.textContent=""; 
-        searchVerseBtn.disabled=!verseInput.value; 
-        saveModalBtn.textContent=isEditing?"Guardar Cambios":"Agregar Versículo"; 
-        saveModalBtn.disabled=!isEditing; 
-        verseInfoContainer.classList.toggle("hidden",!v); 
-        if(v)verseTextEl.textContent=v.text; 
+        verseInput.value=v?v.originalInput:""; statusMessageEl.textContent=""; 
+        searchVerseBtn.disabled=!verseInput.value; saveModalBtn.textContent=isEditing?"Guardar Cambios":"Agregar Versículo"; saveModalBtn.disabled=!isEditing; 
+        verseInfoContainer.classList.toggle("hidden",!v); if(v)verseTextEl.textContent=v.text; 
         verseModalOverlay.classList.add("open");
-        
-        saveModalBtn.onclick = () => {
-            if (currentFetchedVerse) {
-                const result = saveVerse(currentFetchedVerse, isEditing, currentVerseId);
-                if (result.success) { renderPage(); closeAddEditModal(); }
-                else { statusMessageEl.textContent = result.message; }
-            }
-        };
-        
-        searchVerseBtn.onclick = async () => {
-            searchVerseBtn.disabled = true; statusMessageEl.textContent = 'Buscando...';
-            const data = await fetchVerseData(verseInput.value);
-            if (!data.error) {
-                currentFetchedVerse = data;
-                verseTextEl.textContent = data.text;
-                verseInfoContainer.classList.remove('hidden');
-                saveModalBtn.disabled = false;
-                statusMessageEl.textContent = '¡Versículo encontrado!';
-            } else {
-                statusMessageEl.textContent = data.error;
-            }
-            searchVerseBtn.disabled = false;
-        };
+        saveModalBtn.onclick = () => { if (currentFetchedVerse) { const result = saveVerse(currentFetchedVerse, isEditing, currentVerseId); if (result.success) { renderPage(); closeAddEditModal(); } else { statusMessageEl.textContent = result.message; } } };
+        searchVerseBtn.onclick = async () => { searchVerseBtn.disabled = true; statusMessageEl.textContent = 'Buscando...'; const data = await fetchVerseData(verseInput.value); if (!data.error) { currentFetchedVerse = data; verseTextEl.textContent = data.text; verseInfoContainer.classList.remove('hidden'); saveModalBtn.disabled = false; statusMessageEl.textContent = '¡Versículo encontrado!'; } else { statusMessageEl.textContent = data.error; } searchVerseBtn.disabled = false; };
     };
     const closeAddEditModal = () => verseModalOverlay.classList.remove("open");
 
@@ -144,8 +94,44 @@ document.addEventListener('DOMContentLoaded', () => {
     const openPracticeScreen = (verseId) => { const verse = getSavedVerses().find(v => v.id === verseId); if (!verse) return; practiceState = { verse }; practiceTitle.textContent = verse.reference; practiceStatusMessage.textContent = ''; practiceCheckBtn.disabled = false; let instructions = ''; const level = verse.currentLevel || 1; practiceWordBankContainer.classList.add('hidden'); switch(level) { case 1: instructions = 'Escribe las palabras correctas. Las que aciertes desaparecerán de la lista de ayuda.'; setupLevel1(); break; case 2: instructions = 'Completa los espacios con la palabra correcta. Tienes la primera letra como pista.'; setupLevelWithHints(0.4, true); break; case 3: instructions = 'Completa los espacios vacíos con la palabra correcta.'; setupLevelWithHints(0.6, false); break; case 4: instructions = '¡El reto final! Escribe el versículo completo de memoria.'; setupLevelWithHints(1.0, false); break; } practiceInstructions.textContent = instructions; incrementPracticeCount(verseId); document.addEventListener('keydown', handlePracticeKeystrokes); practiceScreen.classList.add('open'); };
     const closePracticeScreen = () => { practiceScreen.classList.remove('open', 'partial'); practiceToggleBtn.querySelector('.iconify').dataset.icon = 'material-symbols:keyboard-arrow-down-rounded'; document.removeEventListener('keydown', handlePracticeKeystrokes); };
     const togglePracticeScreen = () => { practiceScreen.classList.toggle('partial'); const icon = practiceToggleBtn.querySelector('.iconify'); icon.dataset.icon = practiceScreen.classList.contains('partial') ? 'material-symbols:keyboard-arrow-up-rounded' : 'material-symbols:keyboard-arrow-down-rounded'; };
-    const handlePracticeKeystrokes = (e) => { if (e.key === ' ' || e.key === 'ArrowRight') { const inputs = Array.from(practiceVerseContainer.querySelectorAll('.blank-input')); const activeEl = document.activeElement; const currentIndex = inputs.indexOf(activeEl); if (currentIndex > -1) { e.preventDefault(); const nextIndex = (currentIndex + 1) % inputs.length; inputs[nextIndex].focus(); } } if (e.key === 'Enter') { e.preventDefault(); practiceCheckBtn.click(); } else if (e.key === 'Escape') { closePracticeScreen(); } };
-    const createBlanks = (text, percentage, withHint) => { const words = text.match(/\b[\wáéíóúüñ']+\b/g) || []; const blankCount = percentage === 1.0 ? words.length : Math.min(words.length, Math.max(1, Math.floor(words.length * percentage))); const wordsToHide = percentage === 1.0 ? words : [...words].sort(() => 0.5 - Math.random()).slice(0, blankCount); let verseHTML = text; let wordOccurrences = {}; const blanksData = wordsToHide.map(word => { const key = word.toLowerCase(); const occurrence = wordOccurrences[key] || 0; wordOccurrences[key] = occurrence + 1; const id = `${key}_${occurrence}`; const placeholder = `__BLANK_${id}__`; const regex = new RegExp(`\\b${word}\\b`); if (verseHTML.includes(placeholder)) { let i = 0; while (verseHTML.includes(`__BLANK_${key}_${i}__`)) i++; verseHTML = verseHTML.replace(regex, `__BLANK_${key}_${i}__`); return { placeholder: `__BLANK_${key}_${i}__`, word, id: `${key}_${i}`}; } else { verseHTML = verseHTML.replace(regex, placeholder); return { placeholder, word, id }; } }); blanksData.forEach(({ placeholder, word, id }) => { const inputWidth = Math.max(80, word.length * 12); const hint = withHint ? `placeholder="${word.charAt(0)}"` : ''; verseHTML = verseHTML.replace(placeholder, `<input type="text" class="blank-input" data-correct="${word.toLowerCase()}" data-word-id="${id}" style="width:${inputWidth}px" ${hint} autocomplete="off">`); }); return { verseHTML, blanksData }; };
+    const handlePracticeKeystrokes = (e) => {
+        const activeEl = document.activeElement;
+        // CORRECCIÓN: Evitar que el espacio se escriba en el input en MÓVIL Y DESKTOP
+        if (activeEl && activeEl.tagName === 'INPUT' && e.key === ' ') {
+            e.preventDefault();
+            const inputs = Array.from(practiceVerseContainer.querySelectorAll('.blank-input'));
+            const currentIndex = inputs.indexOf(activeEl);
+            if (currentIndex > -1) {
+                const nextIndex = (currentIndex + 1) % inputs.length;
+                inputs[nextIndex].focus();
+            }
+        }
+        if (e.key === 'Enter') { e.preventDefault(); practiceCheckBtn.click(); }
+        else if (e.key === 'Escape') { closePracticeScreen(); }
+    };
+    const createBlanks = (text, percentage, withHint) => {
+        const words = text.match(/\b[\wáéíóúüñ']+\b/g) || [];
+        const blankCount = percentage === 1.0 ? words.length : Math.max(1, Math.floor(words.length * percentage));
+        const wordsToHide = percentage === 1.0 ? words : [...words].sort(() => 0.5 - Math.random()).slice(0, blankCount);
+        let verseHTML = text;
+        let wordOccurrences = {};
+        const blanksData = wordsToHide.map(word => {
+            const key = word.toLowerCase();
+            const occurrence = wordOccurrences[key] || 0;
+            wordOccurrences[key] = occurrence + 1;
+            const id = `${key}_${occurrence}`;
+            const placeholder = `__BLANK_${id}__`;
+            const regex = new RegExp(`\\b${word}\\b`);
+            verseHTML = verseHTML.replace(regex, placeholder);
+            return { placeholder, word, id };
+        });
+        blanksData.forEach(({ placeholder, word, id }) => {
+            const inputWidth = Math.max(70, word.length * 10); // Ancho reducido para mobile
+            const hint = withHint ? `placeholder="${word.charAt(0)}"` : '';
+            verseHTML = verseHTML.replace(placeholder, `<input type="text" class="blank-input" data-correct="${word.toLowerCase()}" data-word-id="${id}" style="width:${inputWidth}px" ${hint} autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">`);
+        });
+        return { verseHTML, blanksData };
+    };
     const setupLevel1 = () => { practiceWordBankContainer.classList.remove('hidden'); const { verseHTML, blanksData } = createBlanks(practiceState.verse.text, 0.2, false); practiceVerseContainer.innerHTML = verseHTML; practiceWordBank.innerHTML = ""; blanksData.sort(() => 0.5 - Math.random()).forEach(({ word, id }) => { const wordEl = document.createElement('span'); wordEl.className = 'word-bank-item bg-blue-100 text-blue-800 font-bold py-2 px-4 rounded-lg'; wordEl.textContent = word; wordEl.dataset.wordId = id; practiceWordBank.appendChild(wordEl); }); practiceVerseContainer.querySelectorAll('.blank-input').forEach(input => input.addEventListener('input', handleWordBankVisibility)); practiceVerseContainer.querySelector("input")?.focus(); };
     const setupLevelWithHints = (percentage, withHint) => { const { verseHTML } = createBlanks(practiceState.verse.text, percentage, withHint); practiceVerseContainer.innerHTML = verseHTML; practiceVerseContainer.querySelector("input")?.focus(); };
     const handleWordBankVisibility=(e)=>{const typedValue=e.target.value.trim().toLowerCase();const correctValue=e.target.dataset.correct;const wordId=e.target.dataset.wordId;const wordBankItem=practiceWordBank.querySelector(`[data-word-id="${wordId}"]`);if(wordBankItem){const isCorrect=typedValue===correctValue;wordBankItem.style.opacity=isCorrect?"0.3":"1";wordBankItem.style.transform=isCorrect?"scale(0.9)":"scale(1)"}};
@@ -157,7 +143,6 @@ document.addEventListener('DOMContentLoaded', () => {
     openModalBtn.addEventListener('click', () => openAddEditModal());
     [cancelModalBtn, closeModalXBtn].forEach(el => el.addEventListener('click', closeAddEditModal));
     verseModalOverlay.addEventListener('click', e => { if (e.target === verseModalOverlay) closeAddEditModal(); });
-    verseInput.addEventListener('input', () => { searchVerseBtn.disabled = !verseInput.value.trim(); verseInfoContainer.classList.add('hidden'); saveModalBtn.disabled = true; });
     practiceCloseBtn.addEventListener('click', closePracticeScreen);
     practiceToggleBtn.addEventListener('click', togglePracticeScreen);
     practiceCheckBtn.addEventListener('click', checkAnswers);
