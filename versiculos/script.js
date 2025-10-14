@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const saveVerse = () => { if (currentFetchedVerse) { const result = isEditing ? (() => { let sv = getSavedVerses(); const i = sv.findIndex(v => v.id === currentVerseId); if (i !== -1) { sv[i] = { ...sv[i], text: currentFetchedVerse.text, reference: currentFetchedVerse.reference, originalInput: currentFetchedVerse.originalInput }; saveVersesToStorage(sv); return { success: true } } })() : addVerseToList(currentFetchedVerse) ? { success: true } : { success: false, message: '¡Ese versículo ya está guardado, che!' }; if (result.success) { renderPage(); closeAddEditModal(); } else { statusMessageEl.textContent = result.message; } } };
     const deleteVerse = (id) => { saveVersesToStorage(getSavedVerses().filter(v => v.id !== id)); renderPage(); };
     const updateVerseLevel = (id, newLevel) => { let verses = getSavedVerses(); const index = verses.findIndex(v => v.id === id); if (index !== -1) { verses[index].lastPracticed = Date.now(); if (newLevel > TOTAL_LEVELS) { verses[index].isDominated = true; if (verses[index].currentLevel <= TOTAL_LEVELS) { verses[index].completionCount = (verses[index].completionCount || 0) + 1; } } verses[index].currentLevel = newLevel; saveVersesToStorage(verses); } };
-    const resetVerseProgress = (id) => { let verses = getSavedVerses(); const index = verses.findIndex(v => v.id === id); if (index !== -1) { verses[index].currentLevel = 1; verses[index].lastPracticed = Date.now(); saveVersesToStorage(verses); renderPage(); } };
+    const resetVerseProgress = (id) => { let verses = getSavedVerses(); const index = verses.findIndex(v => v.id === id); if (index !== -1) { verses[index].currentLevel = 1; verses[index].isDominated = false; saveVersesToStorage(verses); renderPage(); } };
     const incrementPracticeCount = (id) => { let verses = getSavedVerses(); const index = verses.findIndex(v => v.id === id); if (index !== -1) { verses[index].practiceCount = (verses[index].practiceCount || 0) + 1; saveVersesToStorage(verses); } };
 
     // --- RENDERIZADO Y LÓGICA DE PÁGINA ---
@@ -162,7 +162,38 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeAddEditModal = () => verseModalOverlay.classList.remove("open");
 
     // --- LÓGICA DE NIVELES Y PRÁCTICA ---
-    const createBlanks = (text, percentage, withHint) => { const wordsAndPunctuation = text.split(/(\s+)/); const wordData = wordsAndPunctuation.map((part, index) => ({ part, index, isWord: /[\p{L}\p{N}']+/gu.test(part) })).filter(d => d.isWord).map((d, wordIndex) => ({ ...d, score: (d.part.length % 5) * 10 + (wordIndex % 7) + (d.part.charCodeAt(0) % 11) })).sort((a, b) => b.score - a.score); const blankCount = percentage === 1.0 ? wordData.length : Math.max(1, Math.floor(wordData.length * percentage)); const indicesToHide = new Set(wordData.slice(0, blankCount).map(d => d.index)); const blanksData = []; let verseHTML = ""; let wordOccurrences = {}; wordsAndPunctuation.forEach((part, index) => { if (indicesToHide.has(index)) { const word = part; const key = word.toLowerCase(); const occurrence = wordOccurrences[key] || 0; wordOccurrences[key] = occurrence + 1; const id = `${key}_${occurrence}`; const inputWidth = Math.max(70, word.length * 10); const hint = withHint ? `placeholder="${word.charAt(0)}"` : ''; verseHTML += `<input type="text" class="blank-input" data-correct="${word.toLowerCase()}" data-word-id="${id}" style="width:${inputWidth}px" ${hint} autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false">`; blanksData.push({ word, id }); } else { verseHTML += part; } }); return { verseHTML, blanksData }; };
+    const createBlanks = (text, percentage, withHint) => {
+        const cleanWord = (word) => word.replace(/[.,:;¡!¿?]/g, '');
+        const parts = text.split(/(\s+|[.,:;¡!¿?]+)/);
+        const wordData = parts.map((part, index) => ({ part, index, isWord: /[\p{L}\p{N}']+/gu.test(part) && cleanWord(part).length > 0 }))
+                              .filter(d => d.isWord)
+                              .map((d, wordIndex) => ({ ...d, score: (d.part.length % 5) * 10 + (wordIndex % 7) + (d.part.charCodeAt(0) % 11) }))
+                              .sort((a, b) => b.score - a.score);
+
+        const blankCount = percentage === 1.0 ? wordData.length : Math.max(1, Math.floor(wordData.length * percentage));
+        const indicesToHide = new Set(wordData.slice(0, blankCount).map(d => d.index));
+        const blanksData = [];
+        let verseHTML = "";
+        let wordOccurrences = {};
+        
+        parts.forEach((part, index) => {
+            if (indicesToHide.has(index)) {
+                const originalWord = part;
+                const correctWord = cleanWord(originalWord);
+                const key = correctWord.toLowerCase();
+                const occurrence = wordOccurrences[key] || 0;
+                wordOccurrences[key] = occurrence + 1;
+                const id = `${key}_${occurrence}`;
+                const inputWidth = Math.max(70, correctWord.length * 11);
+                const hint = withHint ? `placeholder="${correctWord.charAt(0)}"` : '';
+                verseHTML += `<input type="text" class="blank-input" data-correct="${key}" data-word-id="${id}" style="width:${inputWidth}px" ${hint} autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false">`;
+                blanksData.push({ word: correctWord, id });
+            } else {
+                verseHTML += part;
+            }
+        });
+        return { verseHTML, blanksData };
+    };
     const setupPracticeNavigation = () => { const inputs = Array.from(practiceVerseContainer.querySelectorAll('.blank-input')); inputs.forEach((input, index) => { input.addEventListener('keydown', (e) => { if (e.key === ' ') { e.preventDefault(); if (index < inputs.length - 1) { inputs[index + 1].focus(); } } else if (e.key === 'Backspace' && input.value === '') { e.preventDefault(); if (index > 0) { inputs[index - 1].focus(); } } }); }); if (document.activeElement.tagName !== 'INPUT') { inputs[0]?.focus(); } };
     const openPracticeScreen = (verseId) => { const verse = getSavedVerses().find(v => v.id === verseId); if (!verse) return; practiceState = { verse }; practiceTitle.textContent = verse.reference; practiceStatusMessage.textContent = ''; practiceCheckBtn.disabled = false; const level = verse.currentLevel || 1; practiceWordBankContainer.classList.add('hidden'); switch(level) { case 1: setupLevel1(); break; case 2: setupLevelWithHints(0.4, true); break; case 3: setupLevelWithHints(0.6, false); break; case 4: setupLevelWithHints(1.0, false); break; } incrementPracticeCount(verseId); practiceScreen.classList.add('open'); };
     const closePracticeScreen = () => { practiceScreen.classList.remove('open', 'partial'); practiceToggleBtn.querySelector('.iconify').dataset.icon = 'material-symbols:keyboard-arrow-down-rounded'; };

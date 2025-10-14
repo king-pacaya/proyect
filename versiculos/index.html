@@ -39,7 +39,12 @@
         .slide-up-screen.open { bottom: 0; }
         .slide-up-screen.partial { bottom: calc(-100% + 85px); }
         #practice-verse-container { font-size: 1.25rem; line-height: 2.5; text-align: center; }
-        .blank-input { border: none; border-bottom: 2px solid var(--dark-blue); background-color: rgba(160,195,234,0.2); text-align: center; font-weight: bold; padding: 0 0.25rem; outline: none; transition: all 0.2s; vertical-align: bottom; border-radius: 4px 4px 0 0; font-size: 1.1rem; }
+        .blank-input {
+            border: none; border-bottom: 2px solid var(--dark-blue); background-color: rgba(160,195,234,0.2);
+            text-align: center; font-weight: bold; padding: 0 0.25rem; outline: none; transition: all 0.2s;
+            vertical-align: bottom; border-radius: 4px 4px 0 0; font-size: 1.1rem;
+            display: inline-block; /* Mejora la consistencia del layout */
+        }
         @media (min-width: 768px) { #practice-verse-container { font-size: 1.75rem; line-height: 2.8; } .blank-input { font-size: 1.5rem; } }
         .blank-input:focus { background-color: white; border-color: var(--blue); }
         .blank-input.correct { background-color: #D1FAE5; border-color: var(--green); color: var(--success-text); }
@@ -64,7 +69,7 @@
 
 <div class="container max-w-4xl mx-auto p-4 sm:p-8">
     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8 pb-4 border-b gap-4">
-        <h2 class="text-3xl font-bold text-[var(--dark-blue)] w-full text-center sm:w-auto sm:text-left">Tus Versículos</h2>
+        <h2 class="text-3xl font-bold text-[var(--dark-blue)] w-full text-center sm:w-auto sm:text-left">Versículos</h2>
         <button id="open-modal-btn" class="bg-white text-[var(--dark-blue)] font-bold py-3 px-4 rounded-lg hover:bg-gray-100 transition-colors flex items-center justify-center shadow-sm border border-gray-300 w-full sm:w-auto"><span class="iconify mr-2 text-xl" data-icon="material-symbols:menu-book-outline"></span>Agregar Versículo</button>
     </div>
     <div id="stats-container" class="grid grid-cols-3 gap-4 mb-6 text-center">
@@ -140,8 +145,7 @@
     </footer>
 </div>
 
-
-<script src="script.js"></script>
+<script src="script.js?v=1.1"></script>
 
 </body>
 </html>
