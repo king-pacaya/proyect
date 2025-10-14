@@ -7,7 +7,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
-    <title>Memorizador de Versículos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
+    <title>Versículos</title>
     <style>
         @font-face {
             font-family: 'Moderat';
@@ -34,9 +35,9 @@
         .verse-text { color: var(--dark-blue); border-left: 3px solid var(--light-blue); padding-left: 1rem; line-height: 1.7; }
         .progress-bar-container { background-color: #e5e7eb; border-radius: 9999px; height: 8px; width: 100%; overflow: hidden; }
         .progress-bar-fill { background-color: var(--green); height: 100%; border-radius: 9999px; transition: width 0.5s ease-in-out; }
-        .practice-screen { position: fixed; bottom: -100%; left: 0; width: 100%; height: 100%; background-color: #f5f5f5; z-index: 200; transition: bottom 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); display: flex; flex-direction: column; }
-        .practice-screen.open { bottom: 0; }
-        .practice-screen.partial { bottom: calc(-100% + 85px); }
+        .slide-up-screen { position: fixed; bottom: -100%; left: 0; width: 100%; height: 100%; background-color: #f5f5f5; z-index: 200; transition: bottom 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); display: flex; flex-direction: column; }
+        .slide-up-screen.open { bottom: 0; }
+        .slide-up-screen.partial { bottom: calc(-100% + 85px); }
         #practice-verse-container { font-size: 1.25rem; line-height: 2.5; text-align: center; }
         .blank-input { border: none; border-bottom: 2px solid var(--dark-blue); background-color: rgba(160,195,234,0.2); text-align: center; font-weight: bold; padding: 0 0.25rem; outline: none; transition: all 0.2s; vertical-align: bottom; border-radius: 4px 4px 0 0; font-size: 1.1rem; }
         @media (min-width: 768px) { #practice-verse-container { font-size: 1.75rem; line-height: 2.8; } .blank-input { font-size: 1.5rem; } }
@@ -48,6 +49,13 @@
         .status-tag { padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.8rem; font-weight: bold; display: inline-block; }
         .status-tag.dominado { background-color: #D1FAE5; color: #065F46; }
         .options-menu-dropdown { transition: opacity 0.2s ease, transform 0.2s ease; }
+        
+        /* RSVP Styles */
+        #rsvp-word-container { text-align: center; }
+        #rsvp-word-display { font-family: 'Roboto Mono', monospace; font-weight: 700; display: inline-block; min-height: 1.2em; /* Para evitar saltos de layout */ }
+        #rsvp-word-display .pivot { color: var(--blue); }
+        #rsvp-screen.paused #rsvp-word-display { opacity: 0.4; }
+
         @keyframes celebration-pulse { 0% { box-shadow: 0 0 0 0 rgba(46,204,113,0.7); } 50% { box-shadow: 0 0 0 20px rgba(46,204,113,0); } 100% { box-shadow: 0 0 0 0 rgba(46,204,113,0); } }
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
     </style>
@@ -85,7 +93,7 @@
     </div>
   </div>
 </div>
-<div id="practice-screen" class="practice-screen">
+<div id="practice-screen" class="slide-up-screen">
     <header class="p-4 flex justify-between items-center border-b bg-white">
         <button id="practice-toggle-btn" class="text-gray-500 hover:text-gray-800 p-2 rounded-full"><span class="iconify text-3xl" data-icon="material-symbols:keyboard-arrow-down-rounded"></span></button>
         <div class="text-center absolute left-1/2 -translate-x-1/2 w-3/5">
@@ -99,6 +107,39 @@
         <button id="practice-check-btn" class="bg-[var(--green)] text-white font-bold py-3 px-8 rounded-lg hover:bg-green-600 w-full max-w-xs text-lg">Comprobar</button>
     </footer>
 </div>
+
+<div id="rsvp-screen" class="slide-up-screen bg-gray-100">
+    <header class="p-4 flex justify-between items-center border-b bg-white">
+        <div class="w-1/3">
+             <p id="rsvp-wpm-display" class="text-base sm:text-lg font-bold text-gray-500"></p>
+        </div>
+        <div class="w-1/3 text-center">
+            <h3 id="rsvp-title" class="text-base sm:text-xl font-bold text-[var(--dark-blue)] truncate">Lector Rápido</h3>
+        </div>
+        <div class="w-1/3 flex justify-end">
+            <button id="rsvp-close-btn" class="text-gray-500 hover:text-gray-800 p-2 rounded-full"><span class="iconify text-3xl" data-icon="carbon:close"></span></button>
+        </div>
+    </header>
+    <main class="flex-grow flex items-center justify-center">
+        <div id="rsvp-word-container" class="w-full px-4">
+             <div id="rsvp-word-display" class="text-5xl sm:text-7xl md:text-8xl whitespace-nowrap"></div>
+        </div>
+    </main>
+    <footer class="p-4 border-t bg-white flex items-center justify-center gap-4 sm:gap-6">
+        <button id="rsvp-prev-btn" class="text-[var(--dark-blue)] bg-gray-200 hover:bg-gray-300 rounded-full w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center transition-colors" title="Bajar velocidad">
+            <span class="iconify text-3xl sm:text-4xl" data-icon="material-symbols:fast-rewind-rounded"></span>
+        </button>
+        <button id="rsvp-main-btn" class="text-white bg-[var(--blue)] hover:bg-[var(--dark-blue)] rounded-full w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center transition-transform transform hover:scale-105" title="Pausar / Reanudar / Reiniciar">
+             <span id="rsvp-play-icon" class="iconify text-5xl sm:text-6xl" data-icon="line-md:play-filled"></span>
+             <span id="rsvp-pause-icon" class="iconify text-5xl sm:text-6xl hidden" data-icon="ic:outline-pause"></span>
+             <span id="rsvp-restart-icon" class="iconify text-4xl sm:text-5xl hidden" data-icon="solar:restart-bold"></span>
+        </button>
+        <button id="rsvp-next-btn" class="text-[var(--dark-blue)] bg-gray-200 hover:bg-gray-300 rounded-full w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center transition-colors" title="Aumentar velocidad">
+            <span class="iconify text-3xl sm:text-4xl" data-icon="material-symbols:fast-forward-rounded"></span>
+        </button>
+    </footer>
+</div>
+
 
 <script src="script.js"></script>
 
