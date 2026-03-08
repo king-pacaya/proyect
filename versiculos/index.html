@@ -98,6 +98,15 @@
             75% { transform: translateX(8px); }
         }
 
+        @keyframes pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        .points-pop {
+            animation: pop 0.3s ease;
+        }
+
         .modal-overlay {
             position: fixed; inset: 0; background: rgba(0,0,0,0.5);
             display: flex; justify-content: center; align-items: center;
@@ -110,27 +119,31 @@
 
 <div class="container max-w-2xl mx-auto p-6 sm:p-10 pb-32">
     <div class="flex justify-between items-center mb-8">
-        <h2 class="text-3xl font-black">Mis Versos</h2>
+        <h2 class="text-3xl font-black">Versículos</h2>
         <div class="flex items-center gap-2 bg-orange-100 px-4 py-2 rounded-2xl border-2 border-orange-200">
             <span class="iconify text-orange-500 text-2xl" data-icon="material-symbols:stars-rounded"></span>
             <span id="total-points-stat" class="font-black text-orange-600">0</span>
         </div>
     </div>
 
-    <div class="grid grid-cols-2 gap-4 mb-8 text-center">
-        <div class="bg-blue-50 p-4 rounded-2xl border-2 border-blue-100">
+    <div class="grid grid-cols-3 gap-2 sm:gap-4 mb-8 text-center">
+        <div class="bg-blue-50 p-3 sm:p-4 rounded-2xl border-2 border-blue-100">
             <p class="text-2xl font-black text-[var(--blue)]" id="total-verses-stat">0</p>
             <p class="text-xs font-black text-blue-400 uppercase">Colección</p>
         </div>
-        <div class="bg-green-50 p-4 rounded-2xl border-2 border-green-100">
+        <div class="bg-green-50 p-3 sm:p-4 rounded-2xl border-2 border-green-100">
             <p class="text-2xl font-black text-[var(--green)]" id="dominated-verses-stat">0</p>
             <p class="text-xs font-black text-green-400 uppercase">Dominados</p>
+        </div>
+        <div class="bg-orange-50 p-3 sm:p-4 rounded-2xl border-2 border-orange-100">
+            <p class="text-2xl font-black text-[var(--orange)]" id="streak-stat">0</p>
+            <p class="text-xs font-black text-orange-400 uppercase">Racha</p>
         </div>
     </div>
 
     <div class="mb-10 relative">
         <span class="iconify absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-2xl" data-icon="material-symbols:search"></span>
-        <input type="text" id="verse-search-input" placeholder="¿Qué buscas hoy?" 
+        <input type="text" id="verse-search-input" placeholder="Buscar Versículo" 
                class="w-full p-4 pl-12 border-2 border-gray-200 rounded-2xl focus:border-[var(--blue)] outline-none font-bold">
     </div>
 
@@ -173,12 +186,12 @@
 <div id="practice-screen" class="slide-up-screen">
     <header class="p-6 flex items-center gap-4 border-b">
         <button id="practice-close-btn" class="text-gray-400"><span class="iconify text-4xl" data-icon="carbon:close"></span></button>
-        <div class="practice-progress-bar">
+        <div class="practice-progress-bar flex-grow">
             <div id="practice-progress-fill" class="practice-progress-fill" style="width: 0%;"></div>
         </div>
-        <div class="flex items-center gap-1 font-black text-orange-500">
-            <span id="peek-count" class="text-xl">0</span>
-            <span class="iconify text-2xl" data-icon="material-symbols:visibility-rounded"></span>
+        <div id="practice-points-container" class="flex items-center gap-1 font-black text-orange-500 bg-orange-100 px-3 py-1 rounded-xl">
+            <span class="iconify text-orange-500 text-xl" data-icon="material-symbols:stars-rounded"></span>
+            <span id="practice-points" class="text-lg">0</span>
         </div>
     </header>
 
@@ -186,8 +199,9 @@
         <div class="w-full max-w-xl">
             <div class="flex justify-between items-center mb-6">
                 <h3 class="text-xl font-black text-gray-400" id="practice-mode-title">PRÁCTICA</h3>
-                <button id="hint-peek-btn" class="btn-duo btn-ghost px-4 py-2 rounded-xl text-xs flex gap-2">
-                    REVISAR
+                <button id="hint-peek-btn" class="btn-duo btn-ghost px-4 py-2 rounded-xl text-xs flex gap-1 items-center">
+                    <span>REVISAR</span>
+                    <span class="text-orange-500 text-lg">∞</span>
                 </button>
             </div>
             
@@ -230,6 +244,6 @@
     </footer>
 </div>
 
-<script src="script.js?v=2.0"></script>
+<script src="script.js?v=2.1"></script>
 </body>
 </html>

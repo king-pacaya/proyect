@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
         list: document.getElementById('saved-verses-list'),
         search: document.getElementById('verse-search-input'),
         totalPoints: document.getElementById('total-points-stat'),
+        streakStat: document.getElementById('streak-stat'),
         // Modales y Pantallas
         modal: document.getElementById('verse-modal-overlay'),
         practice: document.getElementById('practice-screen'),
@@ -15,17 +16,19 @@ document.addEventListener('DOMContentLoaded', () => {
         searchApiBtn: document.getElementById('search-verse-btn'),
         checkBtn: document.getElementById('practice-check-btn'),
         hintBtn: document.getElementById('hint-peek-btn'),
-        surrenderBtn: document.getElementById('surrender-btn')
+        surrenderBtn: document.getElementById('surrender-btn'),
+        // Practice points
+        practicePoints: document.getElementById('practice-points')
     };
 
     // --- ESTADO ---
     let state = {
         verses: JSON.parse(localStorage.getItem('myVerses')) || [],
         points: parseInt(localStorage.getItem('userPoints')) || 0,
+        streak: parseInt(localStorage.getItem('userStreak')) || 0,
+        lastPracticeDate: localStorage.getItem('lastPracticeDate') || null,
         currentVerse: null,
         isExam: false,
-        peeksUsed: 0,
-        peeksLimit: 0,
         isChecked: false
     };
 
@@ -35,6 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const save = () => {
         localStorage.setItem('myVerses', JSON.stringify(state.verses));
         localStorage.setItem('userPoints', state.points);
+        localStorage.setItem('userStreak', state.streak);
+        localStorage.setItem('lastPracticeDate', state.lastPracticeDate);
         renderPage();
     };
 
@@ -45,6 +50,30 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const parseRef = (i) => i.trim().match(/(.+?)\s*(\d+):(\d+)(?:-(\d+))?$/i);
+
+    // --- FUNCIÓN PARA ACTUALIZAR RACHA ---
+    const updateStreak = () => {
+        const today = new Date().toDateString(); // formato 'Mon DD YYYY'
+        if (!state.lastPracticeDate) {
+            // Primera práctica
+            state.streak = 1;
+        } else {
+            const last = new Date(state.lastPracticeDate);
+            const lastDay = new Date(last).setHours(0,0,0,0);
+            const todayDay = new Date().setHours(0,0,0,0);
+            const diffDays = Math.round((todayDay - lastDay) / (1000 * 60 * 60 * 24));
+            
+            if (diffDays === 1) {
+                // Día consecutivo
+                state.streak += 1;
+            } else if (diffDays > 1) {
+                // Se rompió la racha
+                state.streak = 1;
+            }
+            // Si diffDays === 0, misma día, no cambiar
+        }
+        state.lastPracticeDate = today;
+    };
 
     // --- LÓGICA DE NEGOCIO ---
     async function fetchVerse(ref) {
@@ -59,6 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const renderPage = () => {
         elements.totalPoints.textContent = state.points;
+        elements.streakStat.textContent = state.streak;
         const query = elements.search.value.toLowerCase();
         const filtered = state.verses.filter(v => v.reference.toLowerCase().includes(query) || v.text.toLowerCase().includes(query));
         
@@ -106,14 +136,13 @@ document.addEventListener('DOMContentLoaded', () => {
         state.currentVerse = verse;
         state.isExam = isExam;
         state.isChecked = false;
-        state.peeksUsed = 0;
         
         const level = isExam ? 4 : (verse.currentLevel || 1);
-        const limits = [999, 5, 3, 1];
-        state.peeksLimit = limits[level - 1] || 1;
-
         document.getElementById('practice-mode-title').textContent = isExam ? "EXAMEN FINAL" : `NIVEL ${level}`;
-        document.getElementById('peek-count').textContent = state.peeksLimit;
+        
+        // Mostrar puntos actuales en el header de práctica
+        elements.practicePoints.textContent = state.points;
+        
         document.getElementById('practice-progress-fill').style.width = `${((level-1)/4)*100}%`;
         
         elements.surrenderBtn.classList.toggle('hidden', !isExam);
@@ -127,7 +156,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const ratios = [0.2, 0.4, 0.6, 1.0];
         const ratio = ratios[level - 1];
         
-        // Regex mejorada: busca palabras completas evitando puntuación pegada
         const words = text.split(/(\s+)/);
         let html = "";
         
@@ -136,7 +164,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if(clean.length > 2 && Math.random() < ratio) {
                 const w = Math.max(40, clean.length * 12);
                 html += `<input type="text" class="blank-input" data-correct="${clean.toLowerCase()}" style="width:${w}px" autocomplete="off" spellcheck="false">`;
-                // Reinsertar puntuación si existía al final de la palabra
                 const punctuation = part.substring(clean.length);
                 if(punctuation) html += punctuation;
             } else {
@@ -145,6 +172,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         document.getElementById('practice-verse-container').innerHTML = html;
         document.querySelector('.blank-input')?.focus();
+    };
+
+    const animatePoints = () => {
+        elements.practicePoints.classList.add('points-pop');
+        setTimeout(() => elements.practicePoints.classList.remove('points-pop'), 300);
     };
 
     const check = () => {
@@ -168,6 +200,12 @@ document.addEventListener('DOMContentLoaded', () => {
             confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
             const pointsWin = state.isExam ? 100 : (state.currentVerse.currentLevel * 10);
             state.points += pointsWin;
+            // Actualizar y animar puntos en práctica
+            elements.practicePoints.textContent = state.points;
+            animatePoints();
+            
+            // Actualizar racha
+            updateStreak();
             
             const idx = state.verses.findIndex(v => v.id === state.currentVerse.id);
             if(state.isExam || state.currentVerse.currentLevel >= 4) {
@@ -250,15 +288,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     elements.checkBtn.onclick = check;
     
+    // Hint sin límite (ilimitado)
     elements.hintBtn.onclick = () => {
-        if(state.peeksUsed < state.peeksLimit) {
-            const container = document.getElementById('practice-verse-container');
-            const originalHTML = container.innerHTML;
-            container.innerHTML = `<p class="text-blue-500 animate-pulse">${state.currentVerse.text}</p>`;
-            state.peeksUsed++;
-            document.getElementById('peek-count').textContent = state.peeksLimit - state.peeksUsed;
-            setTimeout(() => container.innerHTML = originalHTML, 2000);
-        }
+        const container = document.getElementById('practice-verse-container');
+        const originalHTML = container.innerHTML;
+        container.innerHTML = `<p class="text-blue-500 animate-pulse">${state.currentVerse.text}</p>`;
+        setTimeout(() => container.innerHTML = originalHTML, 2000);
     };
 
     elements.surrenderBtn.onclick = () => {
