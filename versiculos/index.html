@@ -7,145 +7,307 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
-    <title>Versículos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@700&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+    <title>Versículos | Kraut App</title>
     <style>
-        @font-face {
-            font-family: 'Moderat';
-            src: url('font/Moderat-Bold.ttf') format('truetype');
-            font-weight: bold; font-style: normal;
-        }
-        @font-face {
-            font-family: 'Moderat';
-            src: url('font/Moderat-Regular.ttf') format('truetype');
-            font-weight: normal; font-style: normal;
-        }
-        * { font-family: 'Moderat', sans-serif; box-sizing: border-box; }
         :root {
-            --green: #2ECC71; --dark-blue: #203855; --blue: #1D54C0;
-            --light-blue: #A0C3EA; --extra-light-blue: #EDF5FF;
-            --success-text: #16A34A; --red: #EF4444; --gold: #FFD700;
+            --green: #58CC02;
+            --green-dark: #46A302;
+            --blue: #1CB0F6;
+            --blue-dark: #1899D6;
+            --dark-blue: #203855;
+            --red: #FF4B4B;
+            --red-dark: #D33131;
+            --gray-light: #E5E5E5;
+            --gray-text: #777777;
         }
-        body { background-color: #f3f4f6; color: var(--dark-blue); }
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.4); display: flex; justify-content: center; align-items: center; z-index: 100; backdrop-filter: blur(2px); opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
-        .modal-overlay.open { opacity: 1; pointer-events: auto; }
-        .modal-content { background: white; border-radius: 1rem; width: 90%; max-width: 550px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); transform: translateY(-50px); transition: transform 0.3s ease, opacity 0.3s ease; opacity: 0; overflow: hidden; }
-        .modal-overlay.open .modal-content { transform: translateY(0); opacity: 1; }
-        .saved-verse-card { background: white; padding: 1.5rem; border-radius: 1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: all 0.3s ease; }
-        .verse-text { color: var(--dark-blue); border-left: 3px solid var(--light-blue); padding-left: 1rem; line-height: 1.7; }
-        .progress-bar-container { background-color: #e5e7eb; border-radius: 9999px; height: 8px; width: 100%; overflow: hidden; }
-        .progress-bar-fill { background-color: var(--green); height: 100%; border-radius: 9999px; transition: width 0.5s ease-in-out; }
-        .slide-up-screen { position: fixed; bottom: -100%; left: 0; width: 100%; height: 100%; background-color: #f5f5f5; z-index: 200; transition: bottom 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); display: flex; flex-direction: column; }
-        .slide-up-screen.open { bottom: 0; }
-        .slide-up-screen.partial { bottom: calc(-100% + 85px); }
-        #practice-verse-container { font-size: 1.25rem; line-height: 2.5; text-align: center; }
-        .blank-input {
-            border: none; border-bottom: 2px solid var(--dark-blue); background-color: rgba(160,195,234,0.2);
-            text-align: center; font-weight: bold; padding: 0 0.25rem; outline: none; transition: all 0.2s;
-            vertical-align: bottom; border-radius: 4px 4px 0 0; font-size: 1.1rem;
-            display: inline-block; /* Mejora la consistencia del layout */
-        }
-        @media (min-width: 768px) { #practice-verse-container { font-size: 1.75rem; line-height: 2.8; } .blank-input { font-size: 1.5rem; } }
-        .blank-input:focus { background-color: white; border-color: var(--blue); }
-        .blank-input.correct { background-color: #D1FAE5; border-color: var(--green); color: var(--success-text); }
-        .blank-input.incorrect { background-color: #FEE2E2; border-color: var(--red); animation: shake 0.5s; }
-        .word-bank-item { transition: opacity 0.3s ease, transform 0.3s ease; }
-        .celebration-active { animation: celebration-pulse 1.2s ease-in-out; }
-        .status-tag { padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.8rem; font-weight: bold; display: inline-block; }
-        .status-tag.dominado { background-color: #D1FAE5; color: #065F46; }
-        .options-menu-dropdown { transition: opacity 0.2s ease, transform 0.2s ease; }
-        
-        /* RSVP Styles */
-        #rsvp-word-container { text-align: center; }
-        #rsvp-word-display { font-family: 'Roboto Mono', monospace; font-weight: 700; display: inline-block; min-height: 1.2em; /* Para evitar saltos de layout */ }
-        #rsvp-word-display .pivot { color: var(--blue); }
-        #rsvp-screen.paused #rsvp-word-display { opacity: 0.4; }
 
-        @keyframes celebration-pulse { 0% { box-shadow: 0 0 0 0 rgba(46,204,113,0.7); } 50% { box-shadow: 0 0 0 20px rgba(46,204,113,0); } 100% { box-shadow: 0 0 0 0 rgba(46,204,113,0); } }
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+        body { 
+            font-family: 'Nunito', sans-serif; 
+            background-color: #FFFFFF; 
+            color: var(--dark-blue);
+        }
+
+        /* Botones estilo Duolingo */
+        .btn-duo {
+            position: relative;
+            border: none;
+            border-bottom: 4px solid var(--gray-light);
+            transition: all 0.1s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 800;
+        }
+
+        .btn-duo:active {
+            margin-top: 4px;
+            border-bottom: 0;
+        }
+
+        .btn-primary { 
+            background-color: var(--blue); 
+            color: white; 
+            border-color: var(--blue-dark); 
+        }
+        
+        .btn-success { 
+            background-color: var(--green); 
+            color: white; 
+            border-color: var(--green-dark); 
+        }
+
+        .btn-error {
+            background-color: var(--red);
+            color: white;
+            border-color: var(--red-dark);
+        }
+
+        /* Tarjetas de Versículos */
+        .verse-card {
+            border: 2px solid var(--gray-light);
+            border-radius: 1.5rem;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .verse-card:hover {
+            border-color: var(--blue);
+            background-color: #F7F7F7;
+        }
+
+        /* Pantalla de Práctica (Slide Up) */
+        .slide-up-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: white;
+            z-index: 200;
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slide-up-screen.open { transform: translateY(0); }
+
+        /* Barra de Progreso Superior */
+        .practice-progress-bar {
+            height: 16px;
+            background: var(--gray-light);
+            border-radius: 10px;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .practice-progress-fill {
+            height: 100%;
+            background: var(--green);
+            transition: width 0.4s ease;
+            border-radius: 10px;
+        }
+
+        /* Inputs de Relleno */
+        .blank-input {
+            border: 2px solid var(--gray-light);
+            border-radius: 0.75rem;
+            background-color: #F7F7F7;
+            text-align: center;
+            font-weight: 700;
+            outline: none;
+            transition: all 0.2s;
+            margin: 0 4px;
+            display: inline-block;
+            font-size: 1.1rem;
+            min-width: 60px;
+        }
+
+        .blank-input:focus {
+            border-color: var(--blue);
+            background-color: white;
+            box-shadow: 0 0 0 4px rgba(28, 176, 246, 0.1);
+        }
+
+        .blank-input.correct {
+            border-color: var(--green);
+            background-color: #D7FFB8;
+            color: var(--green-dark);
+        }
+
+        .blank-input.incorrect {
+            border-color: var(--red);
+            background-color: #FFDFE0;
+            color: var(--red-dark);
+            animation: shake 0.4s;
+        }
+
+        /* Footer de comprobación */
+        .check-footer {
+            border-top: 2px solid var(--gray-light);
+            padding: 1.5rem;
+            background: white;
+            transition: background-color 0.3s;
+        }
+
+        .check-footer.correct-bg { background-color: #D7FFB8; border-color: transparent; }
+        .check-footer.incorrect-bg { background-color: #FFDFE0; border-color: transparent; }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: 0.3s; z-index: 300;
+        }
+        .modal-overlay.open { opacity: 1; pointer-events: auto; }
+        
+        /* Estilo Roboto Mono para el RSVP */
+        .mono { font-family: 'Roboto Mono', monospace; }
     </style>
 </head>
 <body class="antialiased">
 
-<div class="container max-w-4xl mx-auto p-4 sm:p-8">
-    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8 pb-4 border-b gap-4">
-        <h2 class="text-3xl font-bold text-[var(--dark-blue)] w-full text-center sm:w-auto sm:text-left">Versículos</h2>
-        <button id="open-modal-btn" class="bg-white text-[var(--dark-blue)] font-bold py-3 px-4 rounded-lg hover:bg-gray-100 transition-colors flex items-center justify-center shadow-sm border border-gray-300 w-full sm:w-auto"><span class="iconify mr-2 text-xl" data-icon="material-symbols:menu-book-outline"></span>Agregar Versículo</button>
+<div class="container max-w-2xl mx-auto p-6 sm:p-10">
+    <div class="flex justify-between items-center mb-10">
+        <h2 class="text-4xl font-extrabold tracking-tight">Mis Versículos</h2>
+        <button id="open-modal-btn" class="btn-duo btn-primary py-3 px-6 rounded-2xl flex items-center shadow-sm">
+            <span class="iconify mr-2 text-2xl" data-icon="material-symbols:add-circle-rounded"></span>
+            NUEVO
+        </button>
     </div>
-    <div id="stats-container" class="grid grid-cols-3 gap-4 mb-6 text-center">
-        <div><p class="text-2xl font-bold text-[var(--blue)]" id="total-verses-stat">0</p><p class="text-sm text-gray-500">Versículos</p></div>
-        <div><p class="text-2xl font-bold text-[var(--green)]" id="dominated-verses-stat">0</p><p class="text-sm text-gray-500">Dominados</p></div>
-        <div><p class="text-2xl font-bold text-gray-600" id="total-practices-stat">0</p><p class="text-sm text-gray-500">Prácticas</p></div>
-    </div>
-    <div class="mb-6 relative">
-        <span class="iconify absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xl" data-icon="material-symbols:search"></span>
-        <input type="text" id="verse-search-input" placeholder="Buscar en tus versículos..." class="w-full p-3 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--blue)] outline-none">
-    </div>
-    <div id="saved-verses-list" class="space-y-6">
-        <p class="text-gray-500 text-center py-8" id="empty-state">¡Aún no hay versículos! Agregá uno para empezar a memorizar.</p>
-        <p class="text-gray-500 text-center py-8 hidden" id="no-results-state">No se encontraron resultados para tu búsqueda.</p>
-    </div>
-</div>
-<div id="verse-modal-overlay" class="modal-overlay">
-  <div class="modal-content">
-    <div class="flex justify-between items-center p-4 border-b"><h3 class="text-xl font-bold flex items-center"><span id="modal-title-add" class="flex items-center"><span class="iconify mr-2 text-2xl" data-icon="material-symbols:add-box"></span><span>Agregar Versículo</span></span><span id="modal-title-edit" class="flex items-center hidden"><span class="iconify mr-2 text-2xl" data-icon="material-symbols:edit-document"></span><span>Editar Versículo</span></span></h3><button id="close-modal-x-btn" class="text-gray-400 hover:text-gray-700"><span class="iconify text-2xl" data-icon="carbon:close"></span></button></div>
-    <div class="p-6">
-      <label for="modal-verse-input" class="block text-sm font-medium text-gray-700 mb-1">Referencia Bíblica (RVR1960)</label>
-      <div class="flex gap-2 mb-3"><input type="text" id="modal-verse-input" placeholder="Ej: Filipenses 4:6-7" class="flex-grow p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--blue)] outline-none text-lg"><button id="search-verse-btn" class="bg-[var(--blue)] text-white font-bold py-3 px-4 rounded-lg hover:bg-[var(--dark-blue)]"><span class="iconify text-xl" data-icon="material-symbols:search"></span></button></div>
-      <p id="modal-status-message" class="text-sm mb-4" role="alert"></p>
-      <div id="modal-verse-info" class="mb-4 hidden"><label class="block text-sm font-medium text-gray-700 mb-1">Texto del Versículo</label><div id="modal-verse-text" class="p-3 border rounded-md bg-gray-50 text-gray-800 min-h-[100px]"></div></div>
-      <div class="flex justify-end gap-3 pt-6 border-t mt-6"><button id="cancel-modal-btn" class="bg-gray-200 text-gray-700 font-medium py-3 px-6 rounded-lg hover:bg-gray-300">Cancelar</button><button id="save-modal-btn" class="bg-[var(--blue)] text-white font-bold py-3 px-6 rounded-lg hover:bg-[var(--dark-blue)] disabled:opacity-50" disabled>Agregar Versículo</button></div>
-    </div>
-  </div>
-</div>
-<div id="practice-screen" class="slide-up-screen">
-    <header class="p-4 flex justify-between items-center border-b bg-white">
-        <button id="practice-toggle-btn" class="text-gray-500 hover:text-gray-800 p-2 rounded-full"><span class="iconify text-3xl" data-icon="material-symbols:keyboard-arrow-down-rounded"></span></button>
-        <div class="text-center absolute left-1/2 -translate-x-1/2 w-3/5">
-            <h3 id="practice-title" class="text-base sm:text-xl font-bold text-[var(--dark-blue)] truncate"></h3>
+
+    <div class="grid grid-cols-3 gap-4 mb-8">
+        <div class="bg-gray-50 p-4 rounded-2xl border-2 border-gray-100 text-center">
+            <p class="text-2xl font-black text-[var(--blue)]" id="total-verses-stat">0</p>
+            <p class="text-xs font-bold text-gray-400 uppercase">Total</p>
         </div>
-        <button id="practice-close-btn" class="text-gray-500 hover:text-gray-800 p-2 rounded-full"><span class="iconify text-3xl" data-icon="carbon:close"></span></button>
-    </header>
-    <main class="flex-grow flex flex-col items-center justify-center p-4 overflow-y-auto"><div id="practice-word-bank-container" class="w-full max-w-4xl mb-4 sm:mb-8 text-center"><div id="practice-word-bank" class="flex flex-wrap justify-center gap-2 sm:gap-3"></div></div><div id="practice-verse-container" class="w-full max-w-4xl"></div></main>
-    <footer class="p-2 sm:p-4 border-t bg-white flex flex-col items-center gap-2">
-        <p id="practice-status-message" class="text-center font-bold text-lg h-6"></p>
-        <button id="practice-check-btn" class="bg-[var(--green)] text-white font-bold py-3 px-8 rounded-lg hover:bg-green-600 w-full max-w-xs text-lg">Comprobar</button>
-    </footer>
+        <div class="bg-gray-50 p-4 rounded-2xl border-2 border-gray-100 text-center">
+            <p class="text-2xl font-black text-[var(--green)]" id="dominated-verses-stat">0</p>
+            <p class="text-xs font-bold text-gray-400 uppercase">Domindos</p>
+        </div>
+        <div class="bg-gray-50 p-4 rounded-2xl border-2 border-gray-100 text-center">
+            <p class="text-2xl font-black text-orange-400" id="total-practices-stat">0</p>
+            <p class="text-xs font-bold text-gray-400 uppercase">Racha</p>
+        </div>
+    </div>
+
+    <div class="mb-10 relative">
+        <span class="iconify absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-2xl" data-icon="material-symbols:search"></span>
+        <input type="text" id="verse-search-input" placeholder="Buscar versículo o palabra..." 
+               class="w-full p-4 pl-12 border-2 border-gray-200 rounded-2xl focus:border-[var(--blue)] outline-none font-bold transition-all">
+    </div>
+
+    <div id="saved-verses-list" class="space-y-6 pb-20">
+        <div id="empty-state" class="text-center py-20">
+            <span class="iconify mx-auto text-8xl text-gray-200 mb-4" data-icon="material-symbols:menu-book-rounded"></span>
+            <p class="text-gray-400 font-bold text-xl">¿Aún no has guardado nada?<br>Empieza tu colección hoy.</p>
+        </div>
+        <p class="text-gray-500 text-center py-8 hidden" id="no-results-state">No hay coincidencias, Kraut.</p>
+    </div>
 </div>
 
-<div id="rsvp-screen" class="slide-up-screen bg-gray-100">
-    <header class="p-4 flex justify-between items-center border-b bg-white">
-        <div class="w-1/3">
-             <p id="rsvp-wpm-display" class="text-base sm:text-lg font-bold text-gray-500"></p>
+<div id="verse-modal-overlay" class="modal-overlay p-4">
+    <div class="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h3 id="modal-title-add" class="text-2xl font-black">Nuevo Versículo</h3>
+                <h3 id="modal-title-edit" class="text-2xl font-black hidden">Editar Versículo</h3>
+                <button id="close-modal-x-btn" class="text-gray-400 hover:text-red-500 transition-colors">
+                    <span class="iconify text-3xl" data-icon="carbon:close-filled"></span>
+                </button>
+            </div>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-black text-gray-400 uppercase mb-2">Referencia (RVR1960)</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="modal-verse-input" placeholder="Ej: Juan 3:16" 
+                               class="flex-grow p-4 border-2 border-gray-100 rounded-2xl focus:border-[var(--blue)] outline-none font-bold">
+                        <button id="search-verse-btn" class="btn-duo btn-primary p-4 rounded-2xl">
+                            <span class="iconify text-2xl" data-icon="material-symbols:search"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="modal-verse-info" class="hidden animate-in fade-in duration-300">
+                    <label class="block text-xs font-black text-gray-400 uppercase mb-2">Previsualización</label>
+                    <div id="modal-verse-text" class="p-4 border-2 border-dashed border-gray-200 rounded-2xl text-gray-600 font-medium italic"></div>
+                </div>
+                
+                <p id="modal-status-message" class="text-sm font-bold text-center"></p>
+            </div>
         </div>
-        <div class="w-1/3 text-center">
-            <h3 id="rsvp-title" class="text-base sm:text-xl font-bold text-[var(--dark-blue)] truncate">Lector Rápido</h3>
+        <div class="p-6 bg-gray-50 flex gap-4">
+            <button id="cancel-modal-btn" class="flex-1 btn-duo bg-white text-gray-400 border-gray-200 py-4 rounded-2xl">CANCELAR</button>
+            <button id="save-modal-btn" class="flex-1 btn-duo btn-success py-4 rounded-2xl disabled:opacity-50" disabled>GUARDAR</button>
         </div>
-        <div class="w-1/3 flex justify-end">
-            <button id="rsvp-close-btn" class="text-gray-500 hover:text-gray-800 p-2 rounded-full"><span class="iconify text-3xl" data-icon="carbon:close"></span></button>
+    </div>
+</div>
+
+<div id="practice-screen" class="slide-up-screen">
+    <header class="p-6 flex items-center gap-4">
+        <button id="practice-close-btn" class="text-gray-400 hover:text-gray-600">
+            <span class="iconify text-4xl" data-icon="carbon:close"></span>
+        </button>
+        <div class="practice-progress-bar">
+            <div id="practice-progress-fill" class="practice-progress-fill" style="width: 10%;"></div>
         </div>
+        <span class="iconify text-3xl text-red-500" data-icon="material-symbols:favorite-rounded"></span>
     </header>
-    <main class="flex-grow flex items-center justify-center">
-        <div id="rsvp-word-container" class="w-full px-4">
-             <div id="rsvp-word-display" class="text-5xl sm:text-7xl md:text-8xl whitespace-nowrap"></div>
+
+    <main class="flex-grow flex flex-col items-center p-6 sm:p-12 overflow-y-auto">
+        <div class="w-full max-w-xl">
+            <h3 class="text-2xl font-black mb-8 text-center sm:text-left" id="practice-instruction">Completa el versículo:</h3>
+            
+            <div id="practice-verse-container" class="text-xl sm:text-2xl font-bold leading-relaxed text-center mb-10">
+                </div>
+
+            <div id="practice-word-bank-container" class="hidden">
+                <div id="practice-word-bank" class="flex flex-wrap justify-center gap-3">
+                    </div>
+            </div>
         </div>
     </main>
-    <footer class="p-4 border-t bg-white flex items-center justify-center gap-4 sm:gap-6">
-        <button id="rsvp-prev-btn" class="text-[var(--dark-blue)] bg-gray-200 hover:bg-gray-300 rounded-full w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center transition-colors" title="Bajar velocidad">
-            <span class="iconify text-3xl sm:text-4xl" data-icon="material-symbols:fast-rewind-rounded"></span>
-        </button>
-        <button id="rsvp-main-btn" class="text-white bg-[var(--blue)] hover:bg-[var(--dark-blue)] rounded-full w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center transition-transform transform hover:scale-105" title="Pausar / Reanudar / Reiniciar">
-             <span id="rsvp-play-icon" class="iconify text-5xl sm:text-6xl" data-icon="line-md:play-filled"></span>
-             <span id="rsvp-pause-icon" class="iconify text-5xl sm:text-6xl hidden" data-icon="ic:outline-pause"></span>
-             <span id="rsvp-restart-icon" class="iconify text-4xl sm:text-5xl hidden" data-icon="solar:restart-bold"></span>
-        </button>
-        <button id="rsvp-next-btn" class="text-[var(--dark-blue)] bg-gray-200 hover:bg-gray-300 rounded-full w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center transition-colors" title="Aumentar velocidad">
-            <span class="iconify text-3xl sm:text-4xl" data-icon="material-symbols:fast-forward-rounded"></span>
-        </button>
+
+    <footer id="practice-footer" class="check-footer">
+        <div class="max-w-xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div id="feedback-message" class="hidden flex items-center gap-3">
+                <span id="feedback-icon" class="iconify text-4xl"></span>
+                <div>
+                    <p id="feedback-title" class="font-black text-xl"></p>
+                    <p id="feedback-subtitle" class="text-sm font-bold"></p>
+                </div>
+            </div>
+            <button id="practice-check-btn" class="btn-duo btn-success w-full sm:w-48 py-4 rounded-2xl text-lg">COMPROBAR</button>
+        </div>
     </footer>
 </div>
 
-<script src="script.js?v=1.1"></script>
+<div id="rsvp-screen" class="slide-up-screen bg-gray-50">
+    <header class="p-6 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+            <span class="iconify text-[var(--blue)] text-3xl" data-icon="material-symbols:speed"></span>
+            <span id="rsvp-wpm-display" class="font-black text-gray-400">300 WPM</span>
+        </div>
+        <button id="rsvp-close-btn" class="text-gray-400"><span class="iconify text-4xl" data-icon="carbon:close-filled"></span></button>
+    </header>
+    <main class="flex-grow flex items-center justify-center">
+        <div class="w-full px-6 text-center">
+            <div id="rsvp-word-display" class="mono text-5xl sm:text-7xl font-bold min-h-[1.5em] tracking-tight"></div>
+        </div>
+    </main>
+    <footer class="p-10 flex items-center justify-center gap-8">
+        <button id="rsvp-prev-btn" class="btn-duo bg-white p-4 rounded-full border-gray-200"><span class="iconify text-3xl" data-icon="material-symbols:fast-rewind-rounded"></span></button>
+        <button id="rsvp-main-btn" class="btn-duo btn-primary w-24 h-24 rounded-full flex items-center justify-center">
+            <span id="rsvp-play-icon" class="iconify text-5xl" data-icon="line-md:play-filled"></span>
+            <span id="rsvp-pause-icon" class="iconify text-5xl hidden" data-icon="ic:outline-pause"></span>
+            <span id="rsvp-restart-icon" class="iconify text-5xl hidden" data-icon="solar:restart-bold"></span>
+        </button>
+        <button id="rsvp-next-btn" class="btn-duo bg-white p-4 rounded-full border-gray-200"><span class="iconify text-3xl" data-icon="material-symbols:fast-forward-rounded"></span></button>
+    </footer>
+</div>
 
+<script src="script.js?v=1.2"></script>
 </body>
 </html>
